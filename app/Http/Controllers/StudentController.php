@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Student;
 use App\Models\Test;
+use App\Models\TestPart;
 use App\Models\TestSkill;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -33,22 +34,43 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'image' => 'required|image|max:5048',
-            'accountId' => 'required',
+        // Lưu thông tin hình ảnh
+        $imagePath = $request->file('image')->store('imageStudents', 'public');
+
+        // Tạo một bản ghi mới trong bảng student_tests với test_id là null
+        $studentTest = Student::create([
+            'user_id' => $request->accountId,
+            'test_id' => null,
+            'image_file' => $imagePath,
         ]);
 
-        $test = Test::where('test_status', 'Active')->inRandomOrder()->first();
-        $path = $request->file('image')->store('students', 'public');
-        $url = Storage::url($path);
+        // Phân bổ ngẫu nhiên các phần cho sinh viên
+        $skills = [
+            'Listening' => ['Part_1', 'Part_2', 'Part_3'],
+            'Reading' => ['Part_1', 'Part_2', 'Part_3', 'Part_4'],
+            'Writing' => ['Part_1', 'Part_2'],
+            'Speaking' => ['Part_1', 'Part_2', 'Part_3'],
+        ];
+    
+        // Lấy ngẫu nhiên đúng số lượng phần của mỗi kỹ năng và tên phần từ database
+        foreach ($skills as $skill => $parts) {
+            foreach ($parts as $partName) {
+                $selectedPart = TestSkill::where('skill_name', $skill)
+                    ->where('part_name', $partName)
+                    ->inRandomOrder()
+                    ->limit(1)
+                    ->first();
+    
+                if ($selectedPart) {
+                    TestPart::create([
+                        'student_id' => $studentTest->id,
+                        'test_skill_id' => $selectedPart->id,
+                    ]);
+                }
+            }
+        }
 
-        // Lưu URL hình ảnh và thông tin người dùng vào database
-        $student = Student::updateOrCreate(
-            ['user_id' => $request->accountId], // Trường duy nhất để xác định Student
-            ['image_file' => $url, 'test_id' => $test->id] // Cập nhật hoặc thêm mới các trường này
-        );
-
-        return response()->json(['message' => 'Hình ảnh đã được lưu thành công!']);
+        return response()->json(['message' => 'Test created successfully'], 200);
     }
 
     public function startTest()
@@ -73,15 +95,14 @@ class StudentController extends Controller
     public function showTest($slug)
     {
         $test = Test::with(['testSkills.questions.options', 'testSkills.readingsAudios'])
-                    ->where('slug', $slug)
-                    ->firstOrFail();
+            ->where('slug', $slug)
+            ->firstOrFail();
         $skills = $test->testSkills; // Lấy tất cả skills, bao gồm các parts    
-        $sortedSkills = $skills->sortBy(function($skill) {
+        $sortedSkills = $skills->sortBy(function ($skill) {
             $order = ['Listening', 'Reading', 'Writing', 'Speaking'];
             return array_search($skill->skill_name, $order);
-        }); 
-        
-        return view('students.show', ['test' => $test, 'skills' => $sortedSkills ]);
-    }  
-    
+        });
+
+        return view('students.show', ['test' => $test, 'skills' => $sortedSkills]);
+    }
 }
