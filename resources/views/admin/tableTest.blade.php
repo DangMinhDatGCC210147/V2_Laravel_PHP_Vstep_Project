@@ -19,11 +19,11 @@
     </div>
 
     <!-- end page title -->
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12 d-flex justify-content-end">
             <a href="{{ route('test.create') }}" class="btn btn-info">Create</a>
         </div>
-    </div>
+    </div> --}}
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -39,7 +39,7 @@
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Lecturer Name</th>
-                                <th>Test Code</th>
+                                <th>Create At</th>
                                 <th>Test Status</th>
                                 <th>Action</th>
                             </tr>
@@ -52,8 +52,8 @@
                                     <td>{{ $test->duration }}</td>
                                     <td>{{ $test->start_date }}</td>
                                     <td>{{ $test->end_date }}</td>
-                                    <td>{{ $test->instructor->name }}</td>
-                                    <td>{{ $test->test_code }}</td>
+                                    <td>{{ isset($test->instructor->name) ?? '' }}</td>
+                                    <td>{{ $test->created_at }}</td>
                                     @if ($test->test_status == "Active")
                                         <td><div class="badge bg-success">{{ $test->test_status }}</div></td>
                                     @else
@@ -76,9 +76,9 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-                                        <a href="{{ route('testSkills.show', $test->slug) }}"><i
+                                        {{-- <a href="{{ route('testSkills.show', $test->slug) }}"><i
                                                 class="mdi mdi-layers-plus mdi-24px"
-                                                style="color: rgb(198, 198, 24)"></i></a>
+                                                style="color: rgb(198, 198, 24)"></i></a> --}}
                                     </td>
                                 </tr>
                             @endforeach

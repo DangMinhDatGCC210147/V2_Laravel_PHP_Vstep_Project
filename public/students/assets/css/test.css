@@ -3,13 +3,12 @@ html, body {
     margin: 0;
     padding: 0;
     /* overflow-y: hidden; */
-    font-size: 15px !important;
+    font-size: 16px !important;
 }
 .overflow-auto {
     overflow-y: auto !important;
     z-index: 0;
 }
-
 .container-fluid {
     display: flex;
     flex-direction: column;
@@ -130,4 +129,35 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.content-wrapper {
+    padding-bottom: 100px; /* Space for the fixed footer */
+}
+
+
+.skill-content{
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.radio-scaled {
+    transform: scale(1.5);
+    margin: 5px;
+}
+
+.no-select {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }

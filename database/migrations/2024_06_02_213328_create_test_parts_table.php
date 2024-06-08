@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student_id');
             $table->unsignedBigInteger('test_skill_id');
+            $table->unsignedBigInteger('test_id');
             $table->timestamps();
         
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->foreign('test_skill_id')->references('id')->on('test_skills')->onDelete('cascade');
+            $table->foreign('test_id')->references('id')->on('tests')->onDelete('cascade');
         });        
     }
 

@@ -34,7 +34,12 @@ class Test extends Model
 
     public function testSkills()
     {
-        return $this->hasMany(TestSkill::class);
+        return $this->hasMany(TestPart::class);
+    }
+
+    public function testParts()
+    {
+        return $this->hasMany(TestPart::class);
     }
 
     public function students()

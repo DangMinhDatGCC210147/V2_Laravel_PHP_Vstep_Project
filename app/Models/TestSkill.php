@@ -37,6 +37,11 @@ class TestSkill extends Model
         return $this->hasMany(Question::class);
     }
 
+    public function testParts()
+    {
+        return $this->hasMany(TestPart::class, 'test_skill_id');
+    }
+    
     public function readingsAudios()
     {
         return $this->hasMany(ReadingsAudio::class);

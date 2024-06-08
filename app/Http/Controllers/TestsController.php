@@ -27,7 +27,7 @@ class TestsController extends Controller
      */
     public function create()
     {
-        $lecturers = User::where('role', '1')->get();     
+        $lecturers = User::where('role', '1')->get();
         return view('admin.createTest', compact('lecturers'));
     }
 
@@ -78,7 +78,6 @@ class TestsController extends Controller
             $testSkill->skill_name = $skill['skill_name'];
             $testSkill->time_limit = $skill['time_limit'];
             $testSkill->save();
-
         }
 
         return redirect()->route('tableTest.index')->with('success', 'Test and associated skills and parts created successfully!');
@@ -89,16 +88,18 @@ class TestsController extends Controller
      */
     public function show(Test $test_slug)
     {
+        // dd($test_slug);
         // Load the test with associated test skills and skill parts, including a count of questions for each part
         $test = $test_slug->load([
             'testSkills' => function ($query) {
                 $query->withCount('questions') // This will add a `questions_count` attribute to each skill part
-                    ->orderByRaw("FIELD(skill_name, 'Listening', 'Speaking', 'Reading', 'Writing')");
+                    ->leftJoin('test_parts as tp', 'tp.test_skill_id', '=', 'test_skills.id')
+                    ->orderByRaw("FIELD(test_skills.skill_name, 'Listening', 'Speaking', 'Reading', 'Writing')");
             }
         ]);
-    
+
         return view('admin.testSkills', compact('test'));
-    }    
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -165,7 +166,7 @@ class TestsController extends Controller
     {
         $test = Test::where('slug', $test_slug->slug)->firstOrFail();
         $skill = TestSkill::where('slug', $skill_slug->slug)->firstOrFail();
-        
+
         $passages = ReadingsAudio::where('test_skill_id', $skill_slug->id)->get();
         $questions = Question::with('options')->where('test_skill_id', $skill_slug->id)->get();
 

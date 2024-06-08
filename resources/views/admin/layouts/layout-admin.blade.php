@@ -245,14 +245,19 @@
                         <ul class="sub-menu">
                             <li class="menu-item">
                                 <a href="{{ route('createInstructor.create') }}" class="menu-link">
-                                    <span class="menu-text">Manage Instructor</span>
+                                    <span class="menu-text">Manage Lecturers</span>
                                 </a>
                             </li>
                             <li class="menu-item">
+                                <a href="{{ route('createStudent.create') }}" class="menu-link">
+                                    <span class="menu-text">Manage Students</span>
+                                </a>
+                            </li>
+                            {{-- <li class="menu-item">
                                 <a href="{{ route('test.create') }}" class="menu-link">
                                     <span class="menu-text">Manage Test</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="menu-item">
                                 <a href="{{ route('create.skill.part') }}" class="menu-link">
                                     <span class="menu-text">Manage Skill Part</span>
@@ -392,7 +397,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
-                            <p class="mb-0">Develop by <a href="#" target="_blank">DATDMGCC210147</a> </p>
+                            <p class="mb-0">Develop by <a href="#" target="_blank">Dang Minh Dat</a> </p>
                         </div>
                     </div>
                 </div>
@@ -443,7 +448,7 @@
     <!-- Datatables js -->
     <script src="{{ asset('admin/assets/js/pages/datatables.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script> --}}
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check if there is a success message in the session

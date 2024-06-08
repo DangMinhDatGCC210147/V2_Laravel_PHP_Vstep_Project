@@ -32,13 +32,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/lounge', [StudentController::class, 'index'])->name('student.index');
         Route::post('/saving', [StudentController::class, 'store'])->name('image.save');
         Route::get('/start-test', [StudentController::class, 'startTest'])->name('start-test');
-        Route::get('/exam/{slug}', [StudentController::class, 'showTest'])->name('exam-page');
+        Route::get('/examination/{slug}', [StudentController::class, 'displayTest'])->name('examination-page');
+        // Route::get('/exam/{slug}', [StudentController::class, 'showTest'])->name('exam-page');
 
         //STUDENT SUBMISSIONS
         Route::post('/saveListening', [StudentSubmissionController::class, 'saveListening'])->name('saveListening');
         Route::post('/saveSpeaking', [StudentSubmissionController::class, 'saveSpeaking'])->name('saveSpeaking');
         Route::post('/saveReading', [StudentSubmissionController::class, 'saveReading'])->name('saveReading');
         Route::post('/saveWriting', [StudentSubmissionController::class, 'saveWriting'])->name('saveWriting');
+
+        Route::post('/saveAnswer', [StudentSubmissionController::class, 'saveAnswer']);
+        Route::post('/saveRecording', [StudentSubmissionController::class, 'saveRecording']);
     });
 
     Route::middleware(CheckLecturerRole::class)->group(function () {

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>@yield("title", "Vstep Website")</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="DangMinhDat" name="author" />
     {{-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> --}}
     {{-- <meta http-equiv="refresh" content="2"> --}}
