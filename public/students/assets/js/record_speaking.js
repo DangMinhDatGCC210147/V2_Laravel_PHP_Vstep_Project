@@ -81,29 +81,5 @@ document.documentElement.style.userSelect = 'none';
 document.documentElement.style.msUserSelect = 'none';
 document.documentElement.style.mozUserSelect = 'none';
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     var audio = document.getElementById('audioPlayer');
 
-//     audio.addEventListener('play', function () {
-//         // Vô hiệu hóa thanh tiến trình khi âm thanh đang phát
-//         disableSeekBar();
-//     });
-
-//     function disableSeekBar() {
-//         audio.addEventListener('seeking', preventSeeking);
-//     }
-
-//     function preventSeeking(event) {
-//         // Ngăn chặn tua tới lui khi âm thanh đang phát
-//         if (!audio.paused) {
-//             event.preventDefault();
-//             audio.currentTime = audio.currentTime; // Giữ nguyên thời gian hiện tại
-//         }
-//     }
-
-//     // Xóa sự kiện ngăn chặn tua khi âm thanh bị tạm dừng
-//     audio.addEventListener('pause', function () {
-//         audio.removeEventListener('seeking', preventSeeking);
-//     });
-// });
 

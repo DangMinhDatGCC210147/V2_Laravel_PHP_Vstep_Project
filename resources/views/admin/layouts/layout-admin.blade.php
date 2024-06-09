@@ -448,7 +448,6 @@
     <!-- Datatables js -->
     <script src="{{ asset('admin/assets/js/pages/datatables.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check if there is a success message in the session

@@ -32,7 +32,7 @@
                         <div class="badge bg-info">
                             <span id="answered-count">Số câu đã hoàn thành: 0/0</span>
                         </div>
-                        <button class="btn btn-success" id="submitTestButton">Nộp bài</button>
+                        <button class="btn btn-success" id="submitTestButton" data-test-id="{{ $test->id }}">Nộp bài</button>
                     </div>
                 </div>
                 <div class="m-2 mb-5">
@@ -156,31 +156,39 @@
                                                     @endforeach
                                                 @endif
                                             </div>
-                                            @if ($testPart->testSkill->part_name == 'Part_1' && $questionIndex == 1 &&
+                                            @if (
+                                                $testPart->testSkill->part_name == 'Part_1' &&
+                                                    $questionIndex == 1 &&
                                                     $testPart->testSkill->skill_name == 'Speaking')
-                                                    <div class="recording-controls" data-question-id="{{ $question->id }}" 
-                                                        data-part-id="{{ $testPart->testSkill->part_name }}"
-                                                        data-skill-id="{{ $testPart->testSkill->id }}">
-                                                        <button type="button" class="startRecording" hidden>Bắt đầu ghi âm</button>
-                                                        <button type="button" class="stopRecording" disabled hidden>Dừng ghi âm</button>
-                                                        <audio class="audioPlayback" controls hidden></audio>
-                                                    </div>
-                                            @endif
-                                            @if ($testPart->testSkill->part_name == 'Part_2' && $testPart->testSkill->skill_name == 'Speaking')
-                                                <div class="recording-controls" data-question-id="{{ $question->id }}" 
+                                                <div class="recording-controls" data-question-id="{{ $question->id }}"
                                                     data-part-id="{{ $testPart->testSkill->part_name }}"
                                                     data-skill-id="{{ $testPart->testSkill->id }}">
-                                                    <button type="button" class="startRecording" hidden>Bắt đầu ghi âm</button>
-                                                    <button type="button" class="stopRecording" disabled hidden>Dừng ghi âm</button>
+                                                    <button type="button" class="startRecording" hidden>Bắt đầu ghi
+                                                        âm</button>
+                                                    <button type="button" class="stopRecording" disabled hidden>Dừng ghi
+                                                        âm</button>
+                                                    <audio class="audioPlayback" controls hidden></audio>
+                                                </div>
+                                            @endif
+                                            @if ($testPart->testSkill->part_name == 'Part_2' && $testPart->testSkill->skill_name == 'Speaking')
+                                                <div class="recording-controls" data-question-id="{{ $question->id }}"
+                                                    data-part-id="{{ $testPart->testSkill->part_name }}"
+                                                    data-skill-id="{{ $testPart->testSkill->id }}">
+                                                    <button type="button" class="startRecording" hidden>Bắt đầu ghi
+                                                        âm</button>
+                                                    <button type="button" class="stopRecording" disabled hidden>Dừng ghi
+                                                        âm</button>
                                                     <audio class="audioPlayback" controls hidden></audio>
                                                 </div>
                                             @endif
                                             @if ($testPart->testSkill->part_name == 'Part_3' && $testPart->testSkill->skill_name == 'Speaking')
-                                                <div class="recording-controls" data-question-id="{{ $question->id }}" 
+                                                <div class="recording-controls" data-question-id="{{ $question->id }}"
                                                     data-part-id="{{ $testPart->testSkill->part_name }}"
                                                     data-skill-id="{{ $testPart->testSkill->id }}">
-                                                    <button type="button" class="startRecording" hidden>Bắt đầu ghi âm</button>
-                                                    <button type="button" class="stopRecording" disabled hidden>Dừng ghi âm</button>
+                                                    <button type="button" class="startRecording" hidden>Bắt đầu ghi
+                                                        âm</button>
+                                                    <button type="button" class="stopRecording" disabled hidden>Dừng ghi
+                                                        âm</button>
                                                     <audio class="audioPlayback" controls hidden></audio>
                                                 </div>
                                             @endif
@@ -280,8 +288,7 @@
     </footer>
     <!-- End Footer -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.webrtc-experiment.com/MediaStreamRecorder.js"></script>
-
+    <script src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
     <script src="{{ asset('students/assets/js/display_test_page.js') }}"></script>
     <script src="{{ asset('students/assets/js/record_speaking.js') }}"></script>
     <script>
@@ -314,5 +321,32 @@
                 saveAnswer(skillId, questionId, optionId);
             });
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+        $("#submitTestButton").click(function() {
+            var testId = $(this).data("test-id"); 
+            var testResultUrl = `/students/tests/${testId}/results`;
+
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn sẽ không thể hoàn tác lại sau khi nộp!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có, nộp bài!',
+                cancelButtonText: 'Không'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#save-btn").click();
+                    $("#reset-btn").click();
+                    setTimeout(function() {
+                        window.location.href = testResultUrl;
+                    }, 500); // Chờ 500 ms
+                }
+            });
+        });
+    });
     </script>
 @endsection

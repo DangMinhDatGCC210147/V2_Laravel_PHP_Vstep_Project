@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Option;
 use App\Models\Question;
 use App\Models\Student;
+use App\Models\StudentResponses;
 use App\Models\Test;
 use App\Models\TestPart;
 use App\Models\TestSkill;
@@ -47,12 +49,12 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Image created successfully'], 200);
     }
-    
+
     public function startTest()
     {
         $userId = Auth::user()->id; // Lấy user_id của người dùng hiện tại
         $student = Student::where('user_id', $userId)->first(); // Lấy thông tin sinh viên từ DB
-        
+
         // Kiểm tra nếu sinh viên đã có test_id
         if ($student && $student->test_id) {
             $test = Test::find($student->test_id);
@@ -74,7 +76,7 @@ class StudentController extends Controller
             $testId = $test->id;
             $student->test_id = $testId;
             $student->save();
-            
+
             // Phân bổ ngẫu nhiên các phần thi cho sinh viên
             $skills = [
                 'Listening' => ['Part_1', 'Part_2', 'Part_3'],
@@ -120,9 +122,65 @@ class StudentController extends Controller
             'testParts.testSkill.questions.options',
             'testParts.testSkill.readingsAudios'
         ])->where('slug', $slug)->firstOrFail();
-            
+
         $testParts = $test->testParts;
         // dd($testParts);
         return view('students.displayTest', compact('testParts', 'test'));
+    }
+
+    public function showTestResult($testId)
+    {
+        // Lấy skill IDs cho Reading và Listening
+        $skills = TestSkill::whereIn('skill_name', ['Reading', 'Listening'])->get();
+        $readingSkillIds = $skills->where('skill_name', 'Reading')->pluck('id');
+        $listeningSkillIds = $skills->where('skill_name', 'Listening')->pluck('id');
+
+        $student = auth()->user();
+        // Lấy tất cả phản hồi của học sinh có skill_id là Reading hoặc Listening
+        $studentResponses = StudentResponses::where('student_id', $student->id)
+            ->whereIn('skill_id', $readingSkillIds->merge($listeningSkillIds))
+            ->get();
+        $correctAnswersReading = 0;
+        $correctAnswersListening = 0;
+
+        // Duyệt qua từng câu trả lời của học sinh và xác định nếu nó đúng
+        foreach ($studentResponses as $response) {
+            $option = Option::where('question_id', $response->question_id)
+                ->where('id', $response->text_response)
+                ->first();
+
+            if ($option && $option->correct_answer) {
+                if ($readingSkillIds->contains($response->skill_id)) {
+                    $correctAnswersReading++;
+                } elseif ($listeningSkillIds->contains($response->skill_id)) {
+                    $correctAnswersListening++;
+                }
+            }
+        }
+        function roundToHalf($num)
+        {
+            $integerPart = floor($num); // Lấy phần nguyên
+            $decimalPart = $num - $integerPart; // Lấy phần thập phân
+    
+            if ($decimalPart < 0.25) {
+                return $integerPart; // Làm tròn xuống
+            } elseif ($decimalPart < 0.75) {
+                return $integerPart + 0.5; // Làm tròn đến 0.5
+            } else {
+                return ceil($num); // Làm tròn lên
+            }
+        }
+
+        $scoreListening = roundToHalf(($correctAnswersListening * 10) / 35);
+        $scoreReading = roundToHalf(($correctAnswersReading * 10) / 40);
+        // Truyền dữ liệu vào view
+        return view('students.resultStudent', [
+            'correctAnswersReading' => $correctAnswersReading,
+            'correctAnswersListening' => $correctAnswersListening,
+            'scoreListening' => $scoreListening,
+            'scoreReading' => $scoreReading,
+            'testId' => $testId,
+            'student' => $student,
+        ]);
     }
 }

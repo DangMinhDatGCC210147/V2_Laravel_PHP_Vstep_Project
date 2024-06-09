@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/saving', [StudentController::class, 'store'])->name('image.save');
         Route::get('/start-test', [StudentController::class, 'startTest'])->name('start-test');
         Route::get('/examination/{slug}', [StudentController::class, 'displayTest'])->name('examination-page');
-        // Route::get('/exam/{slug}', [StudentController::class, 'showTest'])->name('exam-page');
+        Route::get('/students/tests/{testId}/results', [StudentController::class, 'showTestResult'])->name('student.showTestResult');
 
         //STUDENT SUBMISSIONS
         Route::post('/saveListening', [StudentSubmissionController::class, 'saveListening'])->name('saveListening');

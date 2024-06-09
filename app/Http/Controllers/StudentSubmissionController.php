@@ -125,7 +125,7 @@ class StudentSubmissionController extends Controller
 
         // Validate the incoming request
         $validated = $request->validate([
-            'recording' => 'required|file|mimes:mp3,webm,ogg',
+            'recording' => 'required|file|mimes:mp3,webm,ogg,wav,weba',
             'skill_id' => 'required|integer',
             'question_id' => 'required|integer'
         ]);
@@ -135,7 +135,8 @@ class StudentSubmissionController extends Controller
         $accountId = $user->account_id;
 
         // Construct a unique file name
-        $fileName = $accountId . '_' . time() . '.webm';
+        $currentTimeFormatted = date('n/j/Y', time());
+        $fileName = $accountId . '_' . $currentTimeFormatted . '.mp3';
         // Store the file in a dedicated directory
         $path = $request->file('recording')->storeAs('studentResponse', $fileName, 'public');
 

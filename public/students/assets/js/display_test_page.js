@@ -4,18 +4,13 @@ $(document).ready(function () {
     var countdownInterval;
     var preparationCountdownStarted = false;
     var skillTimers = {
-        'Listening': 10,  // Adjusted for testing purposes
+        'Listening': 47 * 60,  // Adjusted for testing purposes
         'Reading': 60 * 60,   // 60 minutes
-        'Writing': 10,   // Adjusted for testing purposes
+        'Writing': 60 * 60,   // Adjusted for testing purposes
         'Speaking': 12  // Initial 12 seconds for Speaking
     };
     var currentSkillName = null; // Track the current skill name
-    var currentSkillId = null; // Track the current skill ID
     var speakingPart = 0; // Track the current part of the Speaking skill
-    var mediaRecorder; // For recording audio
-    var recordedChunks = []; // For storing recorded audio chunks
-    var recordingInterval; // To manage recording intervals
-    var recorder;
 
     // Set CSRF token for all Ajax requests
     $.ajaxSetup({
@@ -157,20 +152,20 @@ $(document).ready(function () {
 
         if (speakingPart === 1) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_1"]');
-            skillTimers['Speaking'] = 3 * 5;
+            skillTimers['Speaking'] = 3 * 60;
             $('#notification').show();
-            startRecording(3 * 5, recordingControls); // Start recording for 3 minutes
+            startRecording(3 * 60 + 1, recordingControls); // Start recording for 3 minutes
         } else if (speakingPart === 2) {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_' + speakingPart + '"]').prop('disabled', false);
-            skillTimers['Speaking'] = 15;
+            skillTimers['Speaking'] = 60;
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').click();
             $('#notification-take-note').show();
         } else if (speakingPart === 3) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_2"]');
-            skillTimers['Speaking'] = 3 * 5;
+            skillTimers['Speaking'] = 3 * 60;
             $('#notification').show();
-            startRecording(3 * 5, recordingControls); // Start recording for 3 minutes
+            startRecording(3 * 60 + 1, recordingControls); // Start recording for 3 minutes
         } else if (speakingPart === 4) {
             skillTimers['Speaking'] = 5;
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
@@ -179,9 +174,9 @@ $(document).ready(function () {
             $('#notification-take-note').show();
         } else if (speakingPart === 5) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_3"]');
-            skillTimers['Speaking'] = 4 * 3;
+            skillTimers['Speaking'] = 4 * 60;
             $('#notification').show();
-            startRecording(4 * 3, recordingControls); // Start recording for 4 minutes
+            startRecording(4 * 60 + 1, recordingControls); // Start recording for 4 minutes
         }
 
         if (speakingPart <= 5) {
@@ -207,73 +202,56 @@ $(document).ready(function () {
         const stopButton = questionElement.querySelector('.stopRecording');
         const audioPlayback = questionElement.querySelector('.audioPlayback');
         const skillId = questionElement.getAttribute('data-skill-id');
-    
+
         console.log("Start Recording for Question ID: " + questionId + ", Skill ID: " + skillId);
-        let mediaRecorder;
-        let audioChunks = [];
-    
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        let recorder;
+
+        navigator.mediaDevices.getUserMedia({
+                audio: true
+            })
             .then(stream => {
-                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-                mediaRecorder.start();
-                audioChunks = [];
-    
+                const options = {
+                    mimeType: 'audio/mp3',
+                    recorderType: RecordRTC.StereoAudioRecorder,
+                    desiredSampRate: 16000
+                };
+                recorder = new RecordRTC(stream, options);
+                recorder.startRecording();
+
                 startButton.disabled = true;
                 stopButton.disabled = false;
-    
-                mediaRecorder.ondataavailable = function (event) {
-                    audioChunks.push(event.data);
-                };
-    
-                mediaRecorder.onstop = function () {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const audioUrl = URL.createObjectURL(audioBlob);
-    
-                    audioPlayback.src = audioUrl;
-                    audioPlayback.hidden = false;
-    
-                    // Chuẩn bị FormData và thêm các thông tin cần thiết
-                    let formData = new FormData();
-                    formData.append('recording', new File([audioBlob], "recording.webm", { type: 'audio/webm' }));
-                    formData.append('skill_id', skillId);
-                    formData.append('question_id', questionId);
-    
-                    fetch('/saveRecording', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json',
-                        },
-                        body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            // Here we expect a JSON response with validation errors
-                            return response.json().then(data => {
-                                if (response.status === 422) {
-                                    throw new Error(data.message || JSON.stringify(data.errors));
-                                }
-                                throw new Error("Server responded with an error!");
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Success:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error.message);
-                    });
-                };
-    
+
                 setTimeout(() => {
-                    if (mediaRecorder.state !== 'inactive') {
-                        mediaRecorder.stop();
-                        stopButton.disabled = true;
-                    }
+                    recorder.stopRecording(() => {
+                        const audioBlob = recorder.getBlob();
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        audioPlayback.src = audioUrl;
+                        audioPlayback.hidden = false;
+
+                        let formData = new FormData();
+                        formData.append('recording', new File([audioBlob], "recording.mp3", {
+                            type: 'audio/mp3'
+                        }));
+                        formData.append('skill_id', skillId);
+                        formData.append('question_id', questionId);
+
+                        fetch('/saveRecording', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute('content'),
+                                    'Accept': 'application/json',
+                                },
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => console.log('Success:', data))
+                            .catch(error => console.error('Error:', error));
+                    });
+                    stopButton.disabled = true;
                 }, duration * 1000); // Convert seconds to milliseconds
-            });
-    }   
+            }).catch(error => console.error('Error:', error));
+    }  
 
     function enableNextSkillButtons(currentSkillName) {
         var skillNames = $('.skill-part-btn').map(function () {
