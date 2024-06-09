@@ -135,8 +135,8 @@ class StudentSubmissionController extends Controller
         $accountId = $user->account_id;
 
         // Construct a unique file name
-        $currentTimeFormatted = date('n/j/Y', time());
-        $fileName = $accountId . '_' . $currentTimeFormatted . '.mp3';
+        $currentTimeFormatted = date('n_j_Y', time());
+        $fileName = $accountId . '_' . $currentTimeFormatted . '_' . time() . '.mp3';
         // Store the file in a dedicated directory
         $path = $request->file('recording')->storeAs('studentResponse', $fileName, 'public');
 

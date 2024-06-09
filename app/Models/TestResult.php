@@ -9,23 +9,13 @@ use Cviebrock\EloquentSluggable\Sluggable;
 class TestResult extends Model
 {
     use HasFactory;
-    use Sluggable;
 
-    protected $fillable = ['student_id', 'test_id', 'score', 'correct_answers', 'incorrect_answers'];
-
-    public function sluggable(): array
-    {
-        return [
-            'slug' => [
-                'source' => 'test_name'
-            ]
-        ];
-    }
-    
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
+    protected $fillable = [
+        'student_id',
+        'test_name',
+        'listening_correctness',
+        'reading_correctness',
+    ];
 
     public function student()
     {

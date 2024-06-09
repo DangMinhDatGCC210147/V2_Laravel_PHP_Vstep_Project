@@ -16,11 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')
                 ->references('id')
-                ->on('students')
+                ->on('users')
                 ->onDelete('cascade');
-            $table->float('score');
-            $table->integer('correct_answers');
-            $table->integer('incorrect_answers');
+            $table->string('test_name');
+            $table->integer('listening_correctness');
+            $table->integer('reading_correctness');
             $table->timestamps();
         });
     }

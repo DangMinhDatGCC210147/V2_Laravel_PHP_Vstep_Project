@@ -8,12 +8,12 @@ use App\Models\Student;
 use App\Models\StudentResponses;
 use App\Models\Test;
 use App\Models\TestPart;
+use App\Models\TestResult;
 use App\Models\TestSkill;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Redirect;
 
@@ -38,16 +38,30 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        // Lưu thông tin hình ảnh
+        // Lưu thông tin hình ảnh mới
         $imagePath = $request->file('image')->store('imageStudents', 'public');
-
-        // Tạo một bản ghi mới trong bảng student_tests với test_id là null
-        $studentTest = Student::create([
-            'user_id' => $request->accountId,
-            'image_file' => $imagePath,
-        ]);
-
-        return response()->json(['message' => 'Image created successfully'], 200);
+    
+        // Tìm kiếm student với user_id
+        $student = Student::where('user_id', $request->accountId)->first();
+    
+        if ($student) {
+            // Nếu đã có hình, xóa hình cũ
+            if ($student->image_file && Storage::disk('public')->exists($student->image_file)) {
+                Storage::disk('public')->delete($student->image_file);
+            }
+            // Cập nhật hình mới
+            $student->update(['image_file' => $imagePath]);
+            $message = 'Image updated successfully';
+        } else {
+            // Tạo mới student với hình ảnh
+            $student = Student::create([
+                'user_id' => $request->accountId,
+                'image_file' => $imagePath,
+            ]);
+            $message = 'Image created successfully';
+        }
+    
+        return response()->json(['message' => $message, 'student' => $student], 200);
     }
 
     public function startTest()
@@ -55,18 +69,66 @@ class StudentController extends Controller
         $userId = Auth::user()->id; // Lấy user_id của người dùng hiện tại
         $student = Student::where('user_id', $userId)->first(); // Lấy thông tin sinh viên từ DB
 
+        if (!$student) {
+            return redirect()->route('student.index')->with('error', 'Bạn cần chụp ảnh trước khi nhận đề thi.');
+        }
+
         // Kiểm tra nếu sinh viên đã có test_id
-        if ($student && $student->test_id) {
-            $test = Test::find($student->test_id);
-            // Kiểm tra nếu bài test tồn tại và có slug
-            if ($test && $test->slug) {
-                // Chuyển hướng đến trang làm bài thi với slug tương ứng
-                return redirect()->route('examination-page', ['slug' => $test->slug]);
-            } else {
-                // Thông báo lỗi nếu không tìm thấy bài test hoặc bài test không có slug
-                return Redirect::back()->with('error', 'Không tìm thấy bài test hoặc bài test không có slug.');
-            }
-        } else {
+        // if ($student && $student->test_id) {
+        //     $test = Test::find($student->test_id);
+        //     // Kiểm tra nếu bài test tồn tại và có slug
+        //     if ($test && $test->slug) {
+        //         // Chuyển hướng đến trang làm bài thi với slug tương ứng
+        //         return redirect()->route('examination-page', ['slug' => $test->slug]);
+        //     } else {
+        //         // Thông báo lỗi nếu không tìm thấy bài test hoặc bài test không có slug
+        //         return Redirect::back()->with('error', 'Không tìm thấy bài test hoặc bài test không có slug.');
+        //     }
+        // } else {
+        //     // Tạo bài test mới nếu người dùng chưa có test_id
+        //     $testName = 'Test_' . Uuid::uuid4()->toString();
+        //     $test = Test::create([
+        //         'duration' => '03:00:00',
+        //         'test_name' => $testName,
+        //     ]);
+        //     $testId = $test->id;
+        //     $student->test_id = $testId;
+        //     $student->save();
+
+        //     // Phân bổ ngẫu nhiên các phần thi cho sinh viên
+        //     $skills = [
+        //         'Listening' => ['Part_1', 'Part_2', 'Part_3'],
+        //         'Reading' => ['Part_1', 'Part_2', 'Part_3', 'Part_4'],
+        //         'Writing' => ['Part_1', 'Part_2'],
+        //         'Speaking' => ['Part_1', 'Part_2', 'Part_3'],
+        //     ];
+
+        //     foreach ($skills as $skill => $parts) {
+        //         foreach ($parts as $partName) {
+        //             $selectedPart = TestSkill::where('skill_name', $skill)
+        //                 ->where('part_name', $partName)
+        //                 ->inRandomOrder()
+        //                 ->limit(1)
+        //                 ->first();
+
+        //             if ($selectedPart) {
+        //                 $testPart = TestPart::create([
+        //                     'student_id' => $student->id,
+        //                     'test_skill_id' => $selectedPart->id,
+        //                     'test_id' => $testId,
+        //                 ]);
+        //             }
+        //         }
+        //     }
+
+        //     // Chuyển hướng đến trang làm bài thi mới tạo nếu có slug
+        //     if ($test && $test->slug) {
+        //         return redirect()->route('examination-page', ['slug' => $test->slug]);
+        //     } else {
+        //         return Redirect::back()->with('error', 'Không tạo được bài test mới.');
+        //     }
+        // }
+        if ($student) {
             // Tạo bài test mới nếu người dùng chưa có test_id
             $testName = 'Test_' . Uuid::uuid4()->toString();
             $test = Test::create([
@@ -136,8 +198,14 @@ class StudentController extends Controller
         $listeningSkillIds = $skills->where('skill_name', 'Listening')->pluck('id');
 
         $student = auth()->user();
+        $studentId = $student->id; // Lưu ID của user trước khi logout
+        $studentName = $student->name;
+        $studentEmail = $student->email;
+        // Lấy tên của bài kiểm tra
+        $testName = Test::find($testId)->test_name;
+
         // Lấy tất cả phản hồi của học sinh có skill_id là Reading hoặc Listening
-        $studentResponses = StudentResponses::where('student_id', $student->id)
+        $studentResponses = StudentResponses::where('student_id', $studentId)
             ->whereIn('skill_id', $readingSkillIds->merge($listeningSkillIds))
             ->get();
         $correctAnswersReading = 0;
@@ -157,11 +225,12 @@ class StudentController extends Controller
                 }
             }
         }
+
         function roundToHalf($num)
         {
             $integerPart = floor($num); // Lấy phần nguyên
             $decimalPart = $num - $integerPart; // Lấy phần thập phân
-    
+
             if ($decimalPart < 0.25) {
                 return $integerPart; // Làm tròn xuống
             } elseif ($decimalPart < 0.75) {
@@ -173,6 +242,15 @@ class StudentController extends Controller
 
         $scoreListening = roundToHalf(($correctAnswersListening * 10) / 35);
         $scoreReading = roundToHalf(($correctAnswersReading * 10) / 40);
+
+        // Lưu kết quả vào bảng test_results
+        TestResult::create([
+            'student_id' => $studentId,
+            'test_name' => $testName,
+            'listening_correctness' => $correctAnswersListening,
+            'reading_correctness' => $correctAnswersReading,
+        ]);
+
         // Truyền dữ liệu vào view
         return view('students.resultStudent', [
             'correctAnswersReading' => $correctAnswersReading,
@@ -180,7 +258,9 @@ class StudentController extends Controller
             'scoreListening' => $scoreListening,
             'scoreReading' => $scoreReading,
             'testId' => $testId,
-            'student' => $student,
+            'studentId' => $studentId,
+            'studentName' => $studentName,
+            'studentEmail' => $studentEmail,
         ]);
     }
 }

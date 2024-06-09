@@ -14,13 +14,12 @@
             </div>
             <h2 class="text-center">TEST RESULT</h2>
             <div class="row d-flex justify-content-center mt-3">
-                <div class="col-lg-6 col-xl-4">    
+                <div class="col-lg-6 col-xl-4">
                     <div class="card border-light">
                         <div class="card-body">
                             <div class="result-details">
-                                <p><strong>Mã Số Sinh Viên:</strong> {{ $student->name }}</p>
-                                <p><strong>Email</strong> {{ $student->email }}</p>
-                                <p><strong>ID Bài Kiểm Tra:</strong> {{ $testId }}</p>
+                                <p><strong>Mã Số Sinh Viên:</strong> {{ $studentName }}</p>
+                                <p><strong>Email:</strong> {{ $studentEmail }}</p>
                                 <p><strong>Định dạng thi:</strong> Bậc 3 - 5</p>
                                 <p><strong>Ngày thi:</strong> {{ date('d/m/Y') }}</p>
                             </div>
@@ -28,21 +27,21 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-flex justify-content-center">
+            <div class="row d-flex justify-content-center" style="font-size: 1vw">
                 <div class="col-lg-6 col-xl-4">
-                    <!-- Simple card for each skill -->
+                    <!-- Simple card for Listening skill -->
                     <div class="card border-primary">
                         <div class="card-body">
                             <h3 class="card-title">Listening</h3>
                             <hr>
-                            <p class="card-text"><p><strong>Tổng số câu trả lời đúng phần Listening:</strong> {{ $correctAnswersListening }}/35</p></p>
-                            <p class="card-text"><p><strong>Tỷ lệ trả lời đúng - Listening:</strong> {{ number_format(($correctAnswersListening / 35) * 100, 2) }}%</p></p>
+                            <p class="card-text"><strong>Tổng số câu trả lời đúng phần Listening:</strong> {{ $correctAnswersListening }}/35</p>
+                            <p class="card-text"><strong>Tỷ lệ trả lời đúng - Listening:</strong> {{ number_format(($correctAnswersListening / 35) * 100, 2) }}%</p>
                             <hr>
                             <div class="row">
                                 <div class="col-6"><p><strong>Điểm - Listening:</strong></p></div>
-                                <div class="col-6 d-flex justify-content-end">
-                                    <span class="badge bg-primary" style="font-size: 16px">
-                                        {{ number_format($scoreListening, 2) }}
+                                <div class="col-6 d-flex justify-content-end align-items-center">
+                                    <span class="badge bg-warning text-dark" style="font-size: 20px">
+                                        <strong>{{ number_format($scoreListening, 2) }}</strong>
                                     </span>
                                 </div>
                             </div>
@@ -50,15 +49,22 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-xl-4">
-                    <!-- Simple card for each skill -->
+                    <!-- Simple card for Reading skill -->
                     <div class="card border-success">
                         <div class="card-body">
                             <h3 class="card-title">Reading</h3>
                             <hr>
-                            <p class="card-text"><p><strong>Tổng số câu trả lời đúng phần Reading:</strong> {{ $correctAnswersReading }}/35</p></p>
-                            <p class="card-text"><p><strong>Tỷ lệ lời đúng - Reading:</strong> {{ number_format(($correctAnswersReading / 35) * 100, 2) }}%</p></p>
+                            <p class="card-text"><strong>Tổng số câu trả lời đúng phần Reading:</strong> {{ $correctAnswersReading }}/40</p>
+                            <p class="card-text"><strong>Tỷ lệ trả lời đúng - Reading:</strong> {{ number_format(($correctAnswersReading / 40) * 100, 2) }}%</p>
                             <hr>
-                            <p class="card-title"><p><strong>Điểm - Reading:</strong> {{ number_format($scoreReading, 2) }}</p></p>
+                            <div class="row">
+                                <div class="col-6"><p><strong>Điểm - Reading:</strong></p></div>
+                                <div class="col-6 d-flex justify-content-end align-items-center">
+                                    <span class="badge bg-warning text-dark" style="font-size: 20px">
+                                        <strong>{{ number_format($scoreReading, 2) }}</strong>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

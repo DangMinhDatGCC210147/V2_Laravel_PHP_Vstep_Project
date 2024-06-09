@@ -324,29 +324,29 @@
     </script>
     <script>
         $(document).ready(function() {
-        $("#submitTestButton").click(function() {
-            var testId = $(this).data("test-id"); 
-            var testResultUrl = `/students/tests/${testId}/results`;
+            $("#submitTestButton").click(function() {
+                var testId = $(this).data("test-id"); 
+                var testResultUrl = `/students/tests/${testId}/results`;
 
-            Swal.fire({
-                title: 'Bạn có chắc chắn?',
-                text: "Bạn sẽ không thể hoàn tác lại sau khi nộp!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Có, nộp bài!',
-                cancelButtonText: 'Không'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#save-btn").click();
-                    $("#reset-btn").click();
-                    setTimeout(function() {
-                        window.location.href = testResultUrl;
-                    }, 500); // Chờ 500 ms
-                }
+                Swal.fire({
+                    title: 'Bạn có chắc chắn?',
+                    text: "Bạn sẽ không thể hoàn tác lại sau khi nộp!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có, nộp bài!',
+                    cancelButtonText: 'Không'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#save-btn").click();
+                        $("#reset-btn").click();
+                        setTimeout(function() {
+                            window.location.href = testResultUrl;
+                        }, 500); // Chờ 500 ms
+                    }
+                });
             });
         });
-    });
     </script>
 @endsection

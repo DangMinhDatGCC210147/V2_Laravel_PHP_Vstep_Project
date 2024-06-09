@@ -21,11 +21,6 @@ class Student extends Model
         return $this->hasMany(TestResult::class);
     }
 
-    public function writingResponses()
-    {
-        return $this->hasMany(WritingResponse::class);
-    }
-
     public function users()
     {
         return $this->belongsTo(User::class);
