@@ -10,6 +10,7 @@ use App\Http\Controllers\SkillPartQuestionController;
 use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentSubmissionController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\TestsController;
 use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
@@ -130,6 +131,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/question-bank-speaking', [IndexAdminController::class, 'showTableOfSpeakingQuestionBank'])->name('questionBank.speaking');
     
         Route::delete('/test_skill/{test_skill_slug}', [SkillPartQuestionController::class, 'destroy'])->name('test.skill.destroy');
+    
+
+        //ASSIGNMENT LIST
+        Route::get('/list-assingment', [AssignmentController::class, 'index'])->name('tableAssignment.index');
+        
+        //FUNCTION FOR GET INFO ASSIGNMENT
+        Route::get('/create-assignment', [AssignmentController::class, 'create'])->name('create.assignemnt');
+        
+        //FUNCTION FOR CREATING QUESTIONS IN ASSIGNMENT
+        Route::post('/store-assignment-type', [AssignmentController::class, 'store'])->name('storeAssignmentType');
+        Route::get('/show-multiplechoice-type', [AssignmentController::class, 'showMultiplechoiceType'])->name('showMultiplechoiceType');
+        Route::get('/show-fillintheblank-type', [AssignmentController::class, 'showFillintheblankType'])->name('showFillintheblankType');
+        Route::get('/show-truefalse-type', [AssignmentController::class, 'showTruefalseType'])->name('showTruefalseType');
+        Route::get('/show-matching-type', [AssignmentController::class, 'showMatchingType'])->name('showMatchingType');
+
+        //FUNCTIONS FOR STORE/SAVE QUESTION EACH KIND IN ASSIGNMENT
+
+        //FUNCTIONS FOR EDIT AND UPDATE QUESTION IN ASSIGNMENT
     });
     
 });
