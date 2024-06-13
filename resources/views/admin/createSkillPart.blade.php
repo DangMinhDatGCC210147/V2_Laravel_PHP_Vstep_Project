@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary w-md">Next</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary w-md" disabled>Next</button>
                     </div>
                 </form>
             </div>

@@ -43,7 +43,6 @@ class IndexAdminController extends Controller
     public function showTableOfWritingQuestionBank()
     {
         $writingQuestionBank = TestSkill::where('skill_name', 'Writing')
-                                        // ->whereNull('test_id')
                                         ->get();
         $questions = [];
 
@@ -58,7 +57,6 @@ class IndexAdminController extends Controller
     public function showTableOfListeningQuestionBank()
     {
         $listeningQuestionBank = TestSkill::where('skill_name', 'Listening')
-                                        // ->whereNull('test_id')
                                         ->get();
         $questions = [];
 
@@ -72,7 +70,6 @@ class IndexAdminController extends Controller
     public function showTableOfReadingQuestionBank()
     {
         $readingQuestionBank = TestSkill::where('skill_name', 'Reading')
-                                        // ->whereNull('test_id')
                                         ->get();
         $questions = [];
 
@@ -86,7 +83,6 @@ class IndexAdminController extends Controller
     public function showTableOfSpeakingQuestionBank()
     {
         $speakingQuestionBank = TestSkill::where('skill_name', 'Speaking')
-                                        // ->whereNull('test_id')
                                         ->get();
         $questions = [];
 

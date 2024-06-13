@@ -42,7 +42,7 @@
                                 <th>Slug</th>
                                 <th>Time Limit</th>
                                 <th>Part Name</th>
-                                <th>Creating At</th>
+                                <th>Created At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -70,7 +70,7 @@
                                             style="display: none;">
                                             @csrf
                                             @method('DELETE')
-                                        </form> 
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

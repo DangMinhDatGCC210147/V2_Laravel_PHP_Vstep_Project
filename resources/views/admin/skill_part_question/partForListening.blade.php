@@ -19,8 +19,8 @@
     </div>
     <div class="py-3 py-lg-4">
         <div class="row">
-            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('create.skill.part') }}">
-                    <i class="mdi mdi-arrow-left-bold"></i> Turn back to previous page</a>
+            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('questionBank.listening') }}">
+                <i class="mdi mdi-arrow-left-bold"></i> Turn back to previous page</a>
             </div>
         </div>
     </div>
@@ -73,7 +73,7 @@
                                             @endforeach
                                             <hr>
                                             <button type="submit" class="btn btn-warning">Save Changes</button>
-                                        </form>                                     
+                                        </form>
                                     @else
                                         <form action="{{ route('storeQuestionListening') }}" method="POST" id="questionForm" enctype="multipart/form-data">
                                             @csrf
@@ -102,7 +102,7 @@
                                             <hr>
                                             <button type="submit" class="btn btn-primary">Save</button>
                                         </form>
-                                    @endif    
+                                    @endif
                                 @elseif ($partName == 'Part_2')
                                     @if (isset($listening))
                                         <form action="{{ route('updateQuestionListening') }}" method="POST" id="questionForm" enctype="multipart/form-data">
@@ -142,7 +142,7 @@
                                             @endforeach
                                             <hr>
                                             <button type="submit" class="btn btn-warning">Save Changes</button>
-                                        </form>                                     
+                                        </form>
                                     @else
                                         <form action="{{ route('storeQuestionListening') }}" method="POST" id="questionForm" enctype="multipart/form-data">
                                             @csrf
@@ -211,7 +211,7 @@
                                             @endforeach
                                             <hr>
                                             <button type="submit" class="btn btn-warning">Save Changes</button>
-                                        </form>                                     
+                                        </form>
                                     @else
                                         <form action="{{ route('storeQuestionListening') }}" method="POST" id="questionForm" enctype="multipart/form-data">
                                             @csrf
@@ -240,7 +240,7 @@
                                             <hr>
                                             <button type="submit" class="btn btn-primary">Save</button>
                                         </form>
-                                    @endif          
+                                    @endif
                                 @endif
                             </div>
                         </div>

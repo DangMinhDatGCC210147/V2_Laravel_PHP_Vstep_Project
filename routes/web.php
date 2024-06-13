@@ -48,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(CheckLecturerRole::class)->group(function () {
         Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
-        
+
         // INSTRUCTORS
         Route::get('/list-lecturer', [InstructorsController::class, 'index'])->name('tableLecturer.index');
         Route::get('/create-lecturer', [InstructorsController::class, 'create'])->name('createInstructor.create');
@@ -56,12 +56,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/lecturers/{slug}/edit', [InstructorsController::class, 'edit'])->name('createInstructor.edit');
         Route::put('/lecturers/{slug}', [InstructorsController::class, 'update'])->name('createInstructor.update');
         Route::delete('/lecturers/{slug}', [InstructorsController::class, 'destroy'])->name('createInstructor.destroy');
+
         //STUDENTS
         Route::get('/list-student', [InstructorsController::class, 'indexStudent'])->name('tableStudent.index');
         Route::get('/create-student', [InstructorsController::class, 'createStudent'])->name('createStudent.create');
         Route::get('/students/{slug}/edit', [InstructorsController::class, 'editStudent'])->name('createStudent.edit');
         Route::put('/students/{slug}', [InstructorsController::class, 'update'])->name('createStudent.update');
         Route::delete('/students/{slug}', [InstructorsController::class, 'destroy'])->name('createStudent.destroy');
+        Route::post('/create-student-excel', [AuthController::class, 'registerExcel'])->name('createStudent.excel.store');
         //TESTS
         Route::get('/list-test', [TestsController::class, 'index'])->name('tableTest.index');
         Route::get('/tests/create', [TestsController::class, 'create'])->name('test.create');
@@ -70,30 +72,30 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/tests/{test_slug}', [TestsController::class, 'update'])->name('test.update');
         Route::delete('/tests/{test_slug}', [TestsController::class, 'destroy'])->name('test.destroy');
 
-        //EACH SKILL OF THE TEST
-        Route::get('/tests/{test_slug}/skills', [TestsController::class, 'show'])->name('testSkills.show');
-        //SHOW 4 PARTS OF THE SKILL FOR EACH TEST
-        Route::get('/tests/{test_slug}/skills/{skill_slug}/parts', [TestsController::class, 'showDetails'])->name('test.skill.parts');
+        // //EACH SKILL OF THE TEST
+        // Route::get('/tests/{test_slug}/skills', [TestsController::class, 'show'])->name('testSkills.show');
+        // //SHOW 4 PARTS OF THE SKILL FOR EACH TEST
+        // Route::get('/tests/{test_slug}/skills/{skill_slug}/parts', [TestsController::class, 'showDetails'])->name('test.skill.parts');
 
-        //VIEW INPUT QUESTION FOR READING
-        Route::get('/test/{test_slug}/skills/{skill_slug}/view', [TestsController::class, 'addSkillQuestions'])->name('skill.add.questions');
-        Route::get('/edit-skill/{test_slug}/{skill_slug}/edit', [TestsController::class, 'editSkillQuestions'])->name('skill.edit.questions');
+        // //VIEW INPUT QUESTION FOR READING
+        // Route::get('/test/{test_slug}/skills/{skill_slug}/view', [TestsController::class, 'addSkillQuestions'])->name('skill.add.questions');
+        // Route::get('/edit-skill/{test_slug}/{skill_slug}/edit', [TestsController::class, 'editSkillQuestions'])->name('skill.edit.questions');
 
-        //FUNCTIONS FOR SAVE AND UPDATE READING
-        Route::post('/save-reading/{test_slug}/{skill_id}/reading', [ReadingController::class, 'storeReading'])->name('reading.questions.store');
-        Route::put('/edit-reading/{test_slug}/{skill_slug}/update', [ReadingController::class, 'updateReading'])->name('reading.questions.update');
+        // //FUNCTIONS FOR SAVE AND UPDATE READING
+        // Route::post('/save-reading/{test_slug}/{skill_id}/reading', [ReadingController::class, 'storeReading'])->name('reading.questions.store');
+        // Route::put('/edit-reading/{test_slug}/{skill_slug}/update', [ReadingController::class, 'updateReading'])->name('reading.questions.update');
 
-        //FUNCTIONS FOR SAVE AND UPDATE WRITING
-        Route::post('/save-writing/{test_slug}/{skill_id}/writing', [WritingController::class, 'storeWriting'])->name('writing.questions.store');
-        Route::put('/update-writing/{test_slug}/{skill_slug}/update', [WritingController::class, 'updateWriting'])->name('writing.questions.update');
+        // //FUNCTIONS FOR SAVE AND UPDATE WRITING
+        // Route::post('/save-writing/{test_slug}/{skill_id}/writing', [WritingController::class, 'storeWriting'])->name('writing.questions.store');
+        // Route::put('/update-writing/{test_slug}/{skill_slug}/update', [WritingController::class, 'updateWriting'])->name('writing.questions.update');
 
-        //FUNCTIONS FOR SAVE AND UPDATE LISTENING
-        Route::post('/save-listening/{test_slug}/{skill_id}/listening', [ListeningController::class, 'storeListening'])->name('listening.questions.store');
-        Route::put('/update-listening/{test_slug}/{skill_slug}/update', [ListeningController::class, 'updateListening'])->name('listening.questions.update');
+        // //FUNCTIONS FOR SAVE AND UPDATE LISTENING
+        // Route::post('/save-listening/{test_slug}/{skill_id}/listening', [ListeningController::class, 'storeListening'])->name('listening.questions.store');
+        // Route::put('/update-listening/{test_slug}/{skill_slug}/update', [ListeningController::class, 'updateListening'])->name('listening.questions.update');
 
-        //FUNCTIONS FOR SAVE AND UPDATE SPEAKING
-        Route::post('/save-speaking/{test_slug}/{skill_id}/speaking', [SpeakingController::class, 'storeSpeaking'])->name('speaking.questions.store');
-        Route::put('/update-speaking/{test_slug}/{skill_slug}/update', [SpeakingController::class, 'updateSpeaking'])->name('speaking.questions.update');
+        // //FUNCTIONS FOR SAVE AND UPDATE SPEAKING
+        // Route::post('/save-speaking/{test_slug}/{skill_id}/speaking', [SpeakingController::class, 'storeSpeaking'])->name('speaking.questions.store');
+        // Route::put('/update-speaking/{test_slug}/{skill_slug}/update', [SpeakingController::class, 'updateSpeaking'])->name('speaking.questions.update');
 
         //FUNCTIONS FOR CREATING SKILL-PART-QUESTION
         Route::get('/create-skill-part', [SkillPartQuestionController::class, 'create'])->name('create.skill.part');
@@ -122,19 +124,19 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/edit-question-speaking/{test_slug}/{part_name}/edit', [SkillPartQuestionController::class, 'editQuestionSpeaking'])->name('editQuestionSpeaking');
         Route::put('/update-question-speaking', [SkillPartQuestionController::class, 'updateQuestionSpeaking'])->name('updateQuestionSpeaking');
-        
+
         //QUESTION BANK
         Route::get('/question-bank', [IndexAdminController::class, 'show'])->name('questionBank.index');
         Route::get('/question-bank-writing', [IndexAdminController::class, 'showTableOfWritingQuestionBank'])->name('questionBank.writing');
         Route::get('/question-bank-reading', [IndexAdminController::class, 'showTableOfReadingQuestionBank'])->name('questionBank.reading');
         Route::get('/question-bank-listening', [IndexAdminController::class, 'showTableOfListeningQuestionBank'])->name('questionBank.listening');
         Route::get('/question-bank-speaking', [IndexAdminController::class, 'showTableOfSpeakingQuestionBank'])->name('questionBank.speaking');
-    
+
         Route::delete('/test_skill/{test_skill_slug}', [SkillPartQuestionController::class, 'destroy'])->name('test.skill.destroy');
 
 
         Route::get('/list_test_results', [showListResults::class, 'index'])->name('resultList.index');
         Route::get('/download-response/{studentId}/{testName}', [showListResults::class, 'downloadResponse'])->name('download.response');
     });
-    
+
 });

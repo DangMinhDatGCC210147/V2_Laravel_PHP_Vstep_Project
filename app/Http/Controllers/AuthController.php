@@ -2,15 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\UsersImport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 // use Illuminate\Support\Str;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AuthController extends Controller
 {
+    public function registerExcel(Request $request)
+    {
+        if ($request->hasFile('excel_file')) {
+            try {
+                Log::info("Received file: " . $request->file('excel_file')->getClientOriginalName());
+
+                Excel::import(new UsersImport, $request->file('excel_file'));
+
+                return redirect()->route('tableStudent.index')->with('success', 'All users registered successfully');
+            } catch (\Exception $e) {
+                Log::error("Error during Excel import: " . $e->getMessage());
+                return redirect()->route('tableStudent.index')->with('error', 'There was an error processing the Excel file.');
+            }
+        } else {
+            return redirect()->route('tableStudent.index')->with('error', 'No file was uploaded.');
+        }
+    }
     public function registerPost(Request $request)
     {
         $user = new User();
@@ -22,9 +42,9 @@ class AuthController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
         // return back()->with('success','Registered successfully');
-        if($user->role == 1){
+        if ($user->role == 1) {
             return redirect()->route('tableLecturer.index')->with('success', 'Registered successfully');
-        }else{
+        } else {
             return redirect()->route('tableStudent.index')->with('success', 'Registered successfully');
         }
     }
@@ -43,10 +63,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-        
+
             // Lấy thông tin người dùng đã đăng nhập
             $user = Auth::user();
-        
+
             // Lưu thông tin người dùng vào session
             $request->session()->put('role', $user->role);
             $request->session()->put('user_name', $user->name);
