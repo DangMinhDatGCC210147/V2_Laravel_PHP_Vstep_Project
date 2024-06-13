@@ -38,28 +38,49 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        // // Lưu thông tin hình ảnh mới
+        // $imagePath = $request->file('image')->store('imageStudents', 'public');
+    
+        // // Tìm kiếm student với user_id
+        // $student = Student::where('user_id', $request->accountId)->first();
+    
+        // if ($student) {
+        //     // Nếu đã có hình, xóa hình cũ
+        //     if ($student->image_file && Storage::disk('public')->exists($student->image_file)) {
+        //         Storage::disk('public')->delete($student->image_file);
+        //     }
+        //     // Cập nhật hình mới
+        //     $student->update(['image_file' => $imagePath]);
+        //     $message = 'Image updated successfully';
+        // } else {
+        //     // Tạo mới student với hình ảnh
+        //     $student = Student::create([
+        //         'user_id' => $request->accountId,
+        //         'image_file' => $imagePath,
+        //     ]);
+        //     $message = 'Image created successfully';
+        // }
+    
+        // return response()->json(['message' => $message, 'student' => $student], 200);
+        if (!$request->hasFile('image')) {
+            return response()->json(['message' => 'No image file found in the request'], 400);
+        }
+    
+        // Kiểm tra tệp tin có hợp lệ không
+        if (!$request->file('image')->isValid()) {
+            return response()->json(['message' => 'Uploaded file is not valid'], 400);
+        }
+    
         // Lưu thông tin hình ảnh mới
         $imagePath = $request->file('image')->store('imageStudents', 'public');
     
-        // Tìm kiếm student với user_id
-        $student = Student::where('user_id', $request->accountId)->first();
+        // Tạo mới student với hình ảnh
+        $student = Student::create([
+            'user_id' => $request->accountId,
+            'image_file' => $imagePath,
+        ]);
     
-        if ($student) {
-            // Nếu đã có hình, xóa hình cũ
-            if ($student->image_file && Storage::disk('public')->exists($student->image_file)) {
-                Storage::disk('public')->delete($student->image_file);
-            }
-            // Cập nhật hình mới
-            $student->update(['image_file' => $imagePath]);
-            $message = 'Image updated successfully';
-        } else {
-            // Tạo mới student với hình ảnh
-            $student = Student::create([
-                'user_id' => $request->accountId,
-                'image_file' => $imagePath,
-            ]);
-            $message = 'Image created successfully';
-        }
+        $message = 'Image created successfully';
     
         return response()->json(['message' => $message, 'student' => $student], 200);
     }
@@ -67,67 +88,12 @@ class StudentController extends Controller
     public function startTest()
     {
         $userId = Auth::user()->id; // Lấy user_id của người dùng hiện tại
-        $student = Student::where('user_id', $userId)->first(); // Lấy thông tin sinh viên từ DB
+        $student = Student::where('user_id', $userId)->orderBy('created_at', 'desc')->first(); // Lấy thông tin sinh viên từ DB
 
         if (!$student) {
             return redirect()->route('student.index')->with('error', 'Bạn cần chụp ảnh trước khi nhận đề thi.');
         }
 
-        // Kiểm tra nếu sinh viên đã có test_id
-        // if ($student && $student->test_id) {
-        //     $test = Test::find($student->test_id);
-        //     // Kiểm tra nếu bài test tồn tại và có slug
-        //     if ($test && $test->slug) {
-        //         // Chuyển hướng đến trang làm bài thi với slug tương ứng
-        //         return redirect()->route('examination-page', ['slug' => $test->slug]);
-        //     } else {
-        //         // Thông báo lỗi nếu không tìm thấy bài test hoặc bài test không có slug
-        //         return Redirect::back()->with('error', 'Không tìm thấy bài test hoặc bài test không có slug.');
-        //     }
-        // } else {
-        //     // Tạo bài test mới nếu người dùng chưa có test_id
-        //     $testName = 'Test_' . Uuid::uuid4()->toString();
-        //     $test = Test::create([
-        //         'duration' => '03:00:00',
-        //         'test_name' => $testName,
-        //     ]);
-        //     $testId = $test->id;
-        //     $student->test_id = $testId;
-        //     $student->save();
-
-        //     // Phân bổ ngẫu nhiên các phần thi cho sinh viên
-        //     $skills = [
-        //         'Listening' => ['Part_1', 'Part_2', 'Part_3'],
-        //         'Reading' => ['Part_1', 'Part_2', 'Part_3', 'Part_4'],
-        //         'Writing' => ['Part_1', 'Part_2'],
-        //         'Speaking' => ['Part_1', 'Part_2', 'Part_3'],
-        //     ];
-
-        //     foreach ($skills as $skill => $parts) {
-        //         foreach ($parts as $partName) {
-        //             $selectedPart = TestSkill::where('skill_name', $skill)
-        //                 ->where('part_name', $partName)
-        //                 ->inRandomOrder()
-        //                 ->limit(1)
-        //                 ->first();
-
-        //             if ($selectedPart) {
-        //                 $testPart = TestPart::create([
-        //                     'student_id' => $student->id,
-        //                     'test_skill_id' => $selectedPart->id,
-        //                     'test_id' => $testId,
-        //                 ]);
-        //             }
-        //         }
-        //     }
-
-        //     // Chuyển hướng đến trang làm bài thi mới tạo nếu có slug
-        //     if ($test && $test->slug) {
-        //         return redirect()->route('examination-page', ['slug' => $test->slug]);
-        //     } else {
-        //         return Redirect::back()->with('error', 'Không tạo được bài test mới.');
-        //     }
-        // }
         if ($student) {
             // Tạo bài test mới nếu người dùng chưa có test_id
             $testName = 'Test_' . Uuid::uuid4()->toString();
@@ -184,7 +150,6 @@ class StudentController extends Controller
             'testParts.testSkill.questions.options',
             'testParts.testSkill.readingsAudios'
         ])->where('slug', $slug)->firstOrFail();
-
         $testParts = $test->testParts;
         // dd($testParts);
         return view('students.displayTest', compact('testParts', 'test'));
@@ -202,6 +167,7 @@ class StudentController extends Controller
         $studentName = $student->name;
         $studentEmail = $student->email;
         // Lấy tên của bài kiểm tra
+        // dd($testId);
         $testName = Test::find($testId)->test_name;
 
         // Lấy tất cả phản hồi của học sinh có skill_id là Reading hoặc Listening

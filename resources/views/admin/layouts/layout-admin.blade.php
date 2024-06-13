@@ -21,7 +21,7 @@
     <link href="{{ asset('admin/assets/css/style.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css">
     <script src="{{ asset('admin/assets/js/config.js') }}"></script>
-    
+
     <link href="{{ asset('admin/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"
         type="text/css" />
     <link href="{{ asset('admin/assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}"
@@ -295,6 +295,11 @@
                                     <span class="menu-text">Question Bank</span>
                                 </a>
                             </li>
+                            <li class="menu-item">
+                                <a href="{{ route('resultList.index') }}" class="menu-link">
+                                    <span class="menu-text">List Result</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -397,7 +402,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
-                            <p class="mb-0">Develop by <a href="#" target="_blank">Dang Minh Dat</a> </p>
+                            <p class="mb-0">Develop by <a href="mailto:dangminhdat03.forwork@gmail.com"
+                                    target="_blank">Dang Minh Dat</a> </p>
+                            <p class="mb-0">Support by <a href="mailto:khoahnvithuy@gmail.com" target="_blank">Ho
+                                    Nhat Khoa</a> </p>
                         </div>
                     </div>
                 </div>

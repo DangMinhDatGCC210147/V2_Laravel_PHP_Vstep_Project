@@ -114,6 +114,8 @@
                                     @csrf
                                     <input type="hidden" name="skill_id" id="skillId"
                                         value="{{ $testPart->testSkill->id }}">
+                                    <input type="hidden" name="test_id" id="testId"
+                                        value="{{ $test->id }}">
                                     <!-- Hiển thị Questions và Options -->
                                     @foreach ($testPart->testSkill->questions as $questionIndex => $question)
                                         <div class="skill-content m-2 question"
@@ -294,7 +296,7 @@
     <script>
         $(document).ready(function() {
             // Function to handle saving the answer to the database
-            function saveAnswer(skillId, questionId, optionId) {
+            function saveAnswer(skillId, questionId, optionId, testId) {
                 $.ajax({
                     url: '/saveAnswer', // URL to save the answer
                     type: 'POST',
@@ -302,6 +304,7 @@
                         skill_id: skillId,
                         question_id: questionId,
                         option_id: optionId,
+                        test_id: testId,
                         _token: $('input[name="_token"]').val()
                     },
                     success: function(response) {
@@ -318,7 +321,8 @@
                 var skillId = $(this).closest('.skill-content').data('skill-id');
                 var questionId = $(this).attr('name').match(/\d+/)[0];
                 var optionId = $(this).val();
-                saveAnswer(skillId, questionId, optionId);
+                var testId = $(this).closest('form').find('input[name="test_id"]').val(); 
+                saveAnswer(skillId, questionId, optionId, testId);
             });
         });
     </script>
@@ -340,7 +344,8 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $("#save-btn").click();
-                        $("#reset-btn").click();
+                        localStorage.clear();
+                        location.reload();
                         setTimeout(function() {
                             window.location.href = testResultUrl;
                         }, 500); // Chờ 500 ms
@@ -348,5 +353,6 @@
                 });
             });
         });
+        
     </script>
 @endsection

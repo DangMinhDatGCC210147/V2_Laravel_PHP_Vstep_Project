@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('student_responses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('test_id');
+            $table->foreign('test_id')
+                ->references('id')
+                ->on('tests')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('skill_id');
             $table->foreign('skill_id')
                 ->references('id')

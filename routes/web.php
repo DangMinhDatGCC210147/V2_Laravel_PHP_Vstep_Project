@@ -6,6 +6,7 @@ use App\Http\Controllers\IndexAdminController;
 use App\Http\Controllers\InstructorsController;
 use App\Http\Controllers\ListeningController;
 use App\Http\Controllers\ReadingController;
+use App\Http\Controllers\showListResults;
 use App\Http\Controllers\SkillPartQuestionController;
 use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\StudentController;
@@ -130,6 +131,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/question-bank-speaking', [IndexAdminController::class, 'showTableOfSpeakingQuestionBank'])->name('questionBank.speaking');
     
         Route::delete('/test_skill/{test_skill_slug}', [SkillPartQuestionController::class, 'destroy'])->name('test.skill.destroy');
+
+
+        Route::get('/list_test_results', [showListResults::class, 'index'])->name('resultList.index');
+        Route::get('/download-response/{studentId}/{testName}', [showListResults::class, 'downloadResponse'])->name('download.response');
     });
     
 });

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StudentResponses extends Model
 {
     use HasFactory;
-    protected $fillable = ['skill_id', 'student_id', 'question_id', 'text_response'];
+    protected $fillable = ['test_id', 'skill_id', 'student_id', 'question_id', 'text_response'];
 
     public function student()
     {

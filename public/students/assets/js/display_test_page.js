@@ -138,12 +138,12 @@ $(document).ready(function () {
         speakingPart++;
         $('#notification').hide();
         $('#notification-take-note').hide();
-    
+        const testId = $('input[name="test_id"]').val();
         if (speakingPart === 1) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_1"]');
             skillTimers['Speaking'] = 3 * 5;
             $('#notification').show();
-            startRecording(3 * 5 + 1, recordingControls, speakingPart); // Start recording for 3 minutes
+            startRecording(3 * 5 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 2) {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').prop('disabled', false);
@@ -154,7 +154,7 @@ $(document).ready(function () {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_2"]');
             skillTimers['Speaking'] = 3 * 5;
             $('#notification').show();
-            startRecording(3 * 5 + 1, recordingControls, speakingPart); // Start recording for 3 minutes
+            startRecording(3 * 5 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 4) {
             skillTimers['Speaking'] = 5;
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
@@ -165,7 +165,7 @@ $(document).ready(function () {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_3"]');
             skillTimers['Speaking'] = 4 * 5;
             $('#notification').show();
-            startRecording(4 * 5 + 1, recordingControls, speakingPart); // Start recording for 4 minutes
+            startRecording(4 * 5 + 1, recordingControls, speakingPart, testId); // Start recording for 4 minutes
         }
     
         if (speakingPart <= 5) {
@@ -173,15 +173,18 @@ $(document).ready(function () {
         }
     }      
 
-    function startRecording(duration, questionElement, speakingPart) {
+    function startRecording(duration, questionElement, speakingPart, testId) {
         const questionId = questionElement.getAttribute('data-question-id');
         const startButton = questionElement.querySelector('.startRecording');
         const stopButton = questionElement.querySelector('.stopRecording');
         const audioPlayback = questionElement.querySelector('.audioPlayback');
         const skillId = questionElement.getAttribute('data-skill-id');
+        // const testId = $(this).closest('form').find('input[name="test_id"]').val();
 
         console.log("Start Recording for Question ID: " + questionId + ", Skill ID: " + skillId);
-        console.log("Start Recording for Speaking Part: " + speakingPart)
+        console.log("Start Recording for Speaking Part: " + speakingPart);
+        console.log("Start Recording for Test ID: " + testId);
+
         let recorder;
 
         navigator.mediaDevices.getUserMedia({
@@ -212,7 +215,7 @@ $(document).ready(function () {
                         }));
                         formData.append('skill_id', skillId);
                         formData.append('question_id', questionId);
-
+                        formData.append('test_id', testId);
                         fetch('/saveRecording', {
                             method: 'POST',
                             headers: {
@@ -228,8 +231,6 @@ $(document).ready(function () {
                                 // Kiểm tra nếu đang ở Part_3 của Speaking thì tự động nộp bài
                                 if (speakingPart === 5) {
                                     $(document).ready(function() {
-                                        var testId = $(this).data("test-id");
-                                        var testResultUrl = `/students/tests/${testId}/results`;
                                         Swal.fire({
                                             title: 'Bạn đã hoàn thành bài kiểm tra',
                                             text: "Hệ thống sẽ nộp bài tự động",
@@ -238,10 +239,8 @@ $(document).ready(function () {
                                             timer: 3000,
                                             timerProgressBar: true,
                                             willClose: () => {
-                                                $("#save-btn").click();
-                                                $("#reset-btn").click();
                                                 setTimeout(function() {
-                                                    window.location.href = testResultUrl;
+                                                    $("#submitTestButton").click();
                                                 }, 500);
                                             }
                                         });

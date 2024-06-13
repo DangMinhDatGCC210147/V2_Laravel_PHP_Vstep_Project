@@ -18,6 +18,7 @@ class StudentSubmissionController extends Controller
         // Log::info('Received data for Listening:', $request->all());
 
         $validated = $request->validate([
+            'test_id' => 'required|integer',
             'skill_id' => 'required|integer',
             'responses' => 'required|array',
             'responses.*' => 'nullable|string|max:255',
@@ -28,6 +29,7 @@ class StudentSubmissionController extends Controller
             if (!empty($response)) {
                 StudentResponses::updateOrCreate(
                     [
+                        'test_id' => $request->test_id,
                         'skill_id' => $request->skill_id,
                         'student_id' => $studentId,
                         'question_id' => $questionId
@@ -45,6 +47,7 @@ class StudentSubmissionController extends Controller
         // Log::info('Received data for Reading:', $request->all());
 
         $validated = $request->validate([
+            'test_id' => 'required|integer',
             'skill_id' => 'required|integer',
             'responses' => 'required|array',
             'responses.*' => 'nullable|string',
@@ -55,6 +58,7 @@ class StudentSubmissionController extends Controller
             if (!empty($response)) {
                 StudentResponses::updateOrCreate(
                     [
+                        'test_id' => $request->test_id,
                         'skill_id' => $request->skill_id,
                         'student_id' => $studentId,
                         'question_id' => $questionId
@@ -71,6 +75,7 @@ class StudentSubmissionController extends Controller
         // Log::info('Received data for Writing:', $request->all());
 
         $validated = $request->validate([
+            'test_id' => 'required|integer',
             'skill_id' => 'required|integer',
             'responses' => 'required|array',
             'responses.*' => 'nullable|string',
@@ -81,6 +86,7 @@ class StudentSubmissionController extends Controller
             if (!empty($response)) {
                 StudentResponses::updateOrCreate(
                     [
+                        'test_id' => $request->test_id,
                         'skill_id' => $request->skill_id,
                         'student_id' => $studentId,
                         'question_id' => $questionId
@@ -101,6 +107,7 @@ class StudentSubmissionController extends Controller
     public function saveAnswer(Request $request)
     {
         $validatedData = $request->validate([
+            'test_id' => 'required|integer',
             'skill_id' => 'required|integer',
             'question_id' => 'required|integer',
             'option_id' => 'required|integer',
@@ -108,7 +115,8 @@ class StudentSubmissionController extends Controller
 
         $userAnswer = StudentResponses::updateOrCreate(
             [
-                'student_id' => auth()->id(), // Assuming you want to save the user ID as well
+                'test_id' => $validatedData['test_id'],
+                'student_id' => auth()->id(),
                 'skill_id' => $validatedData['skill_id'],
                 'question_id' => $validatedData['question_id'],
             ],
@@ -125,6 +133,7 @@ class StudentSubmissionController extends Controller
 
         // Validate the incoming request
         $validated = $request->validate([
+            'test_id' => 'required|integer',
             'recording' => 'required|file|mimes:mp3,webm,ogg,wav,weba',
             'skill_id' => 'required|integer',
             'question_id' => 'required|integer'
@@ -144,6 +153,7 @@ class StudentSubmissionController extends Controller
         $studentId = $user->id; // Use the authenticated user's ID
         $response = StudentResponses::updateOrCreate(
             [
+                'test_id' => $validated['test_id'],
                 'skill_id' => $validated['skill_id'],
                 'student_id' => $studentId,
                 'question_id' => $validated['question_id']
