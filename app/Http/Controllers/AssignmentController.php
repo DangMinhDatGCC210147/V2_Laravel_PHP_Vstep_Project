@@ -74,7 +74,8 @@ class AssignmentController extends Controller
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'isEnable' => $validatedData['isEnable'],
-            'teacher_id' => $teacher_id
+            'teacher_id' => $teacher_id,
+            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
         ]);
 
         // Tạo các câu hỏi và lựa chọn cho Assignment
@@ -82,8 +83,7 @@ class AssignmentController extends Controller
             $question = QuestionHomework::create([
                 'assignment_id' => $assignment->id,
                 'question_text' => $questionData['question_text'],
-                'question_type' => 'multiple_choice',
-                'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
+                'question_type' => 'multiple_choice'
             ]);
 
             foreach ($questionData['options'] as $optionIndex => $optionData) {
@@ -237,6 +237,109 @@ class AssignmentController extends Controller
 
         return redirect()->route('tableAssignment.index')->with('success', 'Assignment and Matching Headline questions created successfully.');
     }
+
+
+    // Hiển thị form chỉnh sửa Assignment
+    public function editAssignment(Assignment $assignment)
+    {
+        $questions = $assignment->questions()->with('multipleChoiceOptions', 'fillInTheBlanks', 'trueFalse', 'matchingHeadlines')->get();
+
+        if ($questions->isEmpty()) {
+            return redirect()->route('tableAssignment.index')->with('error', 'Assignment does not have any questions.');
+        }
+
+        switch ($questions->first()->question_type) {
+            case 'multiple_choice':
+                return view('admin.assignment_type_question.typeMultiplechoice', compact('assignment', 'questions'));
+            case 'fill_in_the_blank':
+                return view('admin.assignment_type_question.typeFillintheblank', compact('assignment', 'questions'));
+            case 'true_false':
+                return view('admin.assignment_type_question.typeTruefalse', compact('assignment', 'questions'));
+            case 'matching_headline':
+                return view('admin.assignment_type_question.typeMatching', compact('assignment', 'questions'));
+            default:
+                return redirect()->route('tableAssignment.index')->with('error', 'Invalid question type.');
+        }
+    }
+
+    // Cập nhật Assignment
+    public function updateAssignment(Request $request, Assignment $assignment)
+    {
+        // Xác thực chung cho Assignment
+        // dd($request);
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'isEnable' => 'required|boolean',
+            'show_detailed_feedback' => 'nullable|boolean',
+            'questions.*.question_text' => 'required|string',
+            'questions.*.question_type' => 'required|string'
+        ]);
+        // dd($validatedData);
+        // Cập nhật Assignment
+        $assignment->update([
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'isEnable' => $validatedData['isEnable'],
+            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
+        ]);
+
+        // Xóa các câu hỏi và lựa chọn cũ
+        $assignment->questions()->delete();
+
+        // Tạo lại các câu hỏi và lựa chọn
+        foreach ($validatedData['questions'] as $questionIndex => $questionData) {
+            $question = QuestionHomework::create([
+                'assignment_id' => $assignment->id,
+                'question_text' => $questionData['question_text'],
+                'question_type' => $questionData['question_type']
+            ]);
+
+            if ($questionData['question_type'] === 'multiple_choice' && isset($request->questions[$questionIndex]['options'])) {
+                foreach ($request->questions[$questionIndex]['options'] as $optionIndex => $optionData) {
+                    MultipleChoiceOption::create([
+                        'question_id' => $question->id,
+                        'option_text' => $optionData['option_text'],
+                        'is_correct' => $optionIndex == $request->questions[$questionIndex]['is_correct']
+                    ]);
+                }
+            } elseif ($questionData['question_type'] === 'fill_in_the_blank' && isset($request->questions[$questionIndex]['blanks'])) {
+                foreach ($request->questions[$questionIndex]['blanks'] as $blankData) {
+                    FillInTheBlank::create([
+                        'question_id' => $question->id,
+                        'blank_position' => $blankData['blank_position'],
+                        'correct_answer' => $blankData['correct_answer']
+                    ]);
+                }
+            } elseif ($questionData['question_type'] === 'true_false' && isset($request->questions[$questionIndex]['correct_answer'])) {
+                TrueFalse::create([
+                    'question_id' => $question->id,
+                    'correct_answer' => $request->questions[$questionIndex]['correct_answer']
+                ]);
+            } elseif ($questionData['question_type'] === 'matching_headline' && isset($request->questions[$questionIndex]['headlines'])) {
+                foreach ($request->questions[$questionIndex]['headlines'] as $headlineData) {
+                    MatchingHeadline::create([
+                        'question_id' => $question->id,
+                        'headline' => $headlineData['headline'],
+                        'match_text' => $headlineData['match_text'] ?? ''
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('tableAssignment.index')->with('success', 'Assignment and questions updated successfully.');
+    }
+
+
+    // Xóa Assignment
+    public function deleteAssignment(Assignment $assignment)
+    {
+        $assignment->questions()->delete();
+        $assignment->delete();
+
+        return redirect()->route('tableAssignment.index')->with('success', 'Assignment deleted successfully.');
+    }
+
 
     /**
      * Show the form for editing the specified resource.

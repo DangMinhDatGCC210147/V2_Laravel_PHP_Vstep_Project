@@ -154,7 +154,7 @@ Route::middleware(['auth'])->group(function () {
         //FUNCTIONS FOR EDIT AND UPDATE QUESTION IN ASSIGNMENT
         Route::get('/edit-assignment/{assignment}', [AssignmentController::class, 'editAssignment'])->name('editAssignment');
 
-        Route::post('/update-assignment/{assignment}', [AssignmentController::class, 'updateAssignment'])->name('updateAssignment');
+        Route::put('/update-assignment/{assignment}', [AssignmentController::class, 'updateAssignment'])->name('updateAssignment');
 
         Route::delete('/delete-assignment/{assignment}', [AssignmentController::class, 'deleteAssignment'])->name('deleteAssignment');
 

@@ -52,12 +52,12 @@
                                     <td>{{ $assignment->created_at }}</td>
                                     <td>{{ $assignment->isEnable ? 'Yes' : 'No' }}</td>
                                     <td>
-                                        {{-- <a href="{{ route('assignments.edit', $assignment->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="{{ route('assignments.destroy', $assignment->id) }}" method="POST" style="display: inline-block;">
+                                        <a href="{{ route('editAssignment', $assignment->id) }}" class="btn btn-warning">Edit</a>
+                                        <form action="{{ route('deleteAssignment', $assignment->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form> --}}
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this assignment?')">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

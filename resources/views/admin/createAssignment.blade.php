@@ -29,20 +29,6 @@
                 <h5 class="header-title">Create Assignment</h5>
                 <form id="assignmentTypetForm" action="{{ route('storeAssignmentType') }}" method="POST">
                     @csrf
-                    {{-- <div class="mb-2 row">
-                        <label class="col-md-2 col-form-label" for="simple-input">Title</label>
-                        <div class="col-md-10">
-                            <input type="text" id="simple-input" class="form-control" 
-                            placeholder="Title" name="Title" required>
-                        </div>
-                    </div>
-                    <div class="mb-2 row">
-                        <label class="col-md-2 col-form-label" for="simple-input2">Description </label>
-                        <div class="col-md-10">
-                            <input type="text" id="simple-input2" class="form-control" 
-                            placeholder="Description" name="Description" required>
-                        </div>
-                    </div> --}}
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <div class="mb-3">
