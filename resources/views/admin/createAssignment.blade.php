@@ -29,7 +29,7 @@
                 <h5 class="header-title">Create Assignment</h5>
                 <form id="assignmentTypetForm" action="{{ route('storeAssignmentType') }}" method="POST">
                     @csrf
-                    <div class="mb-2 row">
+                    {{-- <div class="mb-2 row">
                         <label class="col-md-2 col-form-label" for="simple-input">Title</label>
                         <div class="col-md-10">
                             <input type="text" id="simple-input" class="form-control" 
@@ -42,19 +42,29 @@
                             <input type="text" id="simple-input2" class="form-control" 
                             placeholder="Description" name="Description" required>
                         </div>
+                    </div> --}}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                    <label class="col-md col-form-label" for="simple-input">Number of Question</label>
+                                    <div class="col-md-8">
+                                        <input type="number" id="numberQuestion" class="form-control"
+                                            placeholder="Number of Quesion" name="numberQuestion" required>
+                                    </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-10">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
                             <div class="form-floating mb-3">
-                                <select class="form-select" id="skillSelect" name="skillName" aria-label="Floating label select example" required>
+                                <select class="form-select" id="typeQuestion" name="typeQuestion" aria-label="Floating label select example" required>
                                     <option selected>Choose Question type</option>
                                     <option value="Multiplechoice">Multiplechoice</option>
                                     <option value="Fillintheblank">Fill in the blank</option>
                                     <option value="Truefalse">True-False</option>
                                     <option value="Matching">Matching</option>
                                 </select>
-                                <label for="skillSelect">Skill Name</label>
+                                <label for="skillSelect">Type Question  </label>
                             </div>
                         </div>
                         {{-- <div class="col-md-6">

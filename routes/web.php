@@ -48,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(CheckLecturerRole::class)->group(function () {
         Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
-        
+
         // INSTRUCTORS
         Route::get('/list-lecturer', [InstructorsController::class, 'index'])->name('tableLecturer.index');
         Route::get('/create-lecturer', [InstructorsController::class, 'create'])->name('createInstructor.create');
@@ -122,33 +122,42 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/edit-question-speaking/{test_slug}/{part_name}/edit', [SkillPartQuestionController::class, 'editQuestionSpeaking'])->name('editQuestionSpeaking');
         Route::put('/update-question-speaking', [SkillPartQuestionController::class, 'updateQuestionSpeaking'])->name('updateQuestionSpeaking');
-        
+
         //QUESTION BANK
         Route::get('/question-bank', [IndexAdminController::class, 'show'])->name('questionBank.index');
         Route::get('/question-bank-writing', [IndexAdminController::class, 'showTableOfWritingQuestionBank'])->name('questionBank.writing');
         Route::get('/question-bank-reading', [IndexAdminController::class, 'showTableOfReadingQuestionBank'])->name('questionBank.reading');
         Route::get('/question-bank-listening', [IndexAdminController::class, 'showTableOfListeningQuestionBank'])->name('questionBank.listening');
         Route::get('/question-bank-speaking', [IndexAdminController::class, 'showTableOfSpeakingQuestionBank'])->name('questionBank.speaking');
-    
+
         Route::delete('/test_skill/{test_skill_slug}', [SkillPartQuestionController::class, 'destroy'])->name('test.skill.destroy');
-    
+
 
         //ASSIGNMENT LIST
         Route::get('/list-assingment', [AssignmentController::class, 'index'])->name('tableAssignment.index');
-        
+
         //FUNCTION FOR GET INFO ASSIGNMENT
         Route::get('/create-assignment', [AssignmentController::class, 'create'])->name('create.assignemnt');
-        
+
         //FUNCTION FOR CREATING QUESTIONS IN ASSIGNMENT
         Route::post('/store-assignment-type', [AssignmentController::class, 'store'])->name('storeAssignmentType');
-        Route::get('/show-multiplechoice-type', [AssignmentController::class, 'showMultiplechoiceType'])->name('showMultiplechoiceType');
-        Route::get('/show-fillintheblank-type', [AssignmentController::class, 'showFillintheblankType'])->name('showFillintheblankType');
-        Route::get('/show-truefalse-type', [AssignmentController::class, 'showTruefalseType'])->name('showTruefalseType');
-        Route::get('/show-matching-type', [AssignmentController::class, 'showMatchingType'])->name('showMatchingType');
+        Route::get('/show-multiplechoice-type/{quantity}', [AssignmentController::class, 'showMultiplechoiceType'])->name('showMultiplechoiceType');
+        Route::get('/show-fillintheblank-type/{quantity}', [AssignmentController::class, 'showFillintheblankType'])->name('showFillintheblankType');
+        Route::get('/show-truefalse-type/{quantity}', [AssignmentController::class, 'showTruefalseType'])->name('showTruefalseType');
+        Route::get('/show-matching-type/{quantity}', [AssignmentController::class, 'showMatchingType'])->name('showMatchingType');
 
         //FUNCTIONS FOR STORE/SAVE QUESTION EACH KIND IN ASSIGNMENT
-
+        Route::post('/store-multiplechoice-type', [AssignmentController::class, 'storeMultiplechoiceType'])->name('storeMultiplechoiceType');
+        Route::post('/store-fillintheblank-type', [AssignmentController::class, 'storeFillintheblankType'])->name('storeFillintheblankType');
+        Route::post('/store-truefalse-type', [AssignmentController::class, 'storeTruefalseType'])->name('storeTruefalseType');
+        Route::post('/store-matching-type', [AssignmentController::class, 'storeMatchingType'])->name('storeMatchingType');
         //FUNCTIONS FOR EDIT AND UPDATE QUESTION IN ASSIGNMENT
+        Route::get('/edit-assignment/{assignment}', [AssignmentController::class, 'editAssignment'])->name('editAssignment');
+
+        Route::post('/update-assignment/{assignment}', [AssignmentController::class, 'updateAssignment'])->name('updateAssignment');
+
+        Route::delete('/delete-assignment/{assignment}', [AssignmentController::class, 'deleteAssignment'])->name('deleteAssignment');
+
     });
-    
+
 });

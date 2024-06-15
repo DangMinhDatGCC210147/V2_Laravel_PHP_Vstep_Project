@@ -36,14 +36,31 @@
                                 <th>No</th>
                                 <th>Title</th>
                                 <th>Description </th>
-                                <th>Teacher ID</th>
+                                <th>Teacher Name</th>
                                 <th>Create At </th>
                                 <th>Enable</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
- 
+                            @foreach ($assignments as $index => $assignment)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $assignment->title }}</td>
+                                    <td>{{ $assignment->description }}</td>
+                                    <td>{{ $assignment->teacher->name }}</td>
+                                    <td>{{ $assignment->created_at }}</td>
+                                    <td>{{ $assignment->isEnable ? 'Yes' : 'No' }}</td>
+                                    <td>
+                                        {{-- <a href="{{ route('assignments.edit', $assignment->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                        <form action="{{ route('assignments.destroy', $assignment->id) }}" method="POST" style="display: inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form> --}}
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
 
