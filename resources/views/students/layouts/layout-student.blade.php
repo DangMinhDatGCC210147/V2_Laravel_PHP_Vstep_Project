@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>@yield("title", "Vstep Website")</title>
+    <title>@yield('title', 'Vstep Website')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content="DangMinhDat" name="author" />
@@ -28,7 +28,7 @@
         rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/assets/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}"
         rel="stylesheet" type="text/css" />
-        <link href="{{ asset('admin/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet')}}" type="text/css" />
+    <link href="{{ asset('admin/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet') }}" type="text/css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <!-- Begin page -->
@@ -80,6 +80,7 @@
     <!-- Datatables js -->
     <script src="{{ asset('admin/assets/js/pages/datatables.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('students/assets/js/checkSession.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check if there is a success message in the session

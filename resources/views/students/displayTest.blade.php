@@ -9,6 +9,7 @@
             'Writing' => 'bg-secondary',
         ];
     @endphp
+    <div data-test-id="{{ $test->id }}" id="testContainer" hidden></div>
     <div class="px-3">
         <!-- Start Content-->
         <div class="container-fluid">
@@ -32,7 +33,8 @@
                         <div class="badge bg-info">
                             <span id="answered-count">Số câu đã hoàn thành: 0/0</span>
                         </div>
-                        <button class="btn btn-success" id="submitTestButton" data-test-id="{{ $test->id }}">Nộp bài</button>
+                        <button class="btn btn-success" id="submitTestButton" data-test-id="{{ $test->id }}">Nộp
+                            bài</button>
                     </div>
                 </div>
                 <div class="m-2 mb-5">
@@ -114,8 +116,7 @@
                                     @csrf
                                     <input type="hidden" name="skill_id" id="skillId"
                                         value="{{ $testPart->testSkill->id }}">
-                                    <input type="hidden" name="test_id" id="testId"
-                                        value="{{ $test->id }}">
+                                    <input type="hidden" name="test_id" id="testId" value="{{ $test->id }}">
                                     <!-- Hiển thị Questions và Options -->
                                     @foreach ($testPart->testSkill->questions as $questionIndex => $question)
                                         <div class="skill-content m-2 question"
@@ -321,7 +322,7 @@
                 var skillId = $(this).closest('.skill-content').data('skill-id');
                 var questionId = $(this).attr('name').match(/\d+/)[0];
                 var optionId = $(this).val();
-                var testId = $(this).closest('form').find('input[name="test_id"]').val(); 
+                var testId = $(this).closest('form').find('input[name="test_id"]').val();
                 saveAnswer(skillId, questionId, optionId, testId);
             });
         });
@@ -329,9 +330,9 @@
     <script>
         $(document).ready(function() {
             $("#submitTestButton").click(function() {
-                var testId = $(this).data("test-id"); 
+                var testId = $(this).data("test-id");
                 var testResultUrl = `/students/tests/${testId}/results`;
-
+                endSession(testId);
                 Swal.fire({
                     title: 'Bạn có chắc chắn?',
                     text: "Bạn sẽ không thể hoàn tác lại sau khi nộp!",
@@ -352,7 +353,21 @@
                     }
                 });
             });
+
+            function endSession(testId) {
+                const url = `/students/tests/${testId}/session/end`;
+                fetch(url, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log("Session ended:", data))
+                    .catch(error => console.error("Error ending session:", error));
+            }
         });
-        
     </script>
 @endsection

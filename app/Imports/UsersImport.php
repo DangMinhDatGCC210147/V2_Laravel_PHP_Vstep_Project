@@ -19,8 +19,8 @@ class UsersImport implements ToModel
             'name'     => $row[0],
             'email'    => $row[1],
             'account_id' => $row[2],
-            'role' => $row[3],
-            'password' => Hash::make($row[4]),
+            'role' => 2,
+            'password' => Hash::make($row[3]),
         ]);
     }
 }

@@ -40,8 +40,7 @@
                                 <p>Cột 1: Nhập đầy đủ họ tên</p>
                                 <p>Cột 2: Nhập địa chỉ email (email đăng kí tài khoản dùng để đăng nhập)</p>
                                 <p>Cột 3: Nhập mã số sinh viên</p>
-                                <p>Cột 4: Nhập vai trò (Nhập mặc định số 2 cho vai trò sinh viên)</p>
-                                <p>Cột 5: Nhập mật khẩu</p>
+                                <p>Cột 4: Nhập mật khẩu (Ex: 12345678)</p>
                                 <p><strong>Bước 3:</strong> Bấm nút "Register" màu trắng để đăng kí</p>
                             </div>
                             <div class="modal-footer">

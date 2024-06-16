@@ -6,10 +6,12 @@ use App\Models\Instructor;
 use App\Models\Question;
 use App\Models\ReadingsAudio;
 use App\Models\SkillPart;
+use App\Models\Student;
 use App\Models\Test;
 use App\Models\TestSkill;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TestsController extends Controller
 {
@@ -102,85 +104,34 @@ class TestsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Test $test_slug)
-    {
-        $lecturers = User::all(); // Assuming you have a Lecturer model
-        return view('admin.createTest', compact('test_slug', 'lecturers'));
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Test $test_slug)
-    {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'test_code' => 'required|string',
-            'duration' => 'required|string',
-            // 'start_date' => 'required|date',
-            // 'end_date' => 'required|date',
-            'instructor_id' => 'required|exists:users,id',
-            'test_status' => 'required|string',
-        ]);
-
-        // Update the test with validated data
-        $test_slug->update($validatedData);
-        // Redirect back to the index page with a success message
-        return redirect()->route('tableTest.index')->with('success', 'Test updated successfully');
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Test $test_slug)
     {
-        $test_slug->delete();
-        return redirect()->route('tableTest.index')->with('success', 'Test deleted successfully');
+        DB::transaction(function () use ($test_slug) {
+            // Lấy ID của Test
+            $testId = $test_slug->id;
+            // Xoá các record trong bảng students có test_id bằng với testId
+            Student::where('test_id', $testId)->delete();
+            // Xoá test
+            $test_slug->delete();
+        });
+
+        // Chuyển hướng người dùng với thông báo thành công
+        return redirect()->route('tableTest.index')->with('success', 'Test and related student records deleted successfully');
     }
 
-    //Show view which use to add questions
-    // public function addSkillQuestions(Test $test_slug, TestSkill $skill_slug)
-    // {
-    //     $test = Test::where('slug', $test_slug->slug)->firstOrFail();
-    //     $skill = TestSkill::where('slug', $skill_slug->slug)->firstOrFail();
-    //     $passages = null;
+    public function destroyAll()
+    {
+        DB::transaction(function () {
+            // Xoá các students liên quan đến mỗi test
+            $tests = Test::all();
+            foreach ($tests as $test) {
+                $test->students()->delete(); // Xoá các bản ghi trong students liên quan đến test
+                $test->delete();
+            }
+        });
 
-    //     switch ($skill->skill_name) {
-    //         case 'Listening':
-    //             return view('admin.questions.manageListening', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
-    //         case 'Speaking':
-    //             return view('admin.questions.manageSpeaking', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
-    //         case 'Reading':
-    //             return view('admin.questions.manageReading', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
-    //         case 'Writing':
-    //             return view('admin.questions.manageWriting', compact('test', 'skill', 'passages', 'test_slug', 'skill_slug'));
-    //         default:
-    //             abort(404);
-    //     }
-    // }
-
-    // public function editSkillQuestions(Test $test_slug, TestSkill $skill_slug)
-    // {
-    //     $test = Test::where('slug', $test_slug->slug)->firstOrFail();
-    //     $skill = TestSkill::where('slug', $skill_slug->slug)->firstOrFail();
-
-    //     $passages = ReadingsAudio::where('test_skill_id', $skill_slug->id)->get();
-    //     $questions = Question::with('options')->where('test_skill_id', $skill_slug->id)->get();
-
-    //     switch ($skill_slug->skill_name) {
-    //         case 'Listening':
-    //             return view('admin.questions.manageListening', compact('test_slug', 'skill_slug', 'passages', 'questions'));
-    //         case 'Speaking':
-    //             return view('admin.questions.manageSpeaking', compact('test_slug', 'skill_slug', 'passages', 'questions'));
-    //         case 'Reading':
-    //             return view('admin.questions.manageReading', compact('test_slug', 'skill_slug', 'passages', 'questions'));
-    //         case 'Writing':
-    //             return view('admin.questions.manageWriting', compact('test_slug', 'skill_slug', 'passages', 'questions'));
-    //         default:
-    //             abort(404);
-    //     }
-    // }
+        return response()->json(['message' => 'All tests and related student records have been deleted successfully.']);
+    }
 }

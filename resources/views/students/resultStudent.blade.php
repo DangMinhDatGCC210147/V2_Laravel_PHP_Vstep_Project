@@ -1,6 +1,7 @@
 @extends('students.layouts.layout-student')
 
 @section('content')
+    <div data-test-id="{{ $testId }}" id="testContainer" hidden></div>
     <div class="px-3">
         <!-- Start Content-->
         <div class="container-fluid">

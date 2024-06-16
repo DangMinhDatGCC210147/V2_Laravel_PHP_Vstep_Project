@@ -100,10 +100,6 @@ class StudentSubmissionController extends Controller
     }
 
 
-    public function saveSpeaking(Request $request)
-    {
-    }
-
     public function saveAnswer(Request $request)
     {
         $validatedData = $request->validate([
@@ -129,7 +125,7 @@ class StudentSubmissionController extends Controller
     }
 
     public function saveRecording(Request $request)
-    { 
+    {
 
         // Validate the incoming request
         $validated = $request->validate([
@@ -165,7 +161,7 @@ class StudentSubmissionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Recording saved successfully.',
-            'path' => $path // Optional: return path for verification/debugging
+            'path' => $path
         ]);
     }
 }

@@ -55,7 +55,8 @@
                                     <td>{{ $result->reading_correctness }}</td>
                                     <td>{{ $result->created_at }}</td>
                                     <td>
-                                        <a href="{{ route('download.response', ['studentId' => $result->student->id, 'testName' => $result->test_name]) }}">
+                                        <a
+                                            href="{{ route('download.response', ['studentId' => $result->student->id, 'testName' => $result->test_name]) }}">
                                             <i class="mdi mdi-download mdi-24px"></i>
                                         </a>
                                     </td>
@@ -95,4 +96,17 @@
         </div><!-- end col-->
     </div>
     <!-- end row-->
+    <script>
+        // Chạy script này khi tài liệu đã sẵn sàng
+        document.addEventListener('DOMContentLoaded', function () {
+            // Kiểm tra xem session có thông báo lỗi không
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}', // Thông báo từ session
+                });
+            @endif
+        });
+        </script>
 @endsection

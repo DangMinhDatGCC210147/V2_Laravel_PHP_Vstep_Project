@@ -31,6 +31,7 @@ class AuthController extends Controller
             return redirect()->route('tableStudent.index')->with('error', 'No file was uploaded.');
         }
     }
+    
     public function registerPost(Request $request)
     {
         $user = new User();

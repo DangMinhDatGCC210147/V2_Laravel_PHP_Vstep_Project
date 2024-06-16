@@ -19,11 +19,37 @@
     </div>
 
     <!-- end page title -->
-    {{-- <div class="row">
-        <div class="col-12 d-flex justify-content-end">
-            <a href="{{ route('test.create') }}" class="btn btn-info">Create</a>
+    @if (auth()->user()->role == 0)
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button class="btn btn-danger" id="deleteAll">Delete All</button>
+            </div>
         </div>
-    </div> --}}
+        <div id="showForm"></div>
+        <!-- Modal -->
+        <!-- Modal Bootstrap 5 -->
+        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete all tests and related student records? This action cannot be
+                            undone.</p>
+                        <p><strong>In addition, when agreeing to delete all files, the speaking, writing files and the reading and
+                            listening exercises will be deleted.</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteAll">Yes, delete it!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -36,11 +62,7 @@
                                 <th>No</th>
                                 <th>Test Name</th>
                                 <th>Duration</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Lecturer Name</th>
                                 <th>Create At</th>
-                                <th>Test Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -50,19 +72,8 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $test->test_name }}</td>
                                     <td>{{ $test->duration }}</td>
-                                    <td>{{ $test->start_date }}</td>
-                                    <td>{{ $test->end_date }}</td>
-                                    <td>{{ isset($test->instructor->name) ?? '' }}</td>
                                     <td>{{ $test->created_at }}</td>
-                                    @if ($test->test_status == "Active")
-                                        <td><div class="badge bg-success">{{ $test->test_status }}</div></td>
-                                    @else
-                                        <td><div class="badge bg-warning">{{ $test->test_status }}</div></td>
-                                    @endif
-                                    
                                     <td>
-                                        <a href="{{ route('test.edit', $test->slug) }}"><i
-                                                class="mdi mdi-lead-pencil mdi-24px"></i></a>
                                         <a href="{{ route('test.destroy', $test->slug) }}"
                                             onclick="event.preventDefault();
                                                     if(confirm('Are you sure you want to delete this test?')) {
@@ -76,9 +87,6 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-                                        {{-- <a href="{{ route('testSkills.show', $test->slug) }}"><i
-                                                class="mdi mdi-layers-plus mdi-24px"
-                                                style="color: rgb(198, 198, 24)"></i></a> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -90,4 +98,41 @@
         </div><!-- end col-->
     </div>
     <!-- end row-->
+    <script>
+        document.getElementById('deleteAll').addEventListener('click', function() {
+            $('#confirmationModal').modal('show');
+        });
+
+        document.getElementById('confirmDeleteAll').addEventListener('click', function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch('/delete-all-tests', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    $('#confirmationModal').modal('hide');
+                    $('#showForm').append(`
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        All tests and related student records have been deleted.
+                    </div>
+                `);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                })
+                .catch(error => {
+                    $('#confirmationModal').modal('hide');
+                    $('#showForm').append(`
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Something went wrong. Please try again later.
+                    </div>
+                `);
+                });
+        });
+    </script>
 @endsection

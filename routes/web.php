@@ -6,7 +6,9 @@ use App\Http\Controllers\IndexAdminController;
 use App\Http\Controllers\InstructorsController;
 use App\Http\Controllers\ListeningController;
 use App\Http\Controllers\ReadingController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\showListResults;
+use App\Http\Controllers\ShowListResultsController;
 use App\Http\Controllers\SkillPartQuestionController;
 use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\StudentController;
@@ -23,12 +25,16 @@ Route::fallback(function () {
 
 Route::get('/', [AuthController::class, 'showlogin'])->name('student.login');
 Route::post('/login', [AuthController::class, 'login'])->name('loginAccount');
+Route::post('/students/tests/{test}/session/start', [SessionController::class, 'start']);
+Route::post('/students/tests/{test}/session/end', [SessionController::class, 'end']);
+
 
 Route::middleware(['auth'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware(CheckStudentRole::class)->group(function () {
+
         //WAITING ROOM
         Route::get('/lounge', [StudentController::class, 'index'])->name('student.index');
         Route::post('/saving', [StudentController::class, 'store'])->name('image.save');
@@ -68,9 +74,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/list-test', [TestsController::class, 'index'])->name('tableTest.index');
         Route::get('/tests/create', [TestsController::class, 'create'])->name('test.create');
         Route::post('/tests', [TestsController::class, 'store'])->name('test.store');
-        Route::get('/tests/{test_slug}/edit', [TestsController::class, 'edit'])->name('test.edit');
-        Route::put('/tests/{test_slug}', [TestsController::class, 'update'])->name('test.update');
         Route::delete('/tests/{test_slug}', [TestsController::class, 'destroy'])->name('test.destroy');
+        Route::delete('/delete-all-tests', [TestsController::class, 'destroyAll']);
 
         // //EACH SKILL OF THE TEST
         // Route::get('/tests/{test_slug}/skills', [TestsController::class, 'show'])->name('testSkills.show');
@@ -135,8 +140,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/test_skill/{test_skill_slug}', [SkillPartQuestionController::class, 'destroy'])->name('test.skill.destroy');
 
 
-        Route::get('/list_test_results', [showListResults::class, 'index'])->name('resultList.index');
-        Route::get('/download-response/{studentId}/{testName}', [showListResults::class, 'downloadResponse'])->name('download.response');
+        Route::get('/list_test_results', [ShowListResultsController::class, 'index'])->name('resultList.index');
+        Route::get('/download-response/{studentId}/{testName}', [ShowListResultsController::class, 'downloadResponse'])->name('download.response');
     });
 
 });
