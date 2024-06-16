@@ -39,4 +39,9 @@ class QuestionHomework extends Model
     {
         return $this->hasMany(MatchingHeadline::class, 'question_id');
     }
+
+    public function studentAnswers()
+    {
+        return $this->hasMany(StudentAnswer::class, 'question_id');
+    }
 }

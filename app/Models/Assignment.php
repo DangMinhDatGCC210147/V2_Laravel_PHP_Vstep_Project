@@ -14,7 +14,8 @@ class Assignment extends Model
         'description',
         'isEnable',
         'teacher_id',
-        'show_detailed_feedback'
+        'show_detailed_feedback',
+        'duration'
     ];
 
     public function questions()
@@ -25,5 +26,10 @@ class Assignment extends Model
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function studentAnswers()
+    {
+        return $this->hasManyThrough(StudentAnswer::class, QuestionHomework::class, 'assignment_id', 'question_id');
     }
 }

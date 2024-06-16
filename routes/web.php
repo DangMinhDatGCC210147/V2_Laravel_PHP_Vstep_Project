@@ -16,6 +16,7 @@ use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckStudentRole;
 use App\Http\Middleware\CheckLecturerRole;
+use App\Http\Controllers\StudentAssignmentController;
 
 Route::fallback(function () {
     return view('errors.404');
@@ -25,6 +26,13 @@ Route::get('/', [AuthController::class, 'showlogin'])->name('student.login');
 Route::post('/login', [AuthController::class, 'login'])->name('loginAccount');
 
 Route::middleware(['auth'])->group(function () {
+
+
+            //FUNCTION OF STUDENT FOR DO ASSIGNEMNT
+            Route::get('/assignments/{assignment}/take', [StudentAssignmentController::class, 'showAssignment'])->name('assignments.show');
+            Route::post('/assignments/{assignment}/submit', [StudentAssignmentController::class, 'submitAssignment'])->name('assignments.submit');
+            Route::get('/assignments/{assignment}/result', [StudentAssignmentController::class, 'resultAssignment'])->name('assignments.result');
+
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -134,7 +142,7 @@ Route::middleware(['auth'])->group(function () {
 
 
         //ASSIGNMENT LIST
-        Route::get('/list-assingment', [AssignmentController::class, 'index'])->name('tableAssignment.index');
+        Route::get('/list-assignment', [AssignmentController::class, 'index'])->name('tableAssignment.index');
 
         //FUNCTION FOR GET INFO ASSIGNMENT
         Route::get('/create-assignment', [AssignmentController::class, 'create'])->name('create.assignemnt');
@@ -157,7 +165,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/update-assignment/{assignment}', [AssignmentController::class, 'updateAssignment'])->name('updateAssignment');
 
         Route::delete('/delete-assignment/{assignment}', [AssignmentController::class, 'deleteAssignment'])->name('deleteAssignment');
-
     });
 
 });

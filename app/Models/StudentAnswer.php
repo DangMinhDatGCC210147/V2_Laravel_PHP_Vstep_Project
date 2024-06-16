@@ -10,9 +10,12 @@ class StudentAnswer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id', 'question_id', 'answer_text', 'is_correct'
+        'student_id',
+        'question_id',
+        'answer_text',
+        'is_correct',
+        'attempt_number',
     ];
-
     public function student()
     {
         return $this->belongsTo(User::class, 'student_id');

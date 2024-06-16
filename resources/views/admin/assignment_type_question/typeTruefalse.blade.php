@@ -49,8 +49,13 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <textarea name="description" id="description" class="form-control">{{ $assignment->description ?? '' }}</textarea>
+                                            <label for="description">Passage</label>
+                                            <textarea name="description" id="description" rows="10" style="resize: vertical;" class="form-control">{{ $assignment->description ?? '' }}</textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="duration">Duration (in minutes)</label>
+                                            <input type="number" name="duration" id="duration" class="form-control" value="{{ $assignment->duration ?? '' }}">
                                         </div>
 
                                         <div class="form-group">

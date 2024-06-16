@@ -62,6 +62,7 @@ class AssignmentController extends Controller
             'description' => 'nullable|string',
             'isEnable' => 'required|boolean',
             'show_detailed_feedback' => 'nullable|boolean',
+            'duration' => 'nullable|integer',
             'questions.*.question_text' => 'required|string',
             'questions.*.options.*.option_text' => 'required|string',
             'questions.*.is_correct' => 'required|integer'
@@ -75,7 +76,8 @@ class AssignmentController extends Controller
             'description' => $validatedData['description'],
             'isEnable' => $validatedData['isEnable'],
             'teacher_id' => $teacher_id,
-            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
+            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false,
+            'duration' => $validatedData['duration']
         ]);
 
         // Tạo các câu hỏi và lựa chọn cho Assignment
@@ -109,6 +111,7 @@ class AssignmentController extends Controller
             'description' => 'nullable|string',
             'isEnable' => 'required|boolean',
             'show_detailed_feedback' => 'nullable|boolean',
+            'duration' => 'nullable|integer',
             'questions.*.question_text' => 'required|string',
             'questions.*.blanks.*.blank_position' => 'required|integer',
             'questions.*.blanks.*.correct_answer' => 'required|string'
@@ -123,7 +126,8 @@ class AssignmentController extends Controller
             'description' => $validatedData['description'],
             'isEnable' => $validatedData['isEnable'],
             'teacher_id' => $teacher_id,
-            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
+            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false,
+            'duration' => $validatedData['duration']
         ]);
 
         // Tạo các câu hỏi Fill In The Blank cho Assignment
@@ -157,6 +161,7 @@ class AssignmentController extends Controller
             'description' => 'nullable|string',
             'isEnable' => 'required|boolean',
             'show_detailed_feedback' => 'nullable|boolean',
+            'duration' => 'nullable|integer',
             'questions.*.question_text' => 'required|string',
             'questions.*.correct_answer' => 'required|in:true,false,not_given'
         ]);
@@ -169,7 +174,8 @@ class AssignmentController extends Controller
             'description' => $validatedData['description'],
             'isEnable' => $validatedData['isEnable'],
             'teacher_id' => $teacher_id,
-            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
+            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false,
+            'duration' => $validatedData['duration']
         ]);
 
         // Tạo các câu hỏi True/False/Not Given cho Assignment
@@ -200,6 +206,7 @@ class AssignmentController extends Controller
             'description' => 'nullable|string',
             'isEnable' => 'required|boolean',
             'show_detailed_feedback' => 'nullable|boolean',
+            'duration' => 'nullable|integer',
             'questions.*.question_text' => 'required|string',
             'questions.*.headlines.*.headline' => 'required|string',
             'questions.*.headlines.*.match_text' => 'nullable|string'
@@ -214,7 +221,8 @@ class AssignmentController extends Controller
             'description' => $validatedData['description'],
             'isEnable' => $validatedData['isEnable'],
             'teacher_id' => $teacher_id,
-            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
+            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false,
+            'duration' => $validatedData['duration']
         ]);
 
         // Tạo các câu hỏi Matching Headline cho Assignment
@@ -272,6 +280,7 @@ class AssignmentController extends Controller
             'description' => 'nullable|string',
             'isEnable' => 'required|boolean',
             'show_detailed_feedback' => 'nullable|boolean',
+            'duration' => 'nullable|integer',
             'questions.*.question_text' => 'required|string',
             'questions.*.question_type' => 'required|string'
         ]);
@@ -281,7 +290,8 @@ class AssignmentController extends Controller
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
             'isEnable' => $validatedData['isEnable'],
-            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false
+            'show_detailed_feedback' => $request->has('show_detailed_feedback') ? $validatedData['show_detailed_feedback'] : false,
+            'duration' => $validatedData['duration']
         ]);
 
         // Xóa các câu hỏi và lựa chọn cũ
