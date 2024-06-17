@@ -43,31 +43,31 @@
                                     <div class="card-body">
                                         <h5 class="card-title">Assignment Details</h5>
 
-                                        <div class="form-group">
+                                        <div class="form-group mt-3">
                                             <label for="title">Title</label>
                                             <input type="text" name="title" id="title" class="form-control" value="{{ $assignment->title ?? '' }}" required>
                                         </div>
 
-                                        <div class="form-group">
+                                        <div class="form-group mt-3">
                                             <label for="description">Passage</label>
                                             <textarea name="description" id="description" rows="10" style="resize: vertical;" class="form-control">{{ $assignment->description ?? '' }}</textarea>
                                         </div>
 
-                                        <div class="form-group">
+                                        <div class="form-group mt-3">
                                             <label for="duration">Duration (in minutes)</label>
                                             <input type="number" name="duration" id="duration" class="form-control" value="{{ $assignment->duration ?? '' }}">
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="isEnable">Enable</label>
+                                        <div class="form-group mt-3">
+                                            <label for="isEnable">Activation state</label>
                                             <select name="isEnable" id="isEnable" class="form-control" required>
                                                 <option value="1" {{ isset($assignment) && $assignment->isEnable ? 'selected' : '' }}>Yes</option>
                                                 <option value="0" {{ isset($assignment) && !$assignment->isEnable ? 'selected' : '' }}>No</option>
                                             </select>
                                         </div>
 
-                                        <div class="form-group">
-                                            <label for="show_detailed_feedback">Show Detailed Feedback</label>
+                                        <div class="form-group mt-3">
+                                            <label for="show_detailed_feedback">Show answers after submit: </label>
                                             <input type="hidden" name="show_detailed_feedback" value="0">
                                             <input type="checkbox" name="show_detailed_feedback" id="show_detailed_feedback" class="form-check-input" value="1" {{ isset($assignment) && $assignment->show_detailed_feedback ? 'checked' : '' }}>
                                         </div>
@@ -82,13 +82,13 @@
                                                 <h5 class="card-title">Question {{ $i + 1 }}</h5>
 
                                                 <div class="form-group">
-                                                    <label for="question_text_{{ $i }}">Question Text</label>
+                                                    {{-- <label for="question_text_{{ $i }}">Question Text</label> --}}
                                                     <textarea name="questions[{{ $i }}][question_text]" id="question_text_{{ $i }}" class="form-control" rows="3" required>{{ $question->question_text }}</textarea>
                                                 </div>
 
                                                 <input type="hidden" name="questions[{{ $i }}][question_type]" value="true_false">
 
-                                                <div class="form-group">
+                                                <div class="form-group mt-3">
                                                     <label>Correct Answer</label>
                                                     <select name="questions[{{ $i }}][correct_answer]" class="form-control" required>
                                                         <option value="true" {{ $question->correct_answer === 'true' ? 'selected' : '' }}>True</option>
@@ -134,6 +134,22 @@
             </div> <!-- end card -->
         </div><!-- end col -->
     </div>
+    <script src="{{ asset('admin/assets/build/ckeditor.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select the textarea where you want to apply CKEditor
+            ClassicEditor
+                .create(document.querySelector('#description'), {
+                    // Configuration options
+                })
+                .then(editor => {
+                    window.editor = editor; // Store editor instance for potential future use
+                })
+                .catch(error => {
+                    console.error('Error occurred in initializing the editor:', error);
+                });
+        });
+    </script>
 @endsection
 
 

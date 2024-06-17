@@ -27,43 +27,32 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="header-title">Create Assignment</h5>
-                <form id="assignmentTypetForm" action="{{ route('storeAssignmentType') }}" method="POST">
+                <form id="assignmentTypetForm" action="{{ route('storeAssignmentType') }}" method="POST" class="p-4 border rounded">
                     @csrf
-                    <div class="row mb-3">
+                    <div class="row">
                         <div class="col-md-4">
-                            <div class="mb-3">
-                                    <label class="col-md col-form-label" for="simple-input">Number of Question</label>
-                                    <div class="col-md-8">
-                                        <input type="number" id="numberQuestion" class="form-control"
-                                            placeholder="Number of Quesion" name="numberQuestion" required>
-                                    </div>
+                            <div class="mb-4">
+                                <label for="numberQuestion" class="form-label">Number of Question</label>
+                                <input type="number" id="numberQuestion" class="form-control" min="1" placeholder="Enter number of questions" name="numberQuestion" required>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <div class="form-floating mb-3">
-                                <select class="form-select" id="typeQuestion" name="typeQuestion" aria-label="Floating label select example" required>
-                                    <option selected>Choose Question type</option>
-                                    <option value="Multiplechoice">Multiplechoice</option>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label for="typeQuestion" class="form-label">Type of Question</label>
+                                <select class="form-select" id="typeQuestion" name="typeQuestion" aria-label="Select question type" required>
+                                    <option value="" disabled selected>Choose Question type</option>
+                                    <option value="Multiplechoice">Multiple Choice</option>
                                     <option value="Fillintheblank">Fill in the blank</option>
-                                    <option value="Truefalse">True-False</option>
-                                    <option value="Matching">Matching</option>
+                                    <option value="Truefalse">True-False-Not Given</option>
+                                    <option value="Matching">Matching Headings</option>
                                 </select>
-                                <label for="skillSelect">Type Question  </label>
                             </div>
                         </div>
-                        {{-- <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <select class="form-select" id="partSelect" name="partName" aria-label="Floating label select example" required>
-                                    <option selected>Choose part name</option>
-                                </select>
-                                <label for="partSelect">Part Name</label>
+                        <div class="col-md-2">
+                            <div class="mb-5 mt-1">
+                                <button type="submit" class="btn btn-primary w-100 mt-4">Next</button>
                             </div>
-                        </div> --}}
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary w-md">Next</button>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -38,8 +38,8 @@
                                 {{-- <th>Passage</th> --}}
                                 <th>Teacher Name</th>
                                 <th>Create At </th>
-                                <th>Enable</th>
-                                <th>Detailed Feedback</th>
+                                <th>Activation</th>
+                                <th>Show Answer</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
