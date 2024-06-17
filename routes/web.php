@@ -13,11 +13,13 @@ use App\Http\Controllers\SkillPartQuestionController;
 use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentSubmissionController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\TestsController;
 use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckStudentRole;
 use App\Http\Middleware\CheckLecturerRole;
+use App\Http\Controllers\StudentAssignmentController;
 
 Route::fallback(function () {
     return view('errors.404');
@@ -30,6 +32,13 @@ Route::post('/students/tests/{test}/session/end', [SessionController::class, 'en
 
 
 Route::middleware(['auth'])->group(function () {
+
+
+            //FUNCTION OF STUDENT FOR DO ASSIGNEMNT
+            Route::get('/assignments/{assignment}/take', [StudentAssignmentController::class, 'showAssignment'])->name('assignments.show');
+            Route::post('/assignments/{assignment}/submit', [StudentAssignmentController::class, 'submitAssignment'])->name('assignments.submit');
+            Route::get('/assignments/{assignment}/result', [StudentAssignmentController::class, 'resultAssignment'])->name('assignments.result');
+
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -139,10 +148,35 @@ Route::middleware(['auth'])->group(function () {
 
         Route::delete('/test_skill/{test_skill_slug}', [SkillPartQuestionController::class, 'destroy'])->name('test.skill.destroy');
 
+        //ASSIGNMENT LIST
+        Route::get('/list-assignment', [AssignmentController::class, 'index'])->name('tableAssignment.index');
+
+        //FUNCTION FOR GET INFO ASSIGNMENT
+        Route::get('/create-assignment', [AssignmentController::class, 'create'])->name('create.assignemnt');
+
+        //FUNCTION FOR CREATING QUESTIONS IN ASSIGNMENT
+        Route::post('/store-assignment-type', [AssignmentController::class, 'store'])->name('storeAssignmentType');
+        Route::get('/show-multiplechoice-type/{quantity}', [AssignmentController::class, 'showMultiplechoiceType'])->name('showMultiplechoiceType');
+        Route::get('/show-fillintheblank-type/{quantity}', [AssignmentController::class, 'showFillintheblankType'])->name('showFillintheblankType');
+        Route::get('/show-truefalse-type/{quantity}', [AssignmentController::class, 'showTruefalseType'])->name('showTruefalseType');
+        Route::get('/show-matching-type/{quantity}', [AssignmentController::class, 'showMatchingType'])->name('showMatchingType');
+
+        //FUNCTIONS FOR STORE/SAVE QUESTION EACH KIND IN ASSIGNMENT
+        Route::post('/store-multiplechoice-type', [AssignmentController::class, 'storeMultiplechoiceType'])->name('storeMultiplechoiceType');
+        Route::post('/store-fillintheblank-type', [AssignmentController::class, 'storeFillintheblankType'])->name('storeFillintheblankType');
+        Route::post('/store-truefalse-type', [AssignmentController::class, 'storeTruefalseType'])->name('storeTruefalseType');
+        Route::post('/store-matching-type', [AssignmentController::class, 'storeMatchingType'])->name('storeMatchingType');
+        //FUNCTIONS FOR EDIT AND UPDATE QUESTION IN ASSIGNMENT
+        Route::get('/edit-assignment/{assignment}', [AssignmentController::class, 'editAssignment'])->name('editAssignment');
+
+        Route::put('/update-assignment/{assignment}', [AssignmentController::class, 'updateAssignment'])->name('updateAssignment');
+
+        Route::delete('/delete-assignment/{assignment}', [AssignmentController::class, 'deleteAssignment'])->name('deleteAssignment');
 
         Route::get('/list_test_results', [ShowListResultsController::class, 'index'])->name('resultList.index');
         Route::get('/download-response/{studentId}/{testName}', [ShowListResultsController::class, 'downloadResponse'])->name('download.response');
         Route::get('/download-all-files', [ShowListResultsController::class, 'downloadAllFiles'])->name('download.allfiles');
+
 
     });
 
