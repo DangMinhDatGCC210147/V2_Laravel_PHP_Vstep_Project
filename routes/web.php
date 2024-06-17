@@ -142,6 +142,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/list_test_results', [ShowListResultsController::class, 'index'])->name('resultList.index');
         Route::get('/download-response/{studentId}/{testName}', [ShowListResultsController::class, 'downloadResponse'])->name('download.response');
+        Route::get('/download-all-files', [ShowListResultsController::class, 'downloadAllFiles'])->name('download.allfiles');
+
     });
 
 });

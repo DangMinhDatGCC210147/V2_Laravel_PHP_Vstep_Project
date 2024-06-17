@@ -22,6 +22,7 @@
     <div class="row">
         <div class="col-12 d-flex justify-content-end">
             {{-- <a href="{{ route('createInstructor.create') }}" class="btn btn-info">Create</a> --}}
+            <button class="btn btn-light" onclick="window.location='{{ route('download.allfiles') }}'">Download All</button>
         </div>
     </div>
 
@@ -99,14 +100,13 @@
     <script>
         // Chạy script này khi tài liệu đã sẵn sàng
         document.addEventListener('DOMContentLoaded', function () {
-            // Kiểm tra xem session có thông báo lỗi không
             @if(session('error'))
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: '{{ session('error') }}', // Thông báo từ session
+                    text: '{{ session('error') }}',
                 });
             @endif
         });
-        </script>
+    </script>
 @endsection

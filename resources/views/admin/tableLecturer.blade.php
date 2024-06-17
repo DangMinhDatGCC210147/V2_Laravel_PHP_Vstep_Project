@@ -38,7 +38,9 @@
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Lecturer ID</th>
+                                @if(auth()->user()->role == 0)
                                 <th>Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -48,6 +50,7 @@
                                     <td>{{ $lecturer->name }}</td>
                                     <td>{{ $lecturer->email }}</td>
                                     <td>{{ $lecturer->account_id }}</td>
+                                    @if(auth()->user()->role == 0)
                                     <td>
                                         <a href="{{ route('createInstructor.edit', $lecturer->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>
@@ -64,8 +67,8 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
-
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

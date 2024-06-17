@@ -18,4 +18,12 @@ class StudentResponses extends Model
     {
         return $this->belongsTo(Question::class);
     }
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function test()
+    {
+        return $this->belongsTo(Test::class);
+    }
 }

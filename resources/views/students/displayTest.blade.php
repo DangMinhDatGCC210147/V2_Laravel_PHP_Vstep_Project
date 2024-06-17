@@ -19,9 +19,6 @@
                         <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i
                                 class="bx bx-moon font-size-18"></i></button>
                     </div>
-                    <div class="col-md-4 text-start">
-                        {{-- <h2>Test Name</h2> <!-- Sử dụng tên mặc định hoặc lấy từ session nếu cần --> --}}
-                    </div>
                     <div class="col-md-3 text-center">
                         <h2>Timer:
                             <span class="badge bg-primary" id="skill-timer" style="display: inline;">

@@ -35,7 +35,8 @@ class IndexAdminController extends Controller
             })
             ->sortByDesc('total_duration');
 
-        $person = User::withCount('testResults')
+        $person = User::where('role', 2) 
+            ->withCount('testResults')
             ->orderByDesc('test_results_count')
             ->first();
 

@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
                 'name' => 'Nguyễn Hoàng Kha',
                 'email' => 'khanhgbc200062@fpt.edu.vn',
                 'account_id' => 'GBC200062',
-                'role' => '2',
+                'role' => '0',
                 'password' => Hash::make('12345678'),
             ],
             [
@@ -71,7 +71,7 @@ class UserSeeder extends Seeder
                 'role' => '2',
                 'password' => Hash::make('12345678'),
             ]
-            
+
             // Add more sample users as needed
         ];
 

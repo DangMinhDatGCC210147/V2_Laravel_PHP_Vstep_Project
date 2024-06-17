@@ -63,7 +63,9 @@
                                 <th>Test Name</th>
                                 <th>Duration</th>
                                 <th>Create At</th>
+                                @if(auth()->user()->role == 0)
                                 <th>Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -73,6 +75,7 @@
                                     <td>{{ $test->test_name }}</td>
                                     <td>{{ $test->duration }}</td>
                                     <td>{{ $test->created_at }}</td>
+                                    @if(auth()->user()->role == 0)
                                     <td>
                                         <a href="{{ route('test.destroy', $test->slug) }}"
                                             onclick="event.preventDefault();
@@ -88,6 +91,7 @@
                                             @method('DELETE')
                                         </form>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

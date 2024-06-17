@@ -30,7 +30,9 @@
                     <div class="row d-flex align-items-center mb-4">
                         <div class="col-8">
                             <h4 class="d-flex align-items-center mb-0">
-                                {{ $person->name }}
+                                @if ($person != null)
+                                    {{ $person->name }}
+                                @endif
                             </h4>
                         </div>
                         <div class="col-4 text-end">
@@ -52,11 +54,17 @@
                     <div class="row d-flex align-items-center mb-4">
                         <div class="col-8">
                             <h4 class="d-flex align-items-center mb-0">
-                                {{ $highestReading->name }}
+                                @if ($highestReading != null)
+                                    {{ $highestReading->name }}
+                                @endif
                             </h4>
                         </div>
                         <div class="col-4 text-end">
-                            <span class="text-muted"><h3>{{ $highestReading->reading_correctness }} câu</h3></span>
+                            <span class="text-muted">
+                                @if ($highestReading != null)
+                                    <h3>{{ $highestReading->reading_correctness }} câu</h3>
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -74,11 +82,17 @@
                     <div class="row d-flex align-items-center mb-4">
                         <div class="col-8">
                             <h4 class="d-flex align-items-center mb-0">
-                                {{ $highestListening->name }}
+                                @if ($highestListening != null)
+                                    {{ $highestListening->name }}
+                                @endif
                             </h4>
                         </div>
                         <div class="col-4 text-end">
-                            <span class="text-muted"><h3>{{ $highestListening->listening_correctness }} câu</h3></span>
+                            <span class="text-muted">
+                                @if ($highestListening != null)
+                                    <h3>{{ $highestListening->listening_correctness }} câu</h3>
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -122,8 +136,8 @@
                                 <th>No</th>
                                 <th>Student Name</th>
                                 <th>Student ID</th>
-                                <th>Total time to do the test</th>
-                                <th>Quantity test done</th>
+                                <th>Total time accessed</th>
+                                <th>Number of test done</th>
                             </tr>
                         </thead>
                         <tbody>
