@@ -9,6 +9,7 @@
             'Writing' => 'bg-secondary',
         ];
     @endphp
+    <div data-test-id="{{ $test->id }}" id="testContainer" hidden></div>
     <div class="px-3">
         <!-- Start Content-->
         <div class="container-fluid">
@@ -17,9 +18,6 @@
                     <div class="col-md-1">
                         <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i
                                 class="bx bx-moon font-size-18"></i></button>
-                    </div>
-                    <div class="col-md-4 text-start">
-                        {{-- <h2>Test Name</h2> <!-- Sử dụng tên mặc định hoặc lấy từ session nếu cần --> --}}
                     </div>
                     <div class="col-md-3 text-center">
                         <h2>Timer:
@@ -32,7 +30,8 @@
                         <div class="badge bg-info">
                             <span id="answered-count">Số câu đã hoàn thành: 0/0</span>
                         </div>
-                        <button class="btn btn-success" id="submitTestButton" data-test-id="{{ $test->id }}">Nộp bài</button>
+                        <button class="btn btn-success" id="submitTestButton" data-test-id="{{ $test->id }}">Nộp
+                            bài</button>
                     </div>
                 </div>
                 <div class="m-2 mb-5">
@@ -114,6 +113,7 @@
                                     @csrf
                                     <input type="hidden" name="skill_id" id="skillId"
                                         value="{{ $testPart->testSkill->id }}">
+                                    <input type="hidden" name="test_id" id="testId" value="{{ $test->id }}">
                                     <!-- Hiển thị Questions và Options -->
                                     @foreach ($testPart->testSkill->questions as $questionIndex => $question)
                                         <div class="skill-content m-2 question"
@@ -294,7 +294,7 @@
     <script>
         $(document).ready(function() {
             // Function to handle saving the answer to the database
-            function saveAnswer(skillId, questionId, optionId) {
+            function saveAnswer(skillId, questionId, optionId, testId) {
                 $.ajax({
                     url: '/saveAnswer', // URL to save the answer
                     type: 'POST',
@@ -302,6 +302,7 @@
                         skill_id: skillId,
                         question_id: questionId,
                         option_id: optionId,
+                        test_id: testId,
                         _token: $('input[name="_token"]').val()
                     },
                     success: function(response) {
@@ -318,16 +319,17 @@
                 var skillId = $(this).closest('.skill-content').data('skill-id');
                 var questionId = $(this).attr('name').match(/\d+/)[0];
                 var optionId = $(this).val();
-                saveAnswer(skillId, questionId, optionId);
+                var testId = $(this).closest('form').find('input[name="test_id"]').val();
+                saveAnswer(skillId, questionId, optionId, testId);
             });
         });
     </script>
     <script>
         $(document).ready(function() {
             $("#submitTestButton").click(function() {
-                var testId = $(this).data("test-id"); 
+                var testId = $(this).data("test-id");
                 var testResultUrl = `/students/tests/${testId}/results`;
-
+                endSession(testId);
                 Swal.fire({
                     title: 'Bạn có chắc chắn?',
                     text: "Bạn sẽ không thể hoàn tác lại sau khi nộp!",
@@ -340,13 +342,29 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $("#save-btn").click();
-                        $("#reset-btn").click();
+                        localStorage.clear();
+                        location.reload();
                         setTimeout(function() {
                             window.location.href = testResultUrl;
                         }, 500); // Chờ 500 ms
                     }
                 });
             });
+
+            function endSession(testId) {
+                const url = `/students/tests/${testId}/session/end`;
+                fetch(url, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log("Session ended:", data))
+                    .catch(error => console.error("Error ending session:", error));
+            }
         });
     </script>
 @endsection

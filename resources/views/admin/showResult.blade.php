@@ -11,46 +11,64 @@
                 <div class="d-none d-lg-block">
                     <ol class="breadcrumb m-0 float-end">
                         <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">List of Lecturers</li>
+                        <li class="breadcrumb-item active">List of Result</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
-    @if(auth()->user()->role == 0)
-        <!-- end page title -->
-        <div class="row">
-            <div class="col-12 d-flex justify-content-end">
-                <a href="{{ route('createInstructor.create') }}" class="btn btn-info">Create</a>
-            </div>
+
+    <!-- end page title -->
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end">
+            {{-- <a href="{{ route('createInstructor.create') }}" class="btn btn-info">Create</a> --}}
+            <button class="btn btn-light" onclick="window.location='{{ route('download.allfiles') }}'">Download All</button>
         </div>
-    @endif
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">List of Lecturers</h4>
+                    <h4 class="header-title">List of Results</h4>
 
                     <table id="basic-datatable" class="table dt-responsive nowrap w-100">
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Lecturer ID</th>
-                                @if(auth()->user()->role == 0)
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Test Name</th>
+                                <th>Listening</th>
+                                <th>Reading</th>
+                                <th>Date Finish</th>
                                 <th>Action</th>
-                                @endif
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($lecturers as $lecturer)
+                            @foreach ($testResults as $result)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $result->student->name }}</td>
+                                    <td>{{ $result->student->account_id }}</td>
+                                    <td>{{ $result->test_name }}</td>
+                                    <td>{{ $result->listening_correctness }}</td>
+                                    <td>{{ $result->reading_correctness }}</td>
+                                    <td>{{ $result->created_at }}</td>
+                                    <td>
+                                        <a
+                                            href="{{ route('download.response', ['studentId' => $result->student->id, 'testName' => $result->test_name]) }}">
+                                            <i class="mdi mdi-download mdi-24px"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            {{-- @foreach ($lecturers as $lecturer)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $lecturer->name }}</td>
                                     <td>{{ $lecturer->email }}</td>
                                     <td>{{ $lecturer->account_id }}</td>
-                                    @if(auth()->user()->role == 0)
                                     <td>
                                         <a href="{{ route('createInstructor.edit', $lecturer->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>
@@ -67,10 +85,10 @@
                                             @csrf
                                             @method('DELETE')
                                         </form>
+
                                     </td>
-                                    @endif
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
                         </tbody>
                     </table>
 
@@ -79,4 +97,16 @@
         </div><!-- end col-->
     </div>
     <!-- end row-->
+    <script>
+        // Chạy script này khi tài liệu đã sẵn sàng
+        document.addEventListener('DOMContentLoaded', function () {
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}',
+                });
+            @endif
+        });
+    </script>
 @endsection

@@ -19,7 +19,7 @@
     </div>
     <div class="py-3 py-lg-4">
         <div class="row">
-            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('create.skill.part') }}">
+            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('questionBank.speaking') }}">
                     <i class="mdi mdi-arrow-left-bold"></i> Turn back to previous page</a>
             </div>
         </div>

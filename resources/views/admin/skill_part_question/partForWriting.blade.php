@@ -19,7 +19,7 @@
     </div>
     <div class="py-3 py-lg-4">
         <div class="row">
-            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('create.skill.part') }}">
+            <div class="col-lg-6"><a class="btn btn-secondary" href="{{ route('questionBank.writing') }}">
                     <i class="mdi mdi-arrow-left-bold"></i> Turn back to previous page</a>
             </div>
         </div>
@@ -52,7 +52,7 @@
                                             </div>
                                             <hr>
                                             <button type="submit" class="btn btn-warning">Save Changes</button>
-                                        </form> 
+                                        </form>
                                     @else
                                         <form id="questionForm" action="{{ route('storeQuestionWriting') }}" method="POST">
                                             @csrf
@@ -87,7 +87,7 @@
                                             </div>
                                             <hr>
                                             <button type="submit" class="btn btn-warning">Save Changes</button>
-                                        </form> 
+                                        </form>
                                     @else
                                         <form id="questionForm" action="{{ route('storeQuestionWriting') }}" method="POST">
                                             @csrf

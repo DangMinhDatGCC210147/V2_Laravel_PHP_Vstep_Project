@@ -63,7 +63,7 @@ class User extends Authenticatable
             ]
         ];
     }
-    
+
     public function getRouteKeyName()
     {
         return 'slug';
@@ -76,5 +76,13 @@ class User extends Authenticatable
     public function students()
     {
         return $this->hasMany(Student::class);
+    }
+    public function testResults()
+    {
+        return $this->hasMany(TestResult::class, 'student_id');
+    }
+    public function sessions()
+    {
+        return $this->hasMany(UserSessions::class);
     }
 }

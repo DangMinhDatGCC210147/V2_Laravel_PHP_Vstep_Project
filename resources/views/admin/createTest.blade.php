@@ -92,7 +92,7 @@
                                                 @foreach($lecturers as $lecturer)
                                                     <option value="{{ $lecturer->id}}" {{ (isset($test_slug) && $lecturer->id == $test_slug->instructor_id) ? 'selected' : '' }}>{{ $lecturer->name}}</option>
                                                 @endforeach
-                                            </select>                                            
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="mb-2 row">
@@ -101,7 +101,7 @@
                                             <button type="submit" class="btn btn-primary w-xl">{{ isset($test_slug) ? 'Update' : 'Create' }}</button>
                                         </div>
                                     </div>
-                                </form>                                
+                                </form>
                             </div>
                         </div>
                     </div>

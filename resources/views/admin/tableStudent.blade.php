@@ -19,11 +19,13 @@
     </div>
 
     <!-- end page title -->
-    <div class="row">
-        <div class="col-12 d-flex justify-content-end">
-            <a href="{{ route('createStudent.create') }}" class="btn btn-info">Create</a>
+    @if(auth()->user()->role == 0)
+        <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="{{ route('createStudent.create') }}" class="btn btn-info">Create</a>
+            </div>
         </div>
-    </div>
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -37,7 +39,9 @@
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Student ID</th>
-                                <th>Action</th>
+                                @if(auth()->user()->role == 0)
+                                    <th>Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -47,6 +51,7 @@
                                     <td>{{ $student->name }}</td>
                                     <td>{{ $student->email }}</td>
                                     <td>{{ $student->account_id }}</td>
+                                    @if(auth()->user()->role == 0)
                                     <td>
                                         <a href="{{ route('createStudent.edit', $student->slug) }}"><i
                                                 class="mdi mdi-lead-pencil mdi-24px"></i></a>
@@ -64,11 +69,11 @@
                                             @method('DELETE')
                                         </form>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-
                 </div> <!-- end card body-->
             </div> <!-- end card -->
         </div><!-- end col-->
