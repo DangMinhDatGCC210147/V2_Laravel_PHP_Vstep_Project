@@ -51,10 +51,10 @@
                                     {{-- <td>{{ Str::limit($assignment->description, 50) }}</td> --}}
                                     <td>{{ $assignment->teacher->name }}</td>
                                     <td>{{ $assignment->created_at }}</td>
-                                    <td>{{ $assignment->isEnable ? 'Yes' : 'No' }}</td>
+                                    <td class="{{ $assignment->isEnable ? 'text-success' : 'text-danger' }}">{{ $assignment->isEnable ? 'Yes' : 'No' }}</td>
                                     <td>{{ $assignment->show_detailed_feedback ? 'Yes' : 'No' }}</td>
                                     <td>
-                                        <button class="btn btn-primary copy-link" data-link="{{ route('assignments.show', $assignment->id) }}">Copy Link</button>
+                                        <button class="btn btn-primary copy-link" data-link="{{ route('assignments.show', $assignment->id) }}" {{ $assignment->isEnable ? '' : 'disabled' }}>Copy Link</button>
                                         <a href="{{ route('editAssignment', $assignment->id) }}" class="btn btn-warning">Edit</a>
                                         <form action="{{ route('deleteAssignment', $assignment->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
