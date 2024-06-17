@@ -54,6 +54,7 @@
                                     <td>{{ $assignment->isEnable ? 'Yes' : 'No' }}</td>
                                     <td>{{ $assignment->show_detailed_feedback ? 'Yes' : 'No' }}</td>
                                     <td>
+                                        <button class="btn btn-primary copy-link" data-link="{{ route('assignments.show', $assignment->id) }}">Copy Link</button>
                                         <a href="{{ route('editAssignment', $assignment->id) }}" class="btn btn-warning">Edit</a>
                                         <form action="{{ route('deleteAssignment', $assignment->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
@@ -71,4 +72,25 @@
         </div><!-- end col-->
     </div>
     <!-- end row-->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const copyButtons = document.querySelectorAll('.copy-link');
+
+            copyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const link = button.getAttribute('data-link');
+                    const tempInput = document.createElement('input');
+                    tempInput.value = link;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+
+                    // Optional: Notify the user
+                    alert('Link copied to clipboard: ' + link);
+                });
+            });
+        });
+    </script>
 @endsection
