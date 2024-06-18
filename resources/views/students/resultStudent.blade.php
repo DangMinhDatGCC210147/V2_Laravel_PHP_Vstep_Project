@@ -11,6 +11,16 @@
                         <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i
                                 class="bx bx-moon font-size-18"></i></button>
                     </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-light"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fe-log-out"></i>
+                            <span>Logout</span>
+                        </button>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
                 </div>
             </div>
             <h2 class="text-center">TEST RESULT</h2>

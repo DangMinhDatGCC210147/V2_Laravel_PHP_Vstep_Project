@@ -33,12 +33,10 @@ Route::post('/students/tests/{test}/session/end', [SessionController::class, 'en
 
 Route::middleware(['auth'])->group(function () {
 
-
-            //FUNCTION OF STUDENT FOR DO ASSIGNEMNT
-            Route::get('/assignments/{assignment}/take', [StudentAssignmentController::class, 'showAssignment'])->name('assignments.show');
-            Route::post('/assignments/{assignment}/submit', [StudentAssignmentController::class, 'submitAssignment'])->name('assignments.submit');
-            Route::get('/assignments/{assignment}/result', [StudentAssignmentController::class, 'resultAssignment'])->name('assignments.result');
-
+    //FUNCTION OF STUDENT FOR DO ASSIGNEMNT
+    Route::get('/assignments/{assignment}/take', [StudentAssignmentController::class, 'showAssignment'])->name('assignments.show');
+    Route::post('/assignments/{assignment}/submit', [StudentAssignmentController::class, 'submitAssignment'])->name('assignments.submit');
+    Route::get('/assignments/{assignment}/result', [StudentAssignmentController::class, 'resultAssignment'])->name('assignments.result');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

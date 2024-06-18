@@ -28,16 +28,20 @@
                         <h5 class="card-title mb-0">The person who does the most tests</h5>
                     </div>
                     <div class="row d-flex align-items-center mb-4">
-                        <div class="col-8">
-                            <h4 class="d-flex align-items-center mb-0">
-                                @if ($person != null)
-                                    {{ $person->name }}
-                                @endif
-                            </h4>
-                        </div>
-                        <div class="col-4 text-end">
-                            <span class="text-muted"><h3>{{ $person->test_results_count }}</h3></span>
-                        </div>
+                        @if ($person->test_results_count !== 0)
+                            <div class="col-8">
+                                <h4 class="d-flex align-items-center mb-0">
+                                    @if ($person != null)
+                                        {{ $person->name }}
+                                    @endif
+                                </h4>
+                            </div>
+                            <div class="col-4 text-end">
+                                <span class="text-muted">
+                                    <h3>{{ $person->test_results_count }}</h3>
+                                </span>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <!--end card body-->
@@ -109,14 +113,18 @@
                         <h5 class="card-title mb-0">Number of Students who took the test</h5>
                     </div>
                     <div class="row d-flex align-items-center mb-4">
+                    @if ($person->test_results_count !== 0)
                         <div class="col-8">
                             <h3 class="d-flex align-items-center mb-0">
                                 {{ $count }}
                             </h3>
                         </div>
                         <div class="col-4 text-end">
-                            <span class="text-muted"><h4>{{ $totalStudentsCount }} sinh viên</h4></span>
+                            <span class="text-muted">
+                                <h4>{{ $totalStudentsCount }} sinh viên</h4>
+                            </span>
                         </div>
+                    @endif
                     </div>
                 </div>
                 <!--end card body-->

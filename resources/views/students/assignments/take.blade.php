@@ -59,7 +59,8 @@
 
                                     @case('fill_in_the_blank')
                                         @foreach ($question->fillInTheBlanks as $index => $fill)
-                                            <input type="text" name="question_{{ $question->id }}[{{ $index }}]" class="form-control mt-3">
+                                            <input type="text" name="question_{{ $question->id }}[{{ $index }}]"
+                                                class="form-control mt-3">
                                         @endforeach
                                     @break
 
@@ -68,9 +69,10 @@
                                             @if (!empty($headline->match_text))
                                                 <div class="mb-2">
                                                     <label><strong>{{ $headline->match_text }}</strong></label>
-                                                    <select name="question_{{ $question->id }}[{{ $headline->match_text }}]" class="form-control">
+                                                    <select name="question_{{ $question->id }}[{{ $headline->match_text }}]"
+                                                        class="form-control">
                                                         <option value="">Select Heading</option>
-                                                        @foreach ($question->matchingHeadlines as $option)
+                                                        @foreach ($question->matchingHeadlines->sortBy('headline') as $option)
                                                             <option value="{{ $option->headline }}">{{ $option->headline }}
                                                             </option>
                                                         @endforeach

@@ -40,10 +40,10 @@ class StudentController extends Controller
     {
         // // Lưu thông tin hình ảnh mới
         // $imagePath = $request->file('image')->store('imageStudents', 'public');
-    
+
         // // Tìm kiếm student với user_id
         // $student = Student::where('user_id', $request->accountId)->first();
-    
+
         // if ($student) {
         //     // Nếu đã có hình, xóa hình cũ
         //     if ($student->image_file && Storage::disk('public')->exists($student->image_file)) {
@@ -60,28 +60,28 @@ class StudentController extends Controller
         //     ]);
         //     $message = 'Image created successfully';
         // }
-    
+
         // return response()->json(['message' => $message, 'student' => $student], 200);
         if (!$request->hasFile('image')) {
             return response()->json(['message' => 'No image file found in the request'], 400);
         }
-    
+
         // Kiểm tra tệp tin có hợp lệ không
         if (!$request->file('image')->isValid()) {
             return response()->json(['message' => 'Uploaded file is not valid'], 400);
         }
-    
+
         // Lưu thông tin hình ảnh mới
         $imagePath = $request->file('image')->store('imageStudents', 'public');
-    
+
         // Tạo mới student với hình ảnh
         $student = Student::create([
             'user_id' => $request->accountId,
             'image_file' => $imagePath,
         ]);
-    
+
         $message = 'Image created successfully';
-    
+
         return response()->json(['message' => $message, 'student' => $student], 200);
     }
 
@@ -96,7 +96,12 @@ class StudentController extends Controller
 
         if ($student) {
             // Tạo bài test mới nếu người dùng chưa có test_id
-            $testName = 'Test_' . Uuid::uuid4()->toString();
+            $randomNumbers = '';
+            for ($i = 0; $i < 10; $i++) {
+                $randomNumbers .= random_int(0, 9);
+            }
+            $testName = 'Test_' . $randomNumbers;
+            
             $test = Test::create([
                 'duration' => '03:00:00',
                 'test_name' => $testName,

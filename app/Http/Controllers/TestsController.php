@@ -25,67 +25,6 @@ class TestsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    // public function create()
-    // {
-    //     $lecturers = User::where('role', '1')->get();
-    //     return view('admin.createTest', compact('lecturers'));
-    // }
-
-    // /**
-    //  * Store a newly created resource in storage.
-    //  */
-    // public function store(Request $request)
-    // {
-
-    //     // Validate the request data
-    //     $request->validate([
-    //         'test_code' => 'required|string|unique:tests,test_code',
-    //         'test_name' => 'required|string',
-    //         'duration' => 'required|date_format:H:i',
-    //         'instructor_id' => 'required|integer',
-    //         // 'start_date' => 'required|date',
-    //         // 'end_date' => 'required|date',
-    //         'test_status' => 'required|string',
-    //     ]);
-    //     // Check if the test_code already exists
-    //     if (Test::where('test_code', $request->test_code)->exists()) {
-    //         return redirect()->back()->withErrors(['test_code' => 'The test code already exists. Please choose a different one.'])->withInput();
-    //     }
-
-    //     // Create a new Test instance and save it
-    //     $test = new Test();
-    //     $test->test_code = $request->test_code;
-    //     $test->test_name = $request->test_name;
-    //     $test->duration = $request->duration;
-    //     $test->start_date = $request->start_date;
-    //     $test->end_date = $request->end_date;
-    //     $test->instructor_id = $request->instructor_id;
-    //     $test->test_status = $request->test_status;
-    //     $test->save();
-
-    //     // Define the skills data
-    //     $skills = [
-    //         ['skill_name' => 'Speaking', 'time_limit' => '00:12:00', 'part_count' => 3],
-    //         ['skill_name' => 'Writing', 'time_limit' => '01:00:00', 'part_count' => 2],
-    //         ['skill_name' => 'Reading', 'time_limit' => '01:00:00', 'part_count' => 4],
-    //         ['skill_name' => 'Listening', 'time_limit' => '00:47:00', 'part_count' => 3],
-    //     ];
-
-    //     // Create each skill linked to the test
-    //     foreach ($skills as $skill) {
-    //         $testSkill = new TestSkill();
-    //         $testSkill->test_id = $test->id;
-    //         $testSkill->skill_name = $skill['skill_name'];
-    //         $testSkill->time_limit = $skill['time_limit'];
-    //         $testSkill->save();
-    //     }
-
-    //     return redirect()->route('tableTest.index')->with('success', 'Test and associated skills and parts created successfully!');
-    // }
-
-    /**
      * Display the specified resource.
      */
     public function show(Test $test_slug)

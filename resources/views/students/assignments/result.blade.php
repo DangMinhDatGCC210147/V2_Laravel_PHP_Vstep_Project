@@ -30,7 +30,8 @@
                         <h3>Detailed Result</h3>
                         @foreach ($answers as $index => $answer)
                             <div class="mb-3 p-3 border rounded">
-                                <label><strong>Question {{ $index + 1 }}: {{ $answer->question->question_text }}</strong></label>
+                                <label><strong>Question {{ $index + 1 }}:
+                                        {{ $answer->question->question_text }}</strong></label>
                                 @switch($answer->question->question_type)
                                     @case('multiple_choice')
                                         @foreach ($answer->question->multipleChoiceOptions as $option)
@@ -87,9 +88,10 @@
 
                                     @case('fill_in_the_blank')
                                         @foreach ($answer->question->fillInTheBlanks as $index => $blank)
-                                            <input type="text" name="question_{{ $answer->question->id }}[{{ $index }}]" class="form-control"
-                                                value="{{ $answer->answer_text[$index] ?? '' }}" disabled>
-                                            <p class="mt-2">Correct Answer: <span class="text-success">{{ $blank->correct_answer }}</span></p>
+                                            <input type="text" name="question_{{ $answer->question->id }}[{{ $index }}]"
+                                                class="form-control" value="{{ $answer->answer_text[$index] ?? '' }}" disabled>
+                                            <p class="mt-2">Correct Answer: <span
+                                                    class="text-success">{{ $blank->correct_answer }}</span></p>
                                         @endforeach
                                     @break
 
@@ -97,24 +99,54 @@
                                         @foreach ($answer->question->matchingHeadlines as $index => $headline)
                                             @if (!empty($headline->match_text))
                                                 <div class="mb-2">
-                                                    <label><strong>{{ $headline->match_text }}</strong></label>
-                                                    <select name="question_{{ $answer->question->id }}[{{ $index }}]" class="form-control"
-                                                        disabled>
-                                                        @foreach ($answer->question->matchingHeadlines as $option)
+                                                    <div class="d-flex">
+                                                        <label><strong>{{ $headline->match_text }} : </strong></label>
+                                                        @if (
+                                                            ($answer->answer_text[$headline->match_text] ?? '') &&
+                                                                ($answer->answer_text[$headline->match_text] ?? '') != $headline->headline)
+                                                            <label for=""><strong class="text-danger">
+                                                                    (Incorrect)</strong></label>
+                                                        @endif
+                                                    </div>
+                                                    <select name="question_{{ $answer->question->id }}[{{ $index }}]"
+                                                        class="form-control" disabled>
+                                                        @foreach ($answer->question->matchingHeadlines->sortBy('headline') as $option)
                                                             <option value="{{ $option->headline }}"
                                                                 {{ $option->headline == ($answer->answer_text[$headline->match_text] ?? '') ? 'selected' : '' }}>
-                                                                {{ $option->headline }}</option>
+                                                                {{ $option->headline }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
-                                                    <p class="mt-2">Correct Answer: <span class="text-success">{{ $headline->headline }}</span></p>
+                                                    <p class="mt-2">Correct Answer: <span
+                                                            class="text-success">{{ $headline->headline }}</span></p>
                                                 </div>
                                             @endif
                                         @endforeach
                                     @break
                                 @endswitch
-                                <p class="mt-2">Your Answer: <span
-                                        class="{{ $answer->is_correct ? 'text-success' : 'text-danger' }}">{{ is_array($answer->answer_text) ? implode(', ', $answer->answer_text) : $answer->answer_text }}</span>
-                                </p>
+                                @if ($answer->question->question_type !== 'matching_headline' || $answer->question->question_type !== 'true_false')
+                                    <p class="mt-2">Your Answer: <span
+                                            class="{{ $answer->is_correct ? 'text-success' : 'text-danger' }}">{{ is_array($answer->answer_text) ? implode(', ', $answer->answer_text) : $answer->answer_text }}</span>
+                                    </p>
+                                @endif
+                                @if ($answer->question->question_type == 'true_false')
+                                    <p class="mt-2">Your Answer:
+                                        <span class="{{ $answer->is_correct ? 'text-success' : 'text-danger' }}">
+                                            @switch($answer->answer_text)
+                                                @case('true')
+                                                    True
+                                                @break
+
+                                                @case('false')
+                                                    False
+                                                @break
+
+                                                @default
+                                                    Not Given
+                                            @endswitch
+                                        </span>
+                                    </p>
+                                @endif
                             </div>
                         @endforeach
                     @endif

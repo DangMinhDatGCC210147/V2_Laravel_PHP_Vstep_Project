@@ -16,12 +16,6 @@ return new class extends Migration
             $table->string('test_name');
             $table->string('test_code')->unique()->nullable();
             $table->time('duration');
-            $table->unsignedBigInteger('instructor_id')->nullable();
-            $table->foreign('instructor_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-            $table->string('test_status')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();
