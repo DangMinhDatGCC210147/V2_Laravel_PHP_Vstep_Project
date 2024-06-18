@@ -8,6 +8,16 @@
                     <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i
                             class="bx bx-moon font-size-18"></i></button>
                 </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-light"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fe-log-out"></i>
+                        <span>Logout</span>
+                    </button>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
             </div>
             <h1 class="mb-4 mt-3">{{ $assignment->title }} - Result</h1>
             <div class="row">
@@ -80,7 +90,7 @@
                                             value="{{ $answer->answer_text }}" disabled>
                                         <p class="mt-2">Correct Answer: <span
                                                 class="text-success">{{ $answer->question->fillInTheBlanks->pluck('correct_answer')->join(', ') }}</span>
-                                        </p>    
+                                        </p>
                                     @break
 
                                     @case('matching_headline')

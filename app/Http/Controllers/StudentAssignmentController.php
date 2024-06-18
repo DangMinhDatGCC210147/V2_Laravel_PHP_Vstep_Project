@@ -28,7 +28,7 @@ class StudentAssignmentController extends Controller
     {
         $studentId = Auth::id();
         $questions = $assignment->questions;
-
+        // dd($questions);
         // Tìm số lần làm bài hiện tại
         $latestAttempt = StudentAnswer::where('student_id', $studentId)
             ->whereIn('question_id', $questions->pluck('id'))
@@ -38,7 +38,6 @@ class StudentAssignmentController extends Controller
 
         foreach ($questions as $question) {
             $answerText = $request->input('question_' . $question->id);
-
             if ($answerText !== null) {
                 // Chuyển đổi đáp án dạng Matching thành chuỗi JSON
                 if ($question->question_type == 'matching_headline') {

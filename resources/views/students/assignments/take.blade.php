@@ -24,7 +24,8 @@
                         @foreach ($questions as $index => $question)
                             <div class="mb-3 p-3 border rounded">
                                 @if ($question->question_type !== 'matching_headline')
-                                    <label><strong>Question {{ $index + 1 }}: {{ $question->question_text }}</strong></label>
+                                    <label><strong>Question {{ $index + 1 }}:
+                                            {{ $question->question_text }}</strong></label>
                                 @endif
                                 @switch($question->question_type)
                                     @case('multiple_choice')
@@ -57,7 +58,10 @@
                                     @break
 
                                     @case('fill_in_the_blank')
-                                        <input type="text" name="question_{{ $question->id }}" class="form-control">
+                                        {{-- @foreach ($question->fillInTheBlanks as $index => $fill)
+                                            <input type="text" name="question_{{ $fill->id }}" class="form-control mt-3">
+                                        @endforeach --}}
+                                        <input type="text" name="question_{{ $question->id }}" class="form-control mt-3">
                                     @break
 
                                     @case('matching_headline')
@@ -68,7 +72,8 @@
                                                     <select name="question_{{ $question->id }}[]" class="form-control">
                                                         <option value="">Select Heading</option>
                                                         @foreach ($question->matchingHeadlines as $option)
-                                                            <option value="{{ $option->headline }}">{{ $option->headline }}</option>
+                                                            <option value="{{ $option->headline }}">{{ $option->headline }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>

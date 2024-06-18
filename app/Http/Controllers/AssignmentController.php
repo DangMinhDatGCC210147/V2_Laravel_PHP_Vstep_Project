@@ -282,7 +282,7 @@ class AssignmentController extends Controller
             'show_detailed_feedback' => 'nullable|boolean',
             'duration' => 'nullable|integer',
             'questions.*.question_text' => 'required|string',
-            'questions.*.question_type' => 'required|string'
+            'questions.*.question_type' => 'required|string',
         ]);
         // dd($validatedData);
         // Cập nhật Assignment

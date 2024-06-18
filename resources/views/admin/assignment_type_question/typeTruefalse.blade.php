@@ -77,6 +77,7 @@
                                 <!-- True/False/Not Given Questions -->
                                 @if (isset($assignment))
                                     @foreach ($questions as $i => $question)
+                                    {{-- @dd($question) --}}
                                         <div class="card mb-3">
                                             <div class="card-body">
                                                 <h5 class="card-title">Question {{ $i + 1 }}</h5>
@@ -91,9 +92,9 @@
                                                 <div class="form-group mt-3">
                                                     <label>Correct Answer</label>
                                                     <select name="questions[{{ $i }}][correct_answer]" class="form-control" required>
-                                                        <option value="true" {{ $question->correct_answer === 'true' ? 'selected' : '' }}>True</option>
-                                                        <option value="false" {{ $question->correct_answer === 'false' ? 'selected' : '' }}>False</option>
-                                                        <option value="not_given" {{ $question->correct_answer === 'not_given' ? 'selected' : '' }}>Not Given</option>
+                                                        <option value="true" {{ $question->trueFalse->correct_answer === 'true' ? 'selected' : '' }}>True</option>
+                                                        <option value="false" {{ $question->trueFalse->correct_answer === 'false' ? 'selected' : '' }}>False</option>
+                                                        <option value="not_given" {{ $question->trueFalse->correct_answer === 'not_given' ? 'selected' : '' }}>Not Given</option>
                                                     </select>
                                                 </div>
                                             </div>

@@ -81,18 +81,18 @@
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Audio For Part 1:</label>
-                                                <input type="file" name="audioFile" class="form-control mb-3" accept="audio/*">
+                                                <input type="file" name="audioFile" class="form-control mb-3" accept="audio/*" required>
                                             </div>
                                             @for ($i = 1; $i <= 8; $i++)
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $i }}">Question {{ $i }}:</label>
-                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}">
+                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required>
                                                     <div class="mt-2">
                                                         @for ($j = 1; $j <= 4; $j++)
                                                             <div class="form-check mt-2">
-                                                                <input class="form-check-input" type="radio" name="questions[{{ $i }}][correct_option]" id="option{{ $i }}{{ $j }}" value="{{ $j }}">
+                                                                <input class="form-check-input" type="radio" name="questions[{{ $i }}][correct_option]" id="option{{ $i }}{{ $j }}" value="{{ $j }}" required>
                                                                 <label class="form-check" for="option{{ $i }}{{ $j }}">
-                                                                    <input type="text" name="questions[{{ $i }}][options][{{ $j }}]" class="form-control" placeholder="Option {{ $j }}">
+                                                                    <input type="text" name="questions[{{ $i }}][options][{{ $j }}]" class="form-control" placeholder="Option {{ $j }}" required>
                                                                 </label>
                                                             </div>
                                                         @endfor
@@ -150,18 +150,18 @@
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Audio For Part 2:</label>
-                                                <input type="file" name="audioFile" class="form-control mb-3" accept="audio/*">
+                                                <input type="file" name="audioFile" class="form-control mb-3" accept="audio/*" required>
                                             </div>
                                             @for ($i = 9; $i <= 20; $i++)
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $i }}">Question {{ $i }}:</label>
-                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}">
+                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required>
                                                     <div class="mt-2">
                                                         @for ($j = 1; $j <= 4; $j++)
                                                             <div class="form-check mt-2">
-                                                                <input class="form-check-input" type="radio" name="questions[{{ $i }}][correct_option]" id="option{{ $i }}{{ $j }}" value="{{ $j }}">
+                                                                <input class="form-check-input" type="radio" name="questions[{{ $i }}][correct_option]" id="option{{ $i }}{{ $j }}" value="{{ $j }}" required>
                                                                 <label class="form-check" for="option{{ $i }}{{ $j }}">
-                                                                    <input type="text" name="questions[{{ $i }}][options][{{ $j }}]" class="form-control" placeholder="Option {{ $j }}">
+                                                                    <input type="text" name="questions[{{ $i }}][options][{{ $j }}]" class="form-control" placeholder="Option {{ $j }}" required>
                                                                 </label>
                                                             </div>
                                                         @endfor
@@ -219,18 +219,18 @@
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Audio For Part 3:</label>
-                                                <input type="file" name="audioFile" class="form-control mb-3" accept="audio/*">
+                                                <input type="file" name="audioFile" class="form-control mb-3" accept="audio/*" required>
                                             </div>
                                             @for ($i = 21; $i <= 35; $i++)
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $i }}">Question {{ $i }}:</label>
-                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}">
+                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required>
                                                     <div class="mt-2">
                                                         @for ($j = 1; $j <= 4; $j++)
                                                             <div class="form-check mt-2">
-                                                                <input class="form-check-input" type="radio" name="questions[{{ $i }}][correct_option]" id="option{{ $i }}{{ $j }}" value="{{ $j }}">
+                                                                <input class="form-check-input" type="radio" name="questions[{{ $i }}][correct_option]" id="option{{ $i }}{{ $j }}" value="{{ $j }}" required>
                                                                 <label class="form-check" for="option{{ $i }}{{ $j }}">
-                                                                    <input type="text" name="questions[{{ $i }}][options][{{ $j }}]" class="form-control" placeholder="Option {{ $j }}">
+                                                                    <input type="text" name="questions[{{ $i }}][options][{{ $j }}]" class="form-control" placeholder="Option {{ $j }}" required>
                                                                 </label>
                                                             </div>
                                                         @endfor
