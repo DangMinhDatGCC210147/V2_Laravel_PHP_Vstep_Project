@@ -42,6 +42,8 @@ class StudentAssignmentController extends Controller
                 // Chuyển đổi đáp án dạng Matching thành chuỗi JSON
                 if ($question->question_type == 'matching_headline') {
                     $answerText = json_encode($answerText);
+                } elseif ($question->question_type == 'fill_in_the_blank') {
+                    $answerText = json_encode($answerText);
                 }
 
                 StudentAnswer::create([
@@ -72,9 +74,9 @@ class StudentAssignmentController extends Controller
             ->where('attempt_number', $latestAttemptNumber)
             ->get();
 
-        // Giải mã chuỗi JSON thành mảng cho dạng Matching
+        // Giải mã chuỗi JSON thành mảng cho dạng Matching và Fill In The Blank
         $answers->each(function ($answer) {
-            if ($answer->question->question_type == 'matching_headline') {
+            if (in_array($answer->question->question_type, ['matching_headline', 'fill_in_the_blank'])) {
                 $answer->answer_text = json_decode($answer->answer_text, true);
             }
         });
@@ -95,9 +97,17 @@ class StudentAssignmentController extends Controller
                     ->pluck('headline', 'match_text');
 
                 $totalQuestions += $correctHeadlines->count();
+                dd($correctHeadlines);
 
                 foreach ($correctHeadlines as $matchText => $headline) {
-                    if (in_array($headline, $answer->answer_text ?? [])) {
+                    if (isset($answer->answer_text[$matchText]) && $answer->answer_text[$matchText] == $headline) {
+                        $correctAnswers++;
+                    }
+                }
+            } elseif ($question->question_type == 'fill_in_the_blank') {
+                $totalQuestions += $question->fillInTheBlanks->count();
+                foreach ($question->fillInTheBlanks as $index => $blank) {
+                    if (isset($answer->answer_text[$index]) && $answer->answer_text[$index] === $blank->correct_answer) {
                         $correctAnswers++;
                     }
                 }
@@ -117,7 +127,6 @@ class StudentAssignmentController extends Controller
         ]);
     }
 
-
     private function checkAnswer(QuestionHomework $question, $answerText)
     {
         switch ($question->question_type) {
@@ -129,9 +138,13 @@ class StudentAssignmentController extends Controller
             case 'true_false':
                 return $question->trueFalse->correct_answer === $answerText;
             case 'fill_in_the_blank':
-                return $question->fillInTheBlanks()
-                    ->where('correct_answer', $answerText)
-                    ->exists();
+                $answerArray = json_decode($answerText, true);
+                foreach ($question->fillInTheBlanks as $index => $blank) {
+                    if (!isset($answerArray[$index]) || $answerArray[$index] !== $blank->correct_answer) {
+                        return false;
+                    }
+                }
+                return true;
             case 'matching_headline':
                 $correctHeadlines = $question->matchingHeadlines()
                     ->whereNotNull('headline')
@@ -143,11 +156,11 @@ class StudentAssignmentController extends Controller
                 $answerArray = json_decode($answerText, true);
 
                 foreach ($correctHeadlines as $matchText => $headline) {
-                    if (in_array($headline, $answerArray ?? [])) {
-                        return true;
+                    if (!isset($answerArray[$matchText]) || $answerArray[$matchText] !== $headline) {
+                        return false;
                     }
                 }
-                return false;
+                return true;
             default:
                 return false;
         }

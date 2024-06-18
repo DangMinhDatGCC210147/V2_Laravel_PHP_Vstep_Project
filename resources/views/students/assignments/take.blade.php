@@ -58,10 +58,9 @@
                                     @break
 
                                     @case('fill_in_the_blank')
-                                        {{-- @foreach ($question->fillInTheBlanks as $index => $fill)
-                                            <input type="text" name="question_{{ $fill->id }}" class="form-control mt-3">
-                                        @endforeach --}}
-                                        <input type="text" name="question_{{ $question->id }}" class="form-control mt-3">
+                                        @foreach ($question->fillInTheBlanks as $index => $fill)
+                                            <input type="text" name="question_{{ $question->id }}[]" class="form-control mt-3">
+                                        @endforeach
                                     @break
 
                                     @case('matching_headline')

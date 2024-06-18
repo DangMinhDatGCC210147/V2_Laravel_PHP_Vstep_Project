@@ -86,11 +86,12 @@
                                     @break
 
                                     @case('fill_in_the_blank')
-                                        <input type="text" name="question_{{ $answer->question->id }}" class="form-control"
-                                            value="{{ $answer->answer_text }}" disabled>
-                                        <p class="mt-2">Correct Answer: <span
-                                                class="text-success">{{ $answer->question->fillInTheBlanks->pluck('correct_answer')->join(', ') }}</span>
-                                        </p>
+                                        @foreach ($answer->question->fillInTheBlanks as $index => $fill)
+                                            <div class="mb-2">
+                                                <input type="text" name="question_{{ $answer->question->id }}[]" class="form-control mt-3" value="{{ $answer->answer_text[$index] ?? '' }}" disabled>
+                                                <p class="mt-2">Correct Answer: <span class="text-success">{{ $fill->correct_answer }}</span></p>
+                                            </div>
+                                        @endforeach
                                     @break
 
                                     @case('matching_headline')
