@@ -86,11 +86,10 @@
                                     @break
 
                                     @case('fill_in_the_blank')
-                                        @foreach ($answer->question->fillInTheBlanks as $index => $fill)
-                                            <div class="mb-2">
-                                                <input type="text" name="question_{{ $answer->question->id }}[]" class="form-control mt-3" value="{{ $answer->answer_text[$index] ?? '' }}" disabled>
-                                                <p class="mt-2">Correct Answer: <span class="text-success">{{ $fill->correct_answer }}</span></p>
-                                            </div>
+                                        @foreach ($answer->question->fillInTheBlanks as $index => $blank)
+                                            <input type="text" name="question_{{ $answer->question->id }}[{{ $index }}]" class="form-control"
+                                                value="{{ $answer->answer_text[$index] ?? '' }}" disabled>
+                                            <p class="mt-2">Correct Answer: <span class="text-success">{{ $blank->correct_answer }}</span></p>
                                         @endforeach
                                     @break
 
@@ -99,16 +98,15 @@
                                             @if (!empty($headline->match_text))
                                                 <div class="mb-2">
                                                     <label><strong>{{ $headline->match_text }}</strong></label>
-                                                    <select name="question_{{ $answer->question->id }}[]" class="form-control"
+                                                    <select name="question_{{ $answer->question->id }}[{{ $index }}]" class="form-control"
                                                         disabled>
                                                         @foreach ($answer->question->matchingHeadlines as $option)
                                                             <option value="{{ $option->headline }}"
-                                                                {{ $option->headline == ($answer->answer_text[$index] ?? '') ? 'selected' : '' }}>
+                                                                {{ $option->headline == ($answer->answer_text[$headline->match_text] ?? '') ? 'selected' : '' }}>
                                                                 {{ $option->headline }}</option>
                                                         @endforeach
                                                     </select>
-                                                    <p class="mt-2">Correct Answer: <span
-                                                            class="text-success">{{ $headline->headline }}</span></p>
+                                                    <p class="mt-2">Correct Answer: <span class="text-success">{{ $headline->headline }}</span></p>
                                                 </div>
                                             @endif
                                         @endforeach

@@ -28,7 +28,7 @@ class StudentAssignmentController extends Controller
     {
         $studentId = Auth::id();
         $questions = $assignment->questions;
-        // dd($questions);
+
         // Tìm số lần làm bài hiện tại
         $latestAttempt = StudentAnswer::where('student_id', $studentId)
             ->whereIn('question_id', $questions->pluck('id'))
@@ -97,7 +97,6 @@ class StudentAssignmentController extends Controller
                     ->pluck('headline', 'match_text');
 
                 $totalQuestions += $correctHeadlines->count();
-                dd($correctHeadlines);
 
                 foreach ($correctHeadlines as $matchText => $headline) {
                     if (isset($answer->answer_text[$matchText]) && $answer->answer_text[$matchText] == $headline) {
