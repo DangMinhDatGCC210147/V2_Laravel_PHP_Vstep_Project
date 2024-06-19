@@ -41,6 +41,9 @@
                                 <th>Test Name</th>
                                 <th>Listening</th>
                                 <th>Reading</th>
+                                <th>Writing</th>
+                                <th>Speaking</th>
+                                <th>Overall</th>
                                 <th>Date Finish</th>
                                 <th>Action</th>
                             </tr>
@@ -52,10 +55,39 @@
                                     <td>{{ $result->student->name }}</td>
                                     <td>{{ $result->student->account_id }}</td>
                                     <td>{{ $result->test_name }}</td>
-                                    <td>{{ $result->listening_correctness }}</td>
-                                    <td>{{ $result->reading_correctness }}</td>
-                                    <td>{{ $result->created_at }}</td>
+                                    <td>{{ number_format($result->computed_listening_score, 1) }}</td>
+                                    <td>{{ number_format($result->computed_reading_score, 1) }}</td>
                                     <td>
+                                        @if (number_format($result->computed_writing_score, 1) != 0.0)
+                                            {{ number_format($result->computed_writing_score, 1) }}
+                                        @else
+                                            {{ '-' }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($result->speaking_part1 != null || $result->speaking_part2 != null || $result->speaking_part3 != null)
+                                            {{ $result->speaking }}
+                                        @else
+                                            {{ '-' }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($result->computed_writing_score != 0.0 && $result->speaking !== null)
+                                            {{ number_format($result->average_score, 1) }}
+                                        @else
+                                            {{ '-' }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $result->created_at->format('Y-m-d') }}</td>
+                                    <td>
+                                        <a
+                                            href="{{ route('mark.response', [
+                                                'studentId' => $result->student->id,
+                                                'testName' => $result->test_name,
+                                                'resultId' => isset($result->computed_listening_score) ? $result->id : '',
+                                            ]) }}">
+                                            <i class="mdi mdi-lead-pencil mdi-24px" style="color:orange"></i>
+                                        </a>
                                         <a
                                             href="{{ route('download.response', ['studentId' => $result->student->id, 'testName' => $result->test_name]) }}">
                                             <i class="mdi mdi-download mdi-24px"></i>
@@ -99,8 +131,8 @@
     <!-- end row-->
     <script>
         // Chạy script này khi tài liệu đã sẵn sàng
-        document.addEventListener('DOMContentLoaded', function () {
-            @if(session('error'))
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('error'))
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',

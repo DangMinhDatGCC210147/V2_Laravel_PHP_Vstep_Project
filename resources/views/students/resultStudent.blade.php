@@ -11,15 +11,17 @@
                         <button class="btn btn-warning d-flex justify-content-center" id="theme-mode"><i
                                 class="bx bx-moon font-size-18"></i></button>
                     </div>
-                    <div class="col-md-1">
-                        <button type="submit" class="btn btn-light"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fe-log-out"></i>
-                            <span>Logout</span>
-                        </button>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
+                    <div class="col-md-2 d-flex justify-content-end">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="submit" class="btn btn-light"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <span>Logout</span>
+                            </button>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <button class="btn btn-info" onclick="window.location.href='{{ route('student.index') }}'">Turn back</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,7 +31,7 @@
                     <div class="card border-light">
                         <div class="card-body">
                             <div class="result-details">
-                                <p><strong>Mã Số Sinh Viên:</strong> {{ $studentName }}</p>
+                                <p><strong>Mã Số Sinh Viên:</strong> {{ $accountId }}</p>
                                 <p><strong>Email:</strong> {{ $studentEmail }}</p>
                                 <p><strong>Định dạng thi:</strong> Bậc 3 - 5</p>
                                 <p><strong>Ngày thi:</strong> {{ date('d/m/Y') }}</p>

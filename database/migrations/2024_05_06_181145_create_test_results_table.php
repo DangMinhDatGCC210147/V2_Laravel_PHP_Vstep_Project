@@ -21,6 +21,11 @@ return new class extends Migration
             $table->string('test_name');
             $table->integer('listening_correctness');
             $table->integer('reading_correctness');
+            $table->decimal('writing_part1', 2, 1)->nullable();
+            $table->decimal('writing_part2', 2, 1)->nullable();
+            $table->decimal('speaking_part1', 2, 1)->nullable();
+            $table->decimal('speaking_part2', 2, 1)->nullable();
+            $table->decimal('speaking_part3', 2, 1)->nullable();
             $table->timestamps();
         });
     }

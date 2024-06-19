@@ -231,16 +231,12 @@
                                     {{-- USE TO SAVE AND UPDATE PART 3 --}}
                                 @elseif ($partName == 'Part_3')
                                     @if (isset($questions))
-                                        <form action="{{ route('updateQuestionReading') }}" method="POST"
-                                            id="questionForm">
+                                        <form action="{{ route('updateQuestionReading') }}" method="POST" id="questionForm">
                                             @csrf
                                             @method('PUT')
-                                            <input type="hidden" id="readingId" name="readingId"
-                                                value="{{ $reading->id }}">
-                                            <input type="hidden" id="partName" name="partName"
-                                                value="{{ $partName }}">
-                                            <input type="hidden" id="skillName" name="skillName"
-                                                value="{{ $skillName }}">
+                                            <input type="hidden" id="slug" name="slug" value="{{ $slug->id }}">
+                                            <input type="hidden" id="partName" name="partName" value="{{ $partName }}">
+                                            <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Passage 3:</label>
                                                 <textarea id="textareaInput" name="passage" class="form-control" rows="8" placeholder="Enter text here">{{ old('passage', $passage->reading_audio_file ?? '') }}</textarea>
@@ -284,8 +280,7 @@
                                             <button type="submit" class="btn btn-warning">Save Changes</button>
                                         </form>
                                     @else
-                                        <form action="{{ route('storeQuestionReading') }}" method="POST"
-                                            id="questionForm">
+                                        <form action="{{ route('storeQuestionReading') }}" method="POST" id="questionForm">
                                             @csrf
                                             <input type="hidden" id="partName" name="partName"
                                                 value="{{ $partName }}">

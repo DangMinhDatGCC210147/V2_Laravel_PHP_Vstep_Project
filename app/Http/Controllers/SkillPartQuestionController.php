@@ -20,22 +20,22 @@ class SkillPartQuestionController extends Controller
      * showReadingPart($skillName, $partName)
      * showWritingPart($skillName, $partName)
      * showListeningPart($skillName, $partName)
-     * 
+     *
      * storeQuestionWriting(Request $request)
      * storeQuestionReading(Request $request)
      * storeQuestionListening(Request $request)
      * storeQuestionSpeaking(Request $request)
-     * 
+     *
      * editQuestionReading($test_slug, $part_name)
      * editQuestionListening($test_slug, $part_name)
      * editQuestionWriting($test_slug, $part_name)
      * editQuestionSpeaking($test_slug, $part_name)
-     * 
+     *
      * updateQuestionReading(Request $request)
      * updateQuestionListening(Request $request)
      * updateQuestionWriting(Request $request)
      * updateQuestionSpeaking(Request $request)
-     * 
+     *
      * destroy(TestSkill $testSkillSlug)
     ================================================*/
 

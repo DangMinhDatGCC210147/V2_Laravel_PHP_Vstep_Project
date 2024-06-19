@@ -14,6 +14,7 @@ use App\Http\Controllers\SpeakingController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentSubmissionController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestsController;
 use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(CheckStudentRole::class)->group(function () {
 
+        Route::get('/student-profile/{slug}', [ProfileController::class, 'showProfile'])->name('student.profile');
         //WAITING ROOM
         Route::get('/lounge', [StudentController::class, 'index'])->name('student.index');
         Route::post('/saving', [StudentController::class, 'store'])->name('image.save');
@@ -175,7 +177,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/download-response/{studentId}/{testName}', [ShowListResultsController::class, 'downloadResponse'])->name('download.response');
         Route::get('/download-all-files', [ShowListResultsController::class, 'downloadAllFiles'])->name('download.allfiles');
 
-
+        //FUNCTION TO MARK SPEKAING AND WRITING
+        Route::get('/mark-response/{studentId}/{testName}/{resultId?}', [ShowListResultsController::class, 'markResponse'])->name('mark.response');
+        Route::post('/update-test-result', [ShowListResultsController::class, 'updateMark'])->name('testResult.update');
     });
 
 });

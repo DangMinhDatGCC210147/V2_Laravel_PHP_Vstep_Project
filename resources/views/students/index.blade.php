@@ -170,14 +170,19 @@
                             <form action="{{ route('start-test') }}" method="GET">
                                 <button type="submit" class="btn btn-success mt-3" style="width: 100%; background-color: #27cd18;">NHẬN ĐỀ</button>
                             </form>
-                        </div>                        
+                        </div>
                         <div class="button_get">
                             <form action="{{ route('logout') }}" method="POST" style="flex: 1;">
                                 @csrf
                                 <button type="submit" class="btn btn-secondary mt-3" style="width: 100%;">ĐĂNG XUẤT</button>
                             </form>
                         </div>
-                    </div>                    
+                    </div>
+                    <form action="{{ route('student.profile', ['slug' => $slug]) }}" method="GET">
+                        <div class="button_get">
+                            <button type="submit" class="btn btn-danger mt-3" style="width: 100%;">PROFILE</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
