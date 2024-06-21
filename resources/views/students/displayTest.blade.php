@@ -30,8 +30,8 @@
                         <div class="badge bg-info">
                             <span id="answered-count">Số câu đã hoàn thành: 0/0</span>
                         </div>
-                        <button class="btn btn-success" id="submitTestButton" data-test-id="{{ $test->id }}">Nộp
-                            bài</button>
+                        <button class="btn btn-warning" id="submitTestButton" data-test-id="{{ $test->id }}" style="font-size: 16px"><strong>Nộp
+                            bài</strong></button>
                     </div>
                 </div>
                 <div class="m-2 mb-5">
@@ -59,7 +59,8 @@
                                             @endif
 
                                             @if ($audio->isAudio())
-                                                <audio controls controlsList="nodownload">
+                                                <audio controls controlsList="nodownload"
+                                                    id="audioPlayer-{{ $audio->id }}">
                                                     <source src="{{ asset('storage/' . $audio->reading_audio_file) }}"
                                                         type="audio/mpeg" id="audioPlayer">
                                                     Your browser does not support the audio element.
@@ -120,9 +121,15 @@
                                             id="part-{{ $testPart->testSkill->part_name }}"
                                             data-skill-id="{{ $testPart->testSkill->id }}"
                                             data-part-id="{{ $testPart->testSkill->part_name }}" style="display: none;">
-                                            @if ($testPart->testSkill->skill_name !== 'Writing')
+                                            @if ($testPart->testSkill->skill_name !== 'Writing' && $testPart->testSkill->skill_name !== 'Speaking')
                                                 <strong>
                                                     <p>Question {{ $question->question_number }}:
+                                                        {!! nl2br($question->question_text) !!}</p>
+                                                </strong>
+                                            @endif
+                                            @if ($testPart->testSkill->skill_name == 'Speaking')
+                                                <strong>
+                                                    <p>Topic {{ $question->question_number }}:
                                                         {!! nl2br($question->question_text) !!}</p>
                                                 </strong>
                                             @endif

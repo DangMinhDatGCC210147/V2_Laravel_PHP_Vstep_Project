@@ -41,7 +41,7 @@
                                         <hr>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="writing_part1" class="form-label">Writing Part 1:</label>
+                                                <label for="writing_part1" class="form-label">Writing Task 1:</label>
                                                 <input type="number" step="0.5" min="0" max="10" class="form-control" id="writing_part1" name="writing_part1" required value="{{ $resultId->writing_part1 }}">
                                                 <div class="invalid-feedback">
                                                     Please provide a valid score.
@@ -50,7 +50,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="writing_part2" class="form-label">Writing Part 2:</label>
+                                                <label for="writing_part2" class="form-label">Writing Task 2:</label>
                                                 <input type="number" step="0.5" min="0" max="10" class="form-control" id="writing_part2" name="writing_part2" value="{{ $resultId->writing_part2 }}" required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid score.

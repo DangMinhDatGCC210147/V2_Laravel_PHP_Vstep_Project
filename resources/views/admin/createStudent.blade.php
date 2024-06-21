@@ -37,10 +37,12 @@
                             <div class="modal-body">
                                 <p><strong>Bước 1:</strong> Tạo một file excel rỗng</p>
                                 <p><strong>Bước 2:</strong> Nhập dữ liệu tương ứng như sau (không cần nhập tên cột vào file):</p>
-                                <p>Cột 1: Nhập đầy đủ họ tên</p>
-                                <p>Cột 2: Nhập địa chỉ email (email đăng kí tài khoản dùng để đăng nhập)</p>
-                                <p>Cột 3: Nhập mã số sinh viên</p>
-                                <p>Cột 4: Nhập mật khẩu (Ex: 12345678)</p>
+                                <ul>
+                                    <li>Cột 1: Nhập đầy đủ họ tên</li>
+                                    <li>Cột 2: Nhập địa chỉ email (email đăng kí tài khoản dùng để đăng nhập)</li>
+                                    <li>Cột 3: Nhập mã số sinh viên</li>
+                                    <li>Cột 4: Nhập mật khẩu (Ex: 12345678)</li>
+                                </ul>
                                 <p><strong>Bước 3:</strong> Bấm nút "Register" màu trắng để đăng kí</p>
                             </div>
                             <div class="modal-footer">

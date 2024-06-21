@@ -24,23 +24,38 @@ $(document).ready(function () {
             this.pause();
             this.currentTime = 0;
         });
-    
+        var audioPlayer = document.getElementById('audioPlayer-' + skillId);
+        if (audioPlayer) {
+            // Kiểm tra trạng thái đã phát trong localStorage
+            if (localStorage.getItem('played-' + skillId) === 'true') {
+                audioPlayer.controls = false; // Vô hiệu hóa các điều khiển
+            } else {
+                // Lắng nghe sự kiện kết thúc để đảm bảo không phát lại và disable
+                audioPlayer.addEventListener('ended', function () {
+                    this.currentTime = 0;
+                    this.pause();
+                    this.controls = false; // Vô hiệu hóa các điều khiển
+                    localStorage.setItem('played-' + skillId, 'true'); // Lưu trạng thái đã phát
+                });
+            }
+        }
+
         $('.skill-content').hide();
         var partSelector = $('[data-skill-id="' + skillId + '"][data-part-id="' + partId + '"]');
         partSelector.show();
-    
+
         $('.skill-part-btn').removeClass('btn-warning').addClass('btn-secondary');
         partSelector.removeClass('btn-secondary').addClass('btn-warning');
-    
+
         var skillName = partSelector.closest('.skill-section').find('.skill-part-btn[data-skill-id="' + skillId + '"]').data('skill-name');
         if (currentSkillName !== skillName || shouldResetTimer) {
             startTimer(skillName, shouldResetTimer);
             currentSkillName = skillName;
             currentSkillId = skillId; // Set currentSkillId
         }
-    
+
         adjustLayout(partSelector);
-    
+
         // Kiểm tra nếu kỹ năng là "Speaking" và part là "Part_1"
         if (skillName === "Speaking" && partId === "Part_1") {
             // Vô hiệu hóa các nút part khác
@@ -48,12 +63,12 @@ $(document).ready(function () {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_1"]').prop('disabled', false);
         }
-    
+
         // Save the current skillId and partId to localStorage
         localStorage.setItem('currentSkillId', skillId);
         localStorage.setItem('currentPartId', partId);
         localStorage.setItem('currentSkillName', skillName);
-    
+
         // Enable current skill parts and disable others
         $('.skill-part-btn').each(function () {
             var btnSkillName = $(this).data('skill-name');
@@ -65,7 +80,7 @@ $(document).ready(function () {
                 $(this).prop('disabled', true);
             }
         });
-    }    
+    }
 
     function adjustLayout(partSelector) {
         var skillText = partSelector.closest('.skill-section').find('.skill-timer').text().trim();
@@ -118,7 +133,7 @@ $(document).ready(function () {
                     }
                 } else if (currentSkillName === "Speaking") {
                     handleSpeakingCountdownTransition();
-                } else if(currentSkillName === "Listening" || currentSkillName === "Reading") {
+                } else if (currentSkillName === "Listening" || currentSkillName === "Reading") {
                     Swal.fire({
                         title: 'Transitioning!',
                         text: 'Moving to the next skill.',
@@ -141,37 +156,37 @@ $(document).ready(function () {
         const testId = $('input[name="test_id"]').val();
         if (speakingPart === 1) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_1"]');
-            skillTimers['Speaking'] = 3 * 5;
+            skillTimers['Speaking'] = 3 * 60;
             $('#notification').show();
-            startRecording(3 * 5 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
+            startRecording(3 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 2) {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').prop('disabled', false);
-            skillTimers['Speaking'] = 5;
+            skillTimers['Speaking'] = 60;
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').click();
             $('#notification-take-note').show();
         } else if (speakingPart === 3) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_2"]');
-            skillTimers['Speaking'] = 3 * 5;
+            skillTimers['Speaking'] = 3 * 60;
             $('#notification').show();
-            startRecording(3 * 5 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
+            startRecording(3 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 4) {
-            skillTimers['Speaking'] = 5;
+            skillTimers['Speaking'] = 60;
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_3"]').prop('disabled', false);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_3"]').click();
             $('#notification-take-note').show();
-        } else if (speakingPart === 5) {
+        } else if (speakingPart === 60) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_3"]');
-            skillTimers['Speaking'] = 4 * 5;
+            skillTimers['Speaking'] = 4 * 60;
             $('#notification').show();
-            startRecording(4 * 5 + 1, recordingControls, speakingPart, testId); // Start recording for 4 minutes
+            startRecording(4 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 4 minutes
         }
-    
+
         if (speakingPart <= 5) {
             startTimer('Speaking');
         }
-    }      
+    }
 
     function startRecording(duration, questionElement, speakingPart, testId) {
         const questionId = questionElement.getAttribute('data-question-id');
@@ -230,7 +245,7 @@ $(document).ready(function () {
                                 console.log('Success:', data);
                                 // Kiểm tra nếu đang ở Part_3 của Speaking thì tự động nộp bài
                                 if (speakingPart === 5) {
-                                    $(document).ready(function() {
+                                    $(document).ready(function () {
                                         Swal.fire({
                                             title: 'Bạn đã hoàn thành bài kiểm tra',
                                             text: "Hệ thống sẽ nộp bài tự động",
@@ -239,12 +254,12 @@ $(document).ready(function () {
                                             timer: 3000,
                                             timerProgressBar: true,
                                             willClose: () => {
-                                                setTimeout(function() {
+                                                setTimeout(function () {
                                                     $("#submitTestButton").click();
                                                 }, 500);
                                             }
                                         });
-                                    }); 
+                                    });
                                 }
                             })
                             .catch(error => console.error('Error:', error));
@@ -268,7 +283,7 @@ $(document).ready(function () {
     }
 
     function startPreparationCountdown() {
-        var timer = 5;
+        var timer = 60;
         var interval = setInterval(function () {
             $('#prepTimer').text(--timer);
             if (timer <= 0) {
@@ -285,7 +300,7 @@ $(document).ready(function () {
         var savedSkillId = localStorage.getItem('currentSkillId');
         var savedPartId = localStorage.getItem('currentPartId');
         var savedSkillName = localStorage.getItem('currentSkillName');
-    
+
         if (savedSkillId && savedPartId) {
             showPart(savedSkillId, savedPartId, false);
         } else {
@@ -293,7 +308,7 @@ $(document).ready(function () {
             showPart(initialSkillPartBtn.data('skill-id'), initialSkillPartBtn.data('part-id'), true);
             savedSkillName = initialSkillPartBtn.data('skill-name');  // Set skill name for the first load
         }
-    
+
         // Kích hoạt các nút part của skill hiện tại, vô hiệu hóa các skill khác
         $('.skill-part-btn').each(function () {
             var btnSkillName = $(this).data('skill-name');
@@ -303,58 +318,58 @@ $(document).ready(function () {
                 $(this).prop('disabled', true);
             }
         });
-    
+
         // Vô hiệu hóa các phần của kỹ năng Speaking khi ở Part_1
         if (localStorage.getItem('currentSkillName') === "Speaking" && localStorage.getItem('currentPartId') === "Part_1") {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_1"]').prop('disabled', false);
         }
-    
+
         $('.skill-part-btn').on('click', function () {
             showPart($(this).data('skill-id'), $(this).data('part-id'), false);
         });
-    
+
         updateAnsweredCount(savedSkillId, savedPartId);
-    
+
         $('input[type="radio"]').on('change', function () {
             var skillContent = $(this).closest('.skill-content');
             updateAnsweredCount(skillContent.data('skill-id'), skillContent.data('part-id'));
         });
-    
+
         $('.skill-part-btn').on('click', function () {
             updateAnsweredCount($(this).data('skill-id'), $(this).data('part-id'));
         });
-    
+
         $('textarea').on('input', function () {
             var questionId = $(this).attr('id').split('_')[1];
             $(`#wordCount_${questionId}`).text(`${countWords($(this).val())} words`);
         });
-    
+
         $('#save-btn').click(function (e) {
             e.preventDefault();
             saveForms();
         });
-    
+
         $('#next-skill-btn').click(function () {
             handleNextSkillButtonClick();
         });
-    
+
         $('input[type="radio"]').each(function () {
             restoreRadioSelection($(this));
         });
-    
+
         $('textarea').each(function () {
             restoreTextareaContent($(this));
         });
-    
+
         $('textarea').on('input', function () {
             saveTextareaContent($(this));
         });
-    
+
         $('input[type="radio"]').change(function () {
             saveRadioSelection($(this));
         });
-    }       
+    }
 
     function updateAnsweredCount(skillId, partId) {
         var questions = $(`.skill-content[data-skill-id="${skillId}"][data-part-id="${partId}"] .options-container`);
@@ -402,16 +417,16 @@ $(document).ready(function () {
         }).get();
         var uniqueSkillNames = [...new Set(skillNames)];
         var nextSkillName = uniqueSkillNames[uniqueSkillNames.indexOf(currentSkillName) + 1];
-    
+
         if (nextSkillName) {
             var confirmationText = null;
-    
+
             if ((currentSkillName === "Listening" && nextSkillName === "Reading") || (currentSkillName === "Reading" && nextSkillName === "Writing")) {
                 confirmationText = "You won't be able to go back to the previous skill!";
             } else if (currentSkillName === "Writing" && nextSkillName === "Speaking") {
                 confirmationText = "You will have 60 seconds to prepare after you click OK.";
             }
-    
+
             if (confirmationText) {
                 Swal.fire({
                     title: 'Are you sure?',
@@ -447,7 +462,7 @@ $(document).ready(function () {
                 confirmButtonText: 'OK'
             });
         }
-    }    
+    }
 
     function restoreRadioSelection(radioButton) {
         var questionId = radioButton.attr('name');

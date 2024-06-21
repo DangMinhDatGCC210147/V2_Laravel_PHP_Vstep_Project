@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\ReadingsAudio;
 use App\Models\TestResult;
 use App\Models\TestSkill;
 use App\Models\User;
@@ -35,7 +36,7 @@ class IndexAdminController extends Controller
             })
             ->sortByDesc('total_duration');
 
-        $person = User::where('role', 2) 
+        $person = User::where('role', 2)
             ->withCount('testResults')
             ->orderByDesc('test_results_count')
             ->first();
@@ -101,17 +102,30 @@ class IndexAdminController extends Controller
     }
     public function showTableOfReadingQuestionBank()
     {
-        $readingQuestionBank = TestSkill::where('skill_name', 'Reading')
-            ->get();
+        // Truy vấn tất cả các kỹ năng có tên 'Reading'
+        $readingQuestionBank = TestSkill::where('skill_name', 'Reading')->get();
+
         $questions = [];
+        $readingAudioFiles = [];
 
         foreach ($readingQuestionBank as $index => $readingQuestion) {
+            // Truy vấn câu hỏi đầu tiên từ bảng questions với test_skill_id tương ứng
             $question = Question::where('test_skill_id', $readingQuestion->id)->first();
-            $questions[$index] = $question ? $question->part_name : 'No question available';
+            if ($question) {
+                $questions[$index] = $question->part_name;
+
+                // Truy vấn reading_audio_file từ bảng readings_audios với test_skill_id tương ứng
+                $readingAudio = ReadingsAudio::where('test_skill_id', $readingQuestion->id)->first();
+                $readingAudioFiles[$index] = $readingAudio ? $readingAudio->reading_audio_file : 'No audio file available';
+            } else {
+                $questions[$index] = 'No question available';
+                $readingAudioFiles[$index] = 'No audio file available';
+            }
         }
 
-        return view('admin.listQuestionBank.listOfReading', compact('readingQuestionBank', 'questions'));
+        return view('admin.listQuestionBank.listOfReading', compact('readingQuestionBank', 'questions', 'readingAudioFiles'));
     }
+
     public function showTableOfSpeakingQuestionBank()
     {
         $speakingQuestionBank = TestSkill::where('skill_name', 'Speaking')

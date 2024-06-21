@@ -244,9 +244,9 @@
                     </div>
                     <div class="col-md-6">
                         <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end">
-                            <p class="mb-0">Develop by <a href="mailto:dangminhdat03.forwork@gmail.com"
+                            <p class="mb-0">Developed by <a href="mailto:dangminhdat03.forwork@gmail.com"
                                     target="_blank">Dang Minh Dat</a> </p>
-                            <p class="mb-0">Support by <a href="mailto:khoahnvithuy@gmail.com" target="_blank">Ho
+                            <p class="mb-0">Supported by <a href="mailto:khoahnvithuy@gmail.com" target="_blank">Ho
                                     Nhat Khoa</a> </p>
                         </div>
                     </div>

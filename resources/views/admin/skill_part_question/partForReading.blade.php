@@ -36,15 +36,13 @@
                             <div class="p-2">
                                 @if ($partName == 'Part_1')
                                     @if (isset($questions))
-                                        <form action="{{ route('updateQuestionListening') }}" method="POST"
+                                        <form action="{{ route('updateQuestionReading') }}" method="POST"
                                             id="questionForm">
                                             @csrf
                                             @method('PUT')
                                             <input type="hidden" id="slug" name="slug" value="{{ $slug->id }}">
-                                            <input type="hidden" id="partName" name="partName"
-                                                value="{{ $partName }}">
-                                            <input type="hidden" id="skillName" name="skillName"
-                                                value="{{ $skillName }}">
+                                            <input type="hidden" id="partName" name="partName" value="{{ $partName }}">
+                                            <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Passage 1:</label>
                                                 <textarea id="textareaInput" name="passage" class="form-control" rows="8" placeholder="Enter text here" required>{{ old('passage', $passage->reading_audio_file ?? '') }}</textarea>
@@ -133,16 +131,12 @@
                                     @endif
                                 @elseif ($partName == 'Part_2')
                                     @if (isset($questions))
-                                        <form action="{{ route('updateQuestionReading') }}" method="POST"
-                                            id="questionForm">
+                                        <form action="{{ route('updateQuestionReading') }}" method="POST" id="questionForm">
                                             @csrf
                                             @method('PUT')
-                                            <input type="hidden" id="slug" name="slug"
-                                                value="{{ $slug->id }}">
-                                            <input type="hidden" id="partName" name="partName"
-                                                value="{{ $partName }}">
-                                            <input type="hidden" id="skillName" name="skillName"
-                                                value="{{ $skillName }}">
+                                            <input type="hidden" id="slug" name="slug" value="{{ $slug->id }}">
+                                            <input type="hidden" id="partName" name="partName" value="{{ $partName }}">
+                                            <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Passage 2:</label>
                                                 <textarea id="textareaInput" name="passage" class="form-control" rows="8" placeholder="Enter text here">{{ old('passage', $passage->reading_audio_file ?? '') }}</textarea>

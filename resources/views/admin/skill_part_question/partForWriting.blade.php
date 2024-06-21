@@ -95,12 +95,13 @@
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group mt-3">
                                                 <label for="question" class="mb-3">Requirement 2:</label>
-                                                <input type="text" id="question" name="question" class="form-control" placeholder="Enter requirement here" required value="{{ $questions[0]->question_text ?? '' }}">
+                                                <input type="text" id="question" name="question" class="form-control" placeholder="Enter requirement here" required value="You should spend about 40 minutes on this task.">
                                             </div>
                                             <div class="form-group mt-3">
                                                 <label for="passage{{ $partName }}" class="mb-3">Passage 2:</label>
                                                 <textarea id="editor{{ $partName }}" class="form-control" name="passage" rows="6" placeholder="Enter passage here"></textarea>
                                             </div>
+                                            <hr>
                                             <button type="submit" class="btn btn-primary">Save</button>
                                         </form>
                                     @endif

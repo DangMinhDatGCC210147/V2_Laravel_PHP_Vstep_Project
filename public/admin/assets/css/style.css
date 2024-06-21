@@ -19062,10 +19062,10 @@ span.flatpickr-weekday,
 
 /*!
  * Waves v0.7.6
- * http://fian.my.id/Waves 
- * 
- * Copyright 2014-2018 Alfiana E. Sibuea and other contributors 
- * Released under the MIT license 
+ * http://fian.my.id/Waves
+ *
+ * Copyright 2014-2018 Alfiana E. Sibuea and other contributors
+ * Released under the MIT license
  * https://github.com/fians/Waves/blob/master/LICENSE */
 .waves-effect {
   position: relative;
@@ -19196,12 +19196,15 @@ span.flatpickr-weekday,
   display: block;
 }
 
-
 .audio-wrapper {
-  width: 100%; 
+  width: 100%;
   padding: 10px;
 }
 audio {
   width: 100%;
-  outline: none;   
+  outline: none;
+}
+
+.ck.ck-content{
+    background-color: var(--bs-secondary-bg) !important;
 }
