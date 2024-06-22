@@ -154,10 +154,11 @@ html, body {
     transform: scale(1.5);
     margin: 5px;
 }
-
+/* 
 .no-select {
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-}
+} */
+

@@ -30,8 +30,9 @@
                         <div class="badge bg-info">
                             <span id="answered-count">Số câu đã hoàn thành: 0/0</span>
                         </div>
-                        <button class="btn btn-warning" id="submitTestButton" data-test-id="{{ $test->id }}" style="font-size: 16px"><strong>Nộp
-                            bài</strong></button>
+                        <button class="btn btn-warning" id="submitTestButton" data-test-id="{{ $test->id }}"
+                            style="font-size: 16px"><strong>Nộp
+                                bài</strong></button>
                     </div>
                 </div>
                 <div class="m-2 mb-5">
@@ -59,6 +60,23 @@
                                             @endif
 
                                             @if ($audio->isAudio())
+                                                <style>
+                                                    audio::-webkit-media-controls-volume-control-container,
+                                                    audio::-webkit-media-controls-mute-button,
+                                                    audio::-webkit-media-controls-volume-slider {
+                                                        display: none !important;
+                                                    }
+
+                                                    .mejs-container {
+                                                        width: 100% !important;
+                                                        /* Set width to 100% to make it full width */
+                                                    }
+
+                                                    .mejs-controls {
+                                                        width: 100% !important;
+                                                        /* Set controls width to 100% */
+                                                    }
+                                                </style>
                                                 <audio controls controlsList="nodownload"
                                                     id="audioPlayer-{{ $audio->id }}">
                                                     <source src="{{ asset('storage/' . $audio->reading_audio_file) }}"
@@ -79,28 +97,31 @@
                                 </div>
                             @endforeach
                             <div class="card notification text-bg-danger mb-3" id="notification"
-                                style="display: none; max-width: 40rem;">
+                                style="display: none; max-width: 100%;">
                                 <div class="card-header text-dark">
-                                    <h4>CHÚ Ý:</h4>
+                                    <span>CHÚ Ý:</span>
                                 </div>
                                 <div class="card-body">
                                     <blockquote class="blockquote mb-0">
-                                        <h5>BÀI NÓI ĐANG ĐƯỢC THU ÂM TRỰC TIẾP, TRONG QUÁ TRÌNH THU ÂM KHÔNG ĐƯỢC
-                                            TƯƠNG TÁC VỚI HỆ THỐNG</h5>
+                                        <span>BÀI NÓI ĐANG ĐƯỢC THU ÂM TRỰC TIẾP, TRONG QUÁ TRÌNH THU ÂM KHÔNG ĐƯỢC
+                                            TƯƠNG TÁC VỚI HỆ THỐNG</span>
                                     </blockquote>
                                 </div>
                             </div>
+
                             <div class="card notification text-bg-success mb-3" id="notification-take-note"
-                                style="display: none; max-width: 40rem;">
+                                style="display: none; max-width: 100%;">
                                 <div class="card-header text-dark">
-                                    <h4>CHÚ Ý:</h4>
+                                    <span>CHÚ Ý:</span>
                                 </div>
                                 <div class="card-body">
                                     <blockquote class="blockquote mb-0">
-                                        <h5>THỜI GIAN ĐỌC CÂU HỎI VÀ CHUẨN BỊ Ý TƯỞNG ĐANG ĐẾM NGƯỢC</h5>
+                                        <span>THỜI GIAN ĐỌC CÂU HỎI VÀ CHUẨN BỊ Ý TƯỞNG ĐANG ĐẾM NGƯỢC</span>
                                     </blockquote>
                                 </div>
                             </div>
+
+                            <div id="audioMotion" style="width: 100%; height: 250px; display: none"></div>
                         </div>
                         <div class="col-md-12 overflow-auto border-style form-area" style="height: 100%;" id="form-area">
                             @foreach ($testParts as $testPart)
@@ -296,6 +317,7 @@
     <!-- End Footer -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.webrtc-experiment.com/RecordRTC.js"></script>
+    <script type="module" src="{{ asset('students/assets/js/recording.js') }}"></script>
     <script src="{{ asset('students/assets/js/display_test_page.js') }}"></script>
     <script src="{{ asset('students/assets/js/record_speaking.js') }}"></script>
     <script>
@@ -338,8 +360,10 @@
                 var testResultUrl = `/students/tests/${testId}/results`;
                 endSession(testId);
                 Swal.fire({
-                    title: 'Bạn có chắc chắn?',
-                    text: "Bạn sẽ không thể hoàn tác lại sau khi nộp!",
+                    html: `
+                        <h3>Bạn đã hoàn thành bài kiểm tra</h3>
+                        <h4>Hệ thống sẽ nộp bài tự động</h4>
+                    `,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

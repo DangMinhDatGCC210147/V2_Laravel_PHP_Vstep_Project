@@ -82,21 +82,15 @@ class InstructorsController extends Controller
         // Update the user data
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->lecturer_id = $request->lecturer_id;
-        $user->student_id = $request->student_id;
+        $user->account_id = $request->account_id;
 
-        if ($user->lecturer_id != null) {
-            $user->role = '1';
-        } else {
-            $user->role = '2';
-        }
         // Save the updated user
         $user->save();
 
         // Redirect back with a success message
-        if ($user->lecturer_id != null) {
+        if ($user->role == 1) {
             return redirect()->route('tableLecturer.index')->with('success', 'Lecturer updated successfully');
-        } else {
+        } else if($user->role == 2){
             return redirect()->route('tableStudent.index')->with('success', 'Student updated successfully');
         }
     }

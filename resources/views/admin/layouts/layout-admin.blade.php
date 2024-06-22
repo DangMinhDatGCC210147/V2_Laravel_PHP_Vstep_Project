@@ -302,9 +302,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Check if there is a success message in the session
             @if (session('success'))
+            const successMessage = @json(session('success'));
                 Swal.fire({
-                    title: 'Success!',
-                    text: '{{ session('success') }}',
+                    html: `
+                        <h3>Success!</h3>
+                        <h4>${successMessage}</h4>
+                    `,
                     icon: 'success',
                     showConfirmButton: false,
                     timer: 3000,

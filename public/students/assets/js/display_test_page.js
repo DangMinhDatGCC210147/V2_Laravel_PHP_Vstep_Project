@@ -4,9 +4,9 @@ $(document).ready(function () {
     var countdownInterval;
     var preparationCountdownStarted = false;
     var skillTimers = {
-        'Listening': 47 * 60,  // Adjusted for testing purposes
-        'Reading': 60 * 60,   // 60 minutes
-        'Writing': 60 * 60,   // Adjusted for testing purposes
+        'Listening': 6,
+        'Reading': 6,
+        'Writing': 6,
         'Speaking': 12  // Initial 12 seconds for Speaking
     };
     var currentSkillName = null; // Track the current skill name
@@ -20,25 +20,25 @@ $(document).ready(function () {
     });
 
     function showPart(skillId, partId, shouldResetTimer = false) {
-        audioElements.each(function () {
-            this.pause();
-            this.currentTime = 0;
-        });
-        var audioPlayer = document.getElementById('audioPlayer-' + skillId);
-        if (audioPlayer) {
-            // Kiểm tra trạng thái đã phát trong localStorage
-            if (localStorage.getItem('played-' + skillId) === 'true') {
-                audioPlayer.controls = false; // Vô hiệu hóa các điều khiển
-            } else {
-                // Lắng nghe sự kiện kết thúc để đảm bảo không phát lại và disable
-                audioPlayer.addEventListener('ended', function () {
-                    this.currentTime = 0;
-                    this.pause();
-                    this.controls = false; // Vô hiệu hóa các điều khiển
-                    localStorage.setItem('played-' + skillId, 'true'); // Lưu trạng thái đã phát
-                });
-            }
-        }
+        // audioElements.each(function () {
+        //     this.pause();
+        //     this.currentTime = 0;
+        // });
+        // var audioPlayer = document.getElementById('audioPlayer-' + skillId);
+        // if (audioPlayer) {
+        //     // Kiểm tra trạng thái đã phát trong localStorage
+        //     if (localStorage.getItem('played-' + skillId) === 'true') {
+        //         audioPlayer.controls = false; // Vô hiệu hóa các điều khiển
+        //     } else {
+        //         // Lắng nghe sự kiện kết thúc để đảm bảo không phát lại và disable
+        //         audioPlayer.addEventListener('ended', function () {
+        //             this.currentTime = 0;
+        //             this.pause();
+        //             this.controls = false; // Vô hiệu hóa các điều khiển
+        //             localStorage.setItem('played-' + skillId, 'true'); // Lưu trạng thái đã phát
+        //         });
+        //     }
+        // }
 
         $('.skill-content').hide();
         var partSelector = $('[data-skill-id="' + skillId + '"][data-part-id="' + partId + '"]');
@@ -135,8 +135,10 @@ $(document).ready(function () {
                     handleSpeakingCountdownTransition();
                 } else if (currentSkillName === "Listening" || currentSkillName === "Reading") {
                     Swal.fire({
-                        title: 'Transitioning!',
-                        text: 'Moving to the next skill.',
+                        html: `
+                                <h3>Transitioning!</h3>
+                                <h4>Moving to the next skill.</h4>
+                            `,
                         icon: 'info',
                         timer: 2000,
                         timerProgressBar: true,
@@ -156,31 +158,34 @@ $(document).ready(function () {
         const testId = $('input[name="test_id"]').val();
         if (speakingPart === 1) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_1"]');
-            skillTimers['Speaking'] = 3 * 60;
+            skillTimers['Speaking'] = 3 * 3;
             $('#notification').show();
-            startRecording(3 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
+            $('#audioMotion').show();
+            startRecording(3 * 3 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 2) {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').prop('disabled', false);
-            skillTimers['Speaking'] = 60;
+            skillTimers['Speaking'] = 10;
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').click();
             $('#notification-take-note').show();
         } else if (speakingPart === 3) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_2"]');
-            skillTimers['Speaking'] = 3 * 60;
+            skillTimers['Speaking'] = 3 * 3;
             $('#notification').show();
-            startRecording(3 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
+            $('#audioMotion').show();
+            startRecording(3 * 3 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 4) {
-            skillTimers['Speaking'] = 60;
+            skillTimers['Speaking'] = 3;
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_3"]').prop('disabled', false);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_3"]').click();
             $('#notification-take-note').show();
-        } else if (speakingPart === 60) {
+        } else if (speakingPart === 5) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_3"]');
-            skillTimers['Speaking'] = 4 * 60;
+            skillTimers['Speaking'] = 4 * 3;
             $('#notification').show();
-            startRecording(4 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 4 minutes
+            $('#audioMotion').show();
+            startRecording(4 * 3 + 1, recordingControls, speakingPart, testId); // Start recording for 4 minutes
         }
 
         if (speakingPart <= 5) {
@@ -188,86 +193,86 @@ $(document).ready(function () {
         }
     }
 
-    function startRecording(duration, questionElement, speakingPart, testId) {
-        const questionId = questionElement.getAttribute('data-question-id');
-        const startButton = questionElement.querySelector('.startRecording');
-        const stopButton = questionElement.querySelector('.stopRecording');
-        const audioPlayback = questionElement.querySelector('.audioPlayback');
-        const skillId = questionElement.getAttribute('data-skill-id');
-        // const testId = $(this).closest('form').find('input[name="test_id"]').val();
+    // function startRecording(duration, questionElement, speakingPart, testId) {
+    //     const questionId = questionElement.getAttribute('data-question-id');
+    //     const startButton = questionElement.querySelector('.startRecording');
+    //     const stopButton = questionElement.querySelector('.stopRecording');
+    //     const audioPlayback = questionElement.querySelector('.audioPlayback');
+    //     const skillId = questionElement.getAttribute('data-skill-id');
+    //     // const testId = $(this).closest('form').find('input[name="test_id"]').val();
 
-        console.log("Start Recording for Question ID: " + questionId + ", Skill ID: " + skillId);
-        console.log("Start Recording for Speaking Part: " + speakingPart);
-        console.log("Start Recording for Test ID: " + testId);
+    //     console.log("Start Recording for Question ID: " + questionId + ", Skill ID: " + skillId);
+    //     console.log("Start Recording for Speaking Part: " + speakingPart);
+    //     console.log("Start Recording for Test ID: " + testId);
 
-        let recorder;
+    //     let recorder;
 
-        navigator.mediaDevices.getUserMedia({
-            audio: true
-        })
-            .then(stream => {
-                const options = {
-                    mimeType: 'audio/mp3',
-                    recorderType: RecordRTC.StereoAudioRecorder,
-                    desiredSampRate: 16000
-                };
-                recorder = new RecordRTC(stream, options);
-                recorder.startRecording();
+    //     navigator.mediaDevices.getUserMedia({
+    //         audio: true
+    //     })
+    //         .then(stream => {
+    //             const options = {
+    //                 mimeType: 'audio/mp3',
+    //                 recorderType: RecordRTC.StereoAudioRecorder,
+    //                 desiredSampRate: 16000
+    //             };
+    //             recorder = new RecordRTC(stream, options);
+    //             recorder.startRecording();
 
-                startButton.disabled = true;
-                stopButton.disabled = false;
+    //             startButton.disabled = true;
+    //             stopButton.disabled = false;
 
-                setTimeout(() => {
-                    recorder.stopRecording(() => {
-                        const audioBlob = recorder.getBlob();
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        audioPlayback.src = audioUrl;
-                        audioPlayback.hidden = false;
+    //             setTimeout(() => {
+    //                 recorder.stopRecording(() => {
+    //                     const audioBlob = recorder.getBlob();
+    //                     const audioUrl = URL.createObjectURL(audioBlob);
+    //                     audioPlayback.src = audioUrl;
+    //                     audioPlayback.hidden = false;
 
-                        let formData = new FormData();
-                        formData.append('recording', new File([audioBlob], "recording.mp3", {
-                            type: 'audio/mp3'
-                        }));
-                        formData.append('skill_id', skillId);
-                        formData.append('question_id', questionId);
-                        formData.append('test_id', testId);
-                        fetch('/saveRecording', {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').getAttribute('content'),
-                                'Accept': 'application/json',
-                            },
-                            body: formData
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Success:', data);
-                                // Kiểm tra nếu đang ở Part_3 của Speaking thì tự động nộp bài
-                                if (speakingPart === 5) {
-                                    $(document).ready(function () {
-                                        Swal.fire({
-                                            title: 'Bạn đã hoàn thành bài kiểm tra',
-                                            text: "Hệ thống sẽ nộp bài tự động",
-                                            icon: 'info',
-                                            showCancelButton: false,
-                                            timer: 3000,
-                                            timerProgressBar: true,
-                                            willClose: () => {
-                                                setTimeout(function () {
-                                                    $("#submitTestButton").click();
-                                                }, 500);
-                                            }
-                                        });
-                                    });
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    });
-                    stopButton.disabled = true;
-                }, duration * 1000); // Convert seconds to milliseconds
-            }).catch(error => console.error('Error:', error));
-    }
+    //                     let formData = new FormData();
+    //                     formData.append('recording', new File([audioBlob], "recording.mp3", {
+    //                         type: 'audio/mp3'
+    //                     }));
+    //                     formData.append('skill_id', skillId);
+    //                     formData.append('question_id', questionId);
+    //                     formData.append('test_id', testId);
+    //                     fetch('/saveRecording', {
+    //                         method: 'POST',
+    //                         headers: {
+    //                             'X-CSRF-TOKEN': document.querySelector(
+    //                                 'meta[name="csrf-token"]').getAttribute('content'),
+    //                             'Accept': 'application/json',
+    //                         },
+    //                         body: formData
+    //                     })
+    //                         .then(response => response.json())
+    //                         .then(data => {
+    //                             console.log('Success:', data);
+    //                             // Kiểm tra nếu đang ở Part_3 của Speaking thì tự động nộp bài
+    //                             if (speakingPart === 5) {
+    //                                 $(document).ready(function () {
+    //                                     Swal.fire({
+    //                                         title: 'Bạn đã hoàn thành bài kiểm tra',
+    //                                         text: "Hệ thống sẽ nộp bài tự động",
+    //                                         icon: 'info',
+    //                                         showCancelButton: false,
+    //                                         timer: 3000,
+    //                                         timerProgressBar: true,
+    //                                         willClose: () => {
+    //                                             setTimeout(function () {
+    //                                                 $("#submitTestButton").click();
+    //                                             }, 500);
+    //                                         }
+    //                                     });
+    //                                 });
+    //                             }
+    //                         })
+    //                         .catch(error => console.error('Error:', error));
+    //                 });
+    //                 stopButton.disabled = true;
+    //             }, duration * 1000); // Convert seconds to milliseconds
+    //         }).catch(error => console.error('Error:', error));
+    // }
 
     function enableNextSkillButtons(currentSkillName) {
         var skillNames = $('.skill-part-btn').map(function () {
@@ -283,7 +288,7 @@ $(document).ready(function () {
     }
 
     function startPreparationCountdown() {
-        var timer = 60;
+        var timer = 5;
         var interval = setInterval(function () {
             $('#prepTimer').text(--timer);
             if (timer <= 0) {
@@ -396,8 +401,10 @@ $(document).ready(function () {
                     if ((completedForms === totalForms - 1 && !popupShown) || completedForms === 1) {
                         popupShown = true;
                         Swal.fire({
-                            title: 'Success!',
-                            text: 'All responses have been saved successfully.',
+                            html: `
+                                <h3>Success!</h3>
+                                <h4>All responses have been saved successfully.</h4>
+                            `,
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 1500
@@ -429,7 +436,11 @@ $(document).ready(function () {
 
             if (confirmationText) {
                 Swal.fire({
-                    title: 'Are you sure?',
+                    html: `
+                        <h3>Are you sure?</h3>
+                        <h4>${confirmationText}</h4>
+                    `,
+                    title: '',
                     text: confirmationText,
                     icon: 'warning',
                     showCancelButton: true,
@@ -455,8 +466,10 @@ $(document).ready(function () {
         } else if (currentSkillName === "Speaking") {
             // Nếu currentSkillName là "Speaking" và không có kỹ năng tiếp theo
             Swal.fire({
-                title: 'Final Skill',
-                text: 'This is the final skill of the test.',
+                html: `
+                    <h3>Final Skill</h3>
+                    <h4>This is the final skill of the test.</h4>
+                `,
                 icon: 'info',
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'OK'
