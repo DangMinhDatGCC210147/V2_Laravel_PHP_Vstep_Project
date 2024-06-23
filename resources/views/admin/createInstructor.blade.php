@@ -24,6 +24,59 @@
     </div>
     <div class="row mt-2">
         <div class="col-12">
+            @if (!isset($user))
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo cấu trúc file excel để tạo tài khoản với số lượng nhiều</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Bước 1:</strong> Tạo một file excel rỗng</p>
+                                <p><strong>Bước 2:</strong> Nhập dữ liệu tương ứng như sau (không cần nhập tên cột vào file):</p>
+                                <ul>
+                                    <li>Cột 1: Nhập đầy đủ họ tên</li>
+                                    <li>Cột 2: Nhập địa chỉ email (email đăng kí tài khoản dùng để đăng nhập)</li>
+                                    <li>Cột 3: Nhập mã số giảng viên</li>
+                                    <li>Cột 4: Nhập mật khẩu (Ex: 12345678)</li>
+                                </ul>
+                                <p><strong>Bước 3:</strong> Bấm nút "Register" màu trắng để đăng kí</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action="{{ route('createLecturer.excel.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <!-- File upload for Excel -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h4 class="header-title">Upload Excel File to Register Multiple Lecturer</h4>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Hướng dẫn tạo file Excel
+                            </button>
+                            <div class="mb-2 row">
+                                <label class="col-md-2 col-form-label" for="excel_file">Excel File</label>
+                                <div class="col-md-10">
+                                    <input type="file" id="excel_file" class="form-control" name="excel_file" required>
+                                </div>
+                            </div>
+                            <div class="mb-2 row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-10">
+                                    <button type="submit" class="btn btn-light">Register</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            @endif
             <div class="card">
                 <div class="card-body">
                     <h4 class="header-title">{{ isset($user) ? 'Edit' : 'Create' }} New Lecturer Account</h4>

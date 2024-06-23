@@ -253,10 +253,11 @@ class SkillPartQuestionController extends Controller
     public function updateQuestionReading(Request $request)
     {
         // Log the entire request data
-        // logger()->info('Request data:', $request->all());
+        logger()->info('Request data:', $request->all());
 
         try {
             $validated = $request->validate([
+                'testSkillId' => 'required',
                 'slug' => 'required',
                 'partName' => 'required|string',
                 'skillName' => 'required|string',
@@ -271,27 +272,36 @@ class SkillPartQuestionController extends Controller
             ]);
 
             // Log validated data
-            // logger()->info('Validated data:', $validated);
+            logger()->info('Validated data:', $validated);
 
             $slugId = $validated['slug'];
-
+            $readingAudioId = $validated['testSkillId'];
             // Fetch the existing TestSkill
-            $testSkill = TestSkill::where('id', $slugId)->firstOrFail();
+            $testSkill = TestSkill::where('id', $slugId)->first();
+            if (!$testSkill) {
+                logger()->error('TestSkill not found', ['id' => $slugId]);
+                return redirect()->back()->with('error', 'TestSkill not found.');
+            }
+            logger()->info('Fetched TestSkill:', ['id' => $testSkill->id]);
 
             // Fetch the existing ReadingsAudio
             $readingAudio = ReadingsAudio::where('test_skill_id', $testSkill->id)
-                ->where('id', $slugId)
-                ->firstOrFail();
+                ->where('id', $readingAudioId)
+                ->first();
+            if (!$readingAudio) {
+                logger()->error('ReadingsAudio not found', ['test_skill_id' => $testSkill->id, 'id' => $slugId]);
+                return redirect()->back()->with('error', 'ReadingsAudio not found.');
+            }
             $readingAudio->reading_audio_file = $validated['passage'];
             $readingAudio->save();
 
             // Log after saving ReadingsAudio
-            // logger()->info('ReadingsAudio updated:', ['id' => $readingAudio->id]);
+            logger()->info('ReadingsAudio updated:', ['id' => $readingAudio->id]);
 
             // Loop through the questions to update
             foreach ($validated['questions'] as $questionData) {
                 // Log question data before processing
-                // logger()->info('Processing question:', $questionData);
+                logger()->info('Processing question:', $questionData);
 
                 // Fetch the existing question by ID
                 $question = Question::findOrFail($questionData['id']);
@@ -299,12 +309,12 @@ class SkillPartQuestionController extends Controller
                 $question->save();
 
                 // Log after updating question
-                // logger()->info('Question updated:', ['id' => $question->id]);
+                logger()->info('Question updated:', ['id' => $question->id]);
 
                 // Loop through the options to update
                 foreach ($questionData['options'] as $optionData) {
                     // Log option data before processing
-                    // logger()->info('Processing option:', $optionData);
+                    logger()->info('Processing option:', $optionData);
 
                     // Fetch the existing option by ID
                     $option = Option::findOrFail($optionData['id']);
@@ -313,7 +323,7 @@ class SkillPartQuestionController extends Controller
                     $option->save();
 
                     // Log after updating option
-                    // logger()->info('Option updated:', ['id' => $option->id]);
+                    logger()->info('Option updated:', ['id' => $option->id]);
                 }
             }
 
@@ -325,6 +335,7 @@ class SkillPartQuestionController extends Controller
             return redirect()->back()->with('error', 'An error occurred while updating the reading part.');
         }
     }
+
 
     public function storeQuestionListening(Request $request)
     {
@@ -627,7 +638,7 @@ class SkillPartQuestionController extends Controller
     public function updateQuestionSpeaking(Request $request)
     {
         // Log the entire request data
-        logger()->info('Request data:', $request->all());
+        // logger()->info('Request data:', $request->all());
 
         try {
             $validated = $request->validate([

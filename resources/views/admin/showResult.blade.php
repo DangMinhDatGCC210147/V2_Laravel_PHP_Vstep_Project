@@ -66,14 +66,20 @@
                                     </td>
                                     <td>
                                         @if ($result->speaking_part1 != null || $result->speaking_part2 != null || $result->speaking_part3 != null)
-                                            {{ $result->speaking }}
+                                            {{ number_format($result->speaking, 1) }}
                                         @else
                                             {{ '-' }}
                                         @endif
                                     </td>
                                     <td>
                                         @if ($result->computed_writing_score != 0.0 && $result->speaking !== null)
-                                            {{ number_format($result->average_score, 1) }}
+                                            @if( number_format($result->average_score, 1) >= 8.0)
+                                                <div style="color: rgb(187, 187, 16)"><strong>{{ number_format($result->average_score, 1) }}</strong></div>
+                                            @elseif ( number_format($result->average_score, 1) >= 6.0)
+                                                <div style="color: rgb(9, 195, 9)"><strong>{{ number_format($result->average_score, 1) }}</strong></div>
+                                            @elseif( number_format($result->average_score, 1) < 6.0)
+                                                <div style="color:rgb(225, 14, 14)"><strong>{{ number_format($result->average_score, 1) }}</strong></div>
+                                            @endif
                                         @else
                                             {{ '-' }}
                                         @endif
@@ -95,32 +101,6 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            {{-- @foreach ($lecturers as $lecturer)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $lecturer->name }}</td>
-                                    <td>{{ $lecturer->email }}</td>
-                                    <td>{{ $lecturer->account_id }}</td>
-                                    <td>
-                                        <a href="{{ route('createInstructor.edit', $lecturer->slug) }}"><i
-                                                class="mdi mdi-lead-pencil mdi-24px"></i></a>
-                                        <a href="{{ route('createInstructor.destroy', $lecturer->slug) }}"
-                                            onclick="event.preventDefault();
-                                                    if(confirm('Are you sure you want to delete this test?')) {
-                                                        document.getElementById('delete-form-{{ $lecturer->slug }}').submit();
-                                                    }">
-                                            <i class="mdi mdi-delete-empty mdi-24px" style="color: red"></i>
-                                        </a>
-                                        <form id="delete-form-{{ $lecturer->slug }}"
-                                            action="{{ route('createInstructor.destroy', $lecturer->slug) }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-
-                                    </td>
-                                </tr>
-                            @endforeach --}}
                         </tbody>
                     </table>
 
@@ -133,10 +113,13 @@
         // Chạy script này khi tài liệu đã sẵn sàng
         document.addEventListener('DOMContentLoaded', function() {
             @if (session('error'))
+            const errorMessage = @json(session('error'));
                 Swal.fire({
+                    html: `
+                        <h3>Oops...</h3>
+                        <h4>${errorMessage}</h4>
+                    `,
                     icon: 'error',
-                    title: 'Oops...',
-                    text: '{{ session('error') }}',
                 });
             @endif
         });

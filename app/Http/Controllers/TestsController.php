@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Instructor;
+use App\Models\Option;
 use App\Models\Question;
 use App\Models\ReadingsAudio;
 use App\Models\SkillPart;
 use App\Models\Student;
 use App\Models\Test;
-use App\Models\TestSkill;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 
 class TestsController extends Controller
 {

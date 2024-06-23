@@ -90,7 +90,7 @@
                                                         class="img-fluid">
                                                 </div>
                                             @elseif ($audio->isText())
-                                                <p>{!! nl2br($audio->reading_audio_file) !!}</p>
+                                                <h5>{!! nl2br($audio->reading_audio_file) !!}</h5>
                                             @endif
                                         </div>
                                     @endforeach

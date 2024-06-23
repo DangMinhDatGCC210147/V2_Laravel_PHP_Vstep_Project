@@ -58,7 +58,7 @@
                                             <div class="form-group mt-3">
                                                 <label for="duration">Duration (in minutes)</label>
                                                 <input type="number" name="duration" id="duration" class="form-control"
-                                                    min="" value="{{ $assignment->duration ?? '' }}"
+                                                    min="0" value="{{ $assignment->duration ?? '' }}"
                                                     placeholder="Ex: 10, 15, 20, 30, ...">
                                             </div>
 

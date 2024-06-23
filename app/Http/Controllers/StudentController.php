@@ -102,7 +102,14 @@ class StudentController extends Controller
             for ($i = 0; $i < 10; $i++) {
                 $randomNumbers .= random_int(0, 9);
             }
-            $testName = 'Test_' . $randomNumbers;
+            $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            $randomLetters = '';
+            for ($i = 0; $i < 3; $i++) {
+                $randomIndex = random_int(0, strlen($letters) - 1);
+                $randomLetters .= $letters[$randomIndex];
+            }
+
+            $testName = 'Test_' . $randomNumbers . $randomLetters;
 
             $test = Test::create([
                 'duration' => '03:00:00',
@@ -280,5 +287,4 @@ class StudentController extends Controller
             'accountId' => $accountId,
         ]);
     }
-
 }

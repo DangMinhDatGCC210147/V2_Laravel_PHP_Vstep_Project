@@ -25,12 +25,38 @@
         </div>
     </div>
     <div class="row mt-2">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo câu hỏi Reading cho form</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Audio For Part: </strong> Giảng viên bấm vào Choose file để thực hiện chọn file từ máy tính và bấm "Open" để chọn file vào form"</p>
+                        <p><strong>Question:</strong> Ở mỗi mục Question sẽ có 5 hàng để nhập:</p>
+                        <ul>
+                            <li><p>Hàng đầu: Dùng để nhập nội dung câu hỏi</p></li>
+                            <li><p>Bốn hàng còn lại: Dùng để nhập các nội dung đáp án chọn</p></li>
+                        </ul>
+                        <p><strong>Radio Box: </strong> Trước bốn hàng nhập nội dung đáp án có bốn hình tròn nhỏ, dùng để tick chọn khi hàng nhập tương ứng là đáp án đúng</p>
+                        <p><strong>Nút Save/Save changes: </strong>Khi đã thực hiện nhập đầy đủ sẽ bấm vào nút Save/Save changes để lưu</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h3>Listening Skill - New Question For {{ str_replace('_', ' ', $partName) }}</h3>
                 </div>
                 <div class="card-body">
+                    <button type="button" class="btn btn-warning mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Hướng dẫn tạo câu hỏi
+                    </button>
                     <div class="row">
                         <div class="col-12">
                             <div class="p-2">

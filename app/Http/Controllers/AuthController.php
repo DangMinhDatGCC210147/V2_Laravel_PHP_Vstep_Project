@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\LecturersImport;
 use App\Imports\UsersImport;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class AuthController extends Controller
 {
-    public function registerExcel(Request $request)
+    public function registerExcelStudents(Request $request)
     {
         if ($request->hasFile('excel_file')) {
             try {
@@ -29,6 +30,24 @@ class AuthController extends Controller
             }
         } else {
             return redirect()->route('tableStudent.index')->with('error', 'No file was uploaded.');
+        }
+    }
+
+    public function registerExcelLecturers(Request $request)
+    {
+        if ($request->hasFile('excel_file')) {
+            try {
+                Log::info("Received file: " . $request->file('excel_file')->getClientOriginalName());
+
+                Excel::import(new LecturersImport, $request->file('excel_file'));
+
+                return redirect()->route('tableLecturer.index')->with('success', 'All users registered successfully');
+            } catch (\Exception $e) {
+                Log::error("Error during Excel import: " . $e->getMessage());
+                return redirect()->route('tableLecturer.index')->with('error', 'There was an error processing the Excel file.');
+            }
+        } else {
+            return redirect()->route('tableLecturer.index')->with('error', 'No file was uploaded.');
         }
     }
 

@@ -80,14 +80,20 @@
                                             </td>
                                             <td>
                                                 @if ($result->speaking_part1 != null || $result->speaking_part2 != null || $result->speaking_part3 != null)
-                                                    {{ $result->speaking }}
+                                                    {{ number_format($result->speaking, 1) }}
                                                 @else
                                                     {{ '-' }}
                                                 @endif
                                             </td>
                                             <td>
                                                 @if ($result->computed_writing_score != 0.0 && $result->speaking !== null)
-                                                    {{ number_format($result->average_score, 1) }}
+                                                    @if( number_format($result->average_score, 1) >= 8.0)
+                                                        <div style="color: yellow">{{ number_format($result->average_score, 1) }}</div>
+                                                    @elseif ( number_format($result->average_score, 1) >= 6.0 && number_format($result->average_score, 1) < 8.0)
+                                                        <div style="color: rgb(9, 195, 9)">{{ number_format($result->average_score, 1) }}</div>
+                                                    @elseif( number_format($result->average_score, 1) < 6.0)
+                                                        <div style="color:rgb(225, 14, 14)">{{ number_format($result->average_score, 1) }}</div>
+                                                    @endif
                                                 @else
                                                     {{ '-' }}
                                                 @endif

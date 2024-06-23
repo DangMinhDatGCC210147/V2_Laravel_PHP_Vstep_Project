@@ -4,9 +4,9 @@ $(document).ready(function () {
     var countdownInterval;
     var preparationCountdownStarted = false;
     var skillTimers = {
-        'Listening': 6,
-        'Reading': 6,
-        'Writing': 6,
+        'Listening': 47 * 60,
+        'Reading': 60 * 60,
+        'Writing': 60 * 60,
         'Speaking': 12  // Initial 12 seconds for Speaking
     };
     var currentSkillName = null; // Track the current skill name

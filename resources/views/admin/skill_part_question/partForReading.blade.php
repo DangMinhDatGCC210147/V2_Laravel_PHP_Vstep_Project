@@ -25,27 +25,53 @@
         </div>
     </div>
     <div class="row mt-2">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo câu hỏi Reading cho form</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Passage: </strong> Giảng viên có thể copy passage của bài reading và dán vào nơi nhập của passage mà không bị mất định dạng. Màu sắc đề xuất cho passage là "Light Grey"</p>
+                        <p><strong>Question:</strong> Ở mỗi mục Question sẽ có 5 hàng để nhập:</p>
+                        <ul>
+                            <li><p>Hàng đầu: Dùng để nhập nội dung câu hỏi</p></li>
+                            <li><p>Bốn hàng còn lại: Dùng để nhập các nội dung đáp án chọn</p></li>
+                        </ul>
+                        <p><strong>Radio Box: </strong> Trước bốn hàng nhập nội dung đáp án có bốn hình tròn nhỏ, dùng để tick chọn khi hàng nhập tương ứng là đáp án đúng</p>
+                        <p><strong>Nút Save/Save changes: </strong>Khi đã thực hiện nhập đầy đủ sẽ bấm vào nút Save/Save changes để lưu</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h3>Reading Skill - New Question For {{ str_replace('_', ' ', $partName) }}</h3>
                 </div>
                 <div class="card-body">
+                    <button type="button" class="btn btn-warning mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Hướng dẫn tạo câu hỏi
+                    </button>
                     <div class="row">
                         <div class="col-12">
                             <div class="p-2">
                                 @if ($partName == 'Part_1')
                                     @if (isset($questions))
-                                        <form action="{{ route('updateQuestionReading') }}" method="POST"
-                                            id="questionForm">
+                                        <form action="{{ route('updateQuestionReading') }}" method="POST" id="questionForm">
                                             @csrf
                                             @method('PUT')
+                                            <input type="hidden" id="testSkillId" name="testSkillId" value="{{ $passage->id }}">
                                             <input type="hidden" id="slug" name="slug" value="{{ $slug->id }}">
                                             <input type="hidden" id="partName" name="partName" value="{{ $partName }}">
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Passage 1:</label>
-                                                <textarea id="textareaInput" name="passage" class="form-control" rows="8" placeholder="Enter text here" required>{{ old('passage', $passage->reading_audio_file ?? '') }}</textarea>
+                                                <textarea id="textareaInput" name="passage" class="form-control" rows="8" placeholder="Enter text here">{{ old('passage', $passage->reading_audio_file ?? '') }}</textarea>
                                             </div>
                                             @foreach ($questions as $index => $question)
                                                 <div class="form-group mt-3">
@@ -57,8 +83,7 @@
                                                         name="questions[{{ $index }}][text]"
                                                         class="form-control mt-2"
                                                         placeholder="Enter question {{ $index + 1 }}"
-                                                        value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}"
-                                                        required>
+                                                        value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}">
                                                     <div class="mt-2">
                                                         @foreach ($question->options as $optionIndex => $option)
                                                             <div class="form-check mt-2">
@@ -134,6 +159,7 @@
                                         <form action="{{ route('updateQuestionReading') }}" method="POST" id="questionForm">
                                             @csrf
                                             @method('PUT')
+                                            <input type="hidden" id="testSkillId" name="testSkillId" value="{{ $passage->id }}">
                                             <input type="hidden" id="slug" name="slug" value="{{ $slug->id }}">
                                             <input type="hidden" id="partName" name="partName" value="{{ $partName }}">
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
@@ -228,6 +254,7 @@
                                         <form action="{{ route('updateQuestionReading') }}" method="POST" id="questionForm">
                                             @csrf
                                             @method('PUT')
+                                            <input type="hidden" id="testSkillId" name="testSkillId" value="{{ $passage->id }}">
                                             <input type="hidden" id="slug" name="slug" value="{{ $slug->id }}">
                                             <input type="hidden" id="partName" name="partName" value="{{ $partName }}">
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">

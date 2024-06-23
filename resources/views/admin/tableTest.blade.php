@@ -64,7 +64,7 @@
                                 <th>Duration</th>
                                 <th>Create At</th>
                                 @if(auth()->user()->role == 0)
-                                <th>Action</th>
+                                    <th>Action</th>
                                 @endif
                             </tr>
                         </thead>
@@ -77,6 +77,9 @@
                                     <td>{{ $test->created_at }}</td>
                                     @if(auth()->user()->role == 0)
                                     <td>
+                                        {{-- <a href="{{ route('downloadTest', ['slug' => $test->slug]) }}">
+                                            <i class="mdi mdi-download mdi-24px"></i>
+                                        </a> --}}
                                         <a href="{{ route('test.destroy', $test->slug) }}"
                                             onclick="event.preventDefault();
                                                     if(confirm('Are you sure you want to delete this test?')) {

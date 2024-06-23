@@ -45,17 +45,18 @@
 
                                         <div class="form-group mt-3">
                                             <label for="title">Title</label>
-                                            <input type="text" name="title" id="title" class="form-control" value="{{ $assignment->title ?? '' }}" required>
+                                            <input type="text" name="title" id="title" class="form-control" value="{{ $assignment->title ?? '' }}" placeholder="Enter title here" required>
                                         </div>
 
                                         <div class="form-group mt-3">
                                             <label for="description">Passage</label>
-                                            <textarea name="description" id="description" rows="10" style="resize: vertical;" class="form-control">{{ $assignment->description ?? '' }}</textarea>
+                                            <textarea name="description" id="description" rows="10" style="resize: vertical;" class="form-control" placeholder="Enter Passage here">{{ $assignment->description ?? '' }}</textarea>
                                         </div>
 
                                         <div class="form-group mt-3">
                                             <label for="duration">Duration (in minutes)</label>
-                                            <input type="number" name="duration" id="duration" class="form-control" value="{{ $assignment->duration ?? '' }}">
+                                            <input type="number" name="duration" id="duration" class="form-control" min="0" value="{{ $assignment->duration ?? '' }}"
+                                            placeholder="Ex: 10, 15, 20, 30, ...">
                                         </div>
 
                                         <div class="form-group mt-3">

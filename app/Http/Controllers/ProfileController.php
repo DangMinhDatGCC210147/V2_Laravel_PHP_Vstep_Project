@@ -12,7 +12,7 @@ class ProfileController extends Controller
     {
         // dd($slug);
         $student = User::where('slug', $slug)->first();
-        
+
         $testResults = TestResult::with('student')
             ->where('student_id', $student->id)
             ->get();
@@ -31,9 +31,9 @@ class ProfileController extends Controller
 
             // Calculate the average score combining reading, listening, writing and speaking
             $average = (
-                $testResult->listening_correctness +
-                $testResult->reading_correctness +
-                $testResult->computed_score +
+                $testResult->computed_listening_score +
+                $testResult->computed_reading_score +
+                $testResult->computed_writing_score +
                 $testResult->speaking
             ) / 4;
 
