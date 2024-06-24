@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use App\Models\StudentResponses;
 use App\Models\Test;
 use App\Models\TestResult;
@@ -43,6 +44,50 @@ class ShowListResultsController extends Controller
 
         return view('admin.showResult', compact('testResults'));
     }
+
+    public function detail($id)
+    {
+        $testResult = TestResult::with(['student', 'test' => function ($query) {
+            $query->select('id', 'test_name');
+        }])->where('id', $id)->first();
+
+        if (!$testResult) {
+            abort(404, 'Test result not found.');
+        }
+
+        $testId = Test::where('test_name', $testResult->test_name)->value('id');
+        $student = null;
+
+        if ($testId) {
+            $student = Student::where('user_id', $testResult->student_id)
+                ->where('test_id', $testId)
+                ->first();
+        }
+        $user = User::where('id', $student->user_id)->first();
+        if (!$student) {
+            // No student found, handle accordingly
+            return redirect()->back()->with('error', 'No corresponding student found for the given test result.');
+        }
+
+        // Calculate scores only if a corresponding student is found
+        $testResult->computed_reading_score = $this->calculateScoreReading($testResult->reading_correctness);
+        $testResult->computed_listening_score = $this->calculateScoreListening($testResult->listening_correctness);
+        $rawScore = ($testResult->writing_part1 + $testResult->writing_part2 * 2) / 3;
+        $testResult->computed_writing_score = round($rawScore * 2) / 2;
+        $averageSpeaking = ($testResult->speaking_part1 + $testResult->speaking_part2 + $testResult->speaking_part3) / 3;
+        $testResult->speaking = round($averageSpeaking * 2) / 2;
+        $average = (
+            $testResult->computed_listening_score +
+            $testResult->computed_reading_score +
+            $testResult->computed_writing_score +
+            $testResult->speaking
+        ) / 4;
+        $testResult->average_score = round($average * 2) / 2;
+
+        return view('admin.resultDetail', compact('testResult', 'student', 'user'));
+    }
+
+
 
     function calculateScoreReading($correctAnswers)
     {
@@ -122,10 +167,11 @@ class ShowListResultsController extends Controller
             return redirect()->back()->with('error', 'Responses not found.');
         }
         $responsesFolderPath = storage_path('app/public/' . $accountId . '_' . $studentName);
-        mkdir($responsesFolderPath . '/speaking', 0777, true); // Ensure speaking directory exists
-        mkdir($responsesFolderPath . '/writing', 0777, true); // Ensure writing directory exists
+
         if (!file_exists($responsesFolderPath)) {
             mkdir($responsesFolderPath, 0777, true);
+            mkdir($responsesFolderPath . '/speaking', 0777, true); // Ensure speaking directory exists
+            mkdir($responsesFolderPath . '/writing', 0777, true); // Ensure writing directory exists
         }
 
         foreach ($responses as $response) {
@@ -135,7 +181,8 @@ class ShowListResultsController extends Controller
                 if (file_exists($filePath)) {
                     copy($filePath, $responsesFolderPath . '/speaking/' . basename($filePath));
                 } else {
-                    return redirect()->back()->with('error', 'Student did not submit Speaking or Writing');
+                    $this->deleteDirectory($responsesFolderPath);
+                    return redirect()->back()->with('error', 'Student did not submit Speaking or Writing or their submissions are not available');
                 }
             } elseif ($writingSkillIds->contains($response->skill_id)) {
                 // Đối với kỹ năng viết, tạo file docx từ text
@@ -166,6 +213,7 @@ class ShowListResultsController extends Controller
             // Return the response with the ZIP file download
             return response()->download($zipFilePath)->deleteFileAfterSend(true);
         } else {
+            $this->deleteDirectory($responsesFolderPath);
             return redirect()->back()->with('error', 'Could not create zip file.');
         }
     }

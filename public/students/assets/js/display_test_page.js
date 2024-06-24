@@ -20,25 +20,25 @@ $(document).ready(function () {
     });
 
     function showPart(skillId, partId, shouldResetTimer = false) {
-        // audioElements.each(function () {
-        //     this.pause();
-        //     this.currentTime = 0;
-        // });
-        // var audioPlayer = document.getElementById('audioPlayer-' + skillId);
-        // if (audioPlayer) {
-        //     // Kiểm tra trạng thái đã phát trong localStorage
-        //     if (localStorage.getItem('played-' + skillId) === 'true') {
-        //         audioPlayer.controls = false; // Vô hiệu hóa các điều khiển
-        //     } else {
-        //         // Lắng nghe sự kiện kết thúc để đảm bảo không phát lại và disable
-        //         audioPlayer.addEventListener('ended', function () {
-        //             this.currentTime = 0;
-        //             this.pause();
-        //             this.controls = false; // Vô hiệu hóa các điều khiển
-        //             localStorage.setItem('played-' + skillId, 'true'); // Lưu trạng thái đã phát
-        //         });
-        //     }
-        // }
+        audioElements.each(function () {
+            this.pause();
+            this.currentTime = 0;
+        });
+        var audioPlayer = document.getElementById('audioPlayer-' + skillId);
+        if (audioPlayer) {
+            // Kiểm tra trạng thái đã phát trong localStorage
+            if (localStorage.getItem('played-' + skillId) === 'true') {
+                audioPlayer.controls = false; // Vô hiệu hóa các điều khiển
+            } else {
+                // Lắng nghe sự kiện kết thúc để đảm bảo không phát lại và disable
+                audioPlayer.addEventListener('ended', function () {
+                    this.currentTime = 0;
+                    this.pause();
+                    this.controls = false; // Vô hiệu hóa các điều khiển
+                    localStorage.setItem('played-' + skillId, 'true'); // Lưu trạng thái đã phát
+                });
+            }
+        }
 
         $('.skill-content').hide();
         var partSelector = $('[data-skill-id="' + skillId + '"][data-part-id="' + partId + '"]');

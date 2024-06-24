@@ -98,6 +98,9 @@
                                             href="{{ route('download.response', ['studentId' => $result->student->id, 'testName' => $result->test_name]) }}">
                                             <i class="mdi mdi-download mdi-24px"></i>
                                         </a>
+                                        <a href="{{ route('resultList.details', ['id' => $result->id]) }}">
+                                            <i class="mdi mdi-eye mdi-24px" style="color:rgb(22, 22, 174)"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

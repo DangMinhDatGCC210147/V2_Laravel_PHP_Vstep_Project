@@ -80,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/students/{slug}', [InstructorsController::class, 'update'])->name('createStudent.update');
         Route::delete('/students/{slug}', [InstructorsController::class, 'destroy'])->name('createStudent.destroy');
         Route::post('/create-student-excel', [AuthController::class, 'registerExcelStudents'])->name('createStudent.excel.store');
+
         //TESTS
         Route::get('/list-test', [TestsController::class, 'index'])->name('tableTest.index');
         Route::get('/tests/create', [TestsController::class, 'create'])->name('test.create');
@@ -142,16 +143,17 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store-fillintheblank-type', [AssignmentController::class, 'storeFillintheblankType'])->name('storeFillintheblankType');
         Route::post('/store-truefalse-type', [AssignmentController::class, 'storeTruefalseType'])->name('storeTruefalseType');
         Route::post('/store-matching-type', [AssignmentController::class, 'storeMatchingType'])->name('storeMatchingType');
+
         //FUNCTIONS FOR EDIT AND UPDATE QUESTION IN ASSIGNMENT
         Route::get('/edit-assignment/{assignment}', [AssignmentController::class, 'editAssignment'])->name('editAssignment');
-
         Route::put('/update-assignment/{assignment}', [AssignmentController::class, 'updateAssignment'])->name('updateAssignment');
-
         Route::delete('/delete-assignment/{assignment}', [AssignmentController::class, 'deleteAssignment'])->name('deleteAssignment');
 
+        //SHOW RESULT IN ADMIN AND LECTURER VIEW
         Route::get('/list_test_results', [ShowListResultsController::class, 'index'])->name('resultList.index');
         Route::get('/download-response/{studentId}/{testName}', [ShowListResultsController::class, 'downloadResponse'])->name('download.response');
         Route::get('/download-all-files', [ShowListResultsController::class, 'downloadAllFiles'])->name('download.allfiles');
+        Route::get('/detail_test_results/{id}', [ShowListResultsController::class, 'detail'])->name('resultList.details');
 
         //FUNCTION TO MARK SPEKAING AND WRITING
         Route::get('/mark-response/{studentId}/{testName}/{resultId?}', [ShowListResultsController::class, 'markResponse'])->name('mark.response');
