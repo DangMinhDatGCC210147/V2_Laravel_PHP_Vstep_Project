@@ -26,7 +26,7 @@ class AuthController extends Controller
                 return redirect()->route('tableStudent.index')->with('success', 'All users registered successfully');
             } catch (\Exception $e) {
                 Log::error("Error during Excel import: " . $e->getMessage());
-                return redirect()->route('tableStudent.index')->with('error', 'There was an error processing the Excel file.');
+                return redirect()->route('tableStudent.index')->with('error', 'There was an error processing the Excel file. Or there is a duplicate account in the system.');
             }
         } else {
             return redirect()->route('tableStudent.index')->with('error', 'No file was uploaded.');
@@ -44,7 +44,7 @@ class AuthController extends Controller
                 return redirect()->route('tableLecturer.index')->with('success', 'All users registered successfully');
             } catch (\Exception $e) {
                 Log::error("Error during Excel import: " . $e->getMessage());
-                return redirect()->route('tableLecturer.index')->with('error', 'There was an error processing the Excel file.');
+                return redirect()->route('tableLecturer.index')->with('error', 'There was an error processing the Excel file. Or there is a duplicate account in the system.');
             }
         } else {
             return redirect()->route('tableLecturer.index')->with('error', 'No file was uploaded.');
@@ -53,6 +53,15 @@ class AuthController extends Controller
 
     public function registerPost(Request $request)
     {
+        if (User::where('email', $request->email)->exists()) {
+            return back()->with('error', 'Email: ' . $request->email . 'already exists.');
+        }
+
+        // Kiểm tra xem account_id đã tồn tại chưa
+        if (User::where('account_id', $request->account_id)->exists()) {
+            return back()->with('error', 'Student ID ' . $request->account_id . ' already exists.');
+        }
+
         $user = new User();
 
         $user->name = $request->name;
@@ -94,11 +103,12 @@ class AuthController extends Controller
             $request->session()->put('account_id', $user->id);
             $request->session()->put('slug', $user->slug);
             // Kiểm tra thông tin session đã lưu
-            // dd($request->session()->all());
             if ($user->role == 1) {
-                return redirect()->route('admin.index')->with('success', 'Login successfully!');
-            } else {
-                return redirect()->route('student.index')->with('success', 'Login successfully!');
+                return redirect()->route('admin.index')->with('success', 'Login successfully as Lecturer!');
+            } elseif ($user->role == 0) {
+                return redirect()->route('admin.index')->with('success', 'Login successfully as Admin!');
+            }else {
+                return redirect()->route('student.index')->with('success', 'Login successfully as student!');
             }
         }
 

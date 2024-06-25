@@ -90,7 +90,7 @@
                                                         class="img-fluid">
                                                 </div>
                                             @elseif ($audio->isText())
-                                                <h5>{!! nl2br($audio->reading_audio_file) !!}</h5>
+                                                <p>{!! nl2br($audio->reading_audio_file) !!}</p>
                                             @endif
                                         </div>
                                     @endforeach
@@ -310,7 +310,6 @@
             <div class="btn-group">
                 <button class="btn btn-info mb-2" id="next-skill-btn">Tiếp tục</button>
                 <button class="btn btn-primary mb-2" id="save-btn">Lưu bài</button>
-                <button class="btn btn-danger mb-2" id="reset-btn">Làm mới</button>
             </div>
         </div>
     </footer>

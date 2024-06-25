@@ -53,19 +53,24 @@ export function startRecording(duration, questionElement, speakingPart, testId) 
                 .then(data => {
                     console.log('Success:', data);
                     if (speakingPart === 5) {
+                        var testResultUrl = `/students/tests/${testId}/results`;
+                        endSession(testId);
                         Swal.fire({
                             html: `
-                                <h4>Bạn đã hoàn thành bài kiểm tra</h4>
-                                <p>Hệ thống sẽ nộp bài tự động</p>
+                                <h3>Bạn đã hoàn thành bài kiểm tra</h3>
+                                <h4>Hệ thống sẽ nộp bài tự động</h4>
                             `,
-                            icon: 'info',
+                            icon: 'warning',
                             showCancelButton: false,
-                            timer: 2000,
-                            timerProgressBar: true,
-                            willClose: () => {
-                                setTimeout(function () {
-                                    $("#submitTestButton").click();
-                                }, 500);
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $("#save-btn").click();
+                                localStorage.clear();
+                                location.reload();
+                                setTimeout(function() {
+                                    window.location.href = testResultUrl;
+                                }, 500); // Chờ 500 ms
                             }
                         });
                     }
@@ -78,6 +83,20 @@ export function startRecording(duration, questionElement, speakingPart, testId) 
         }, duration * 1000);
     })
     .catch(error => console.error('Error:', error));
+}
+function endSession(testId) {
+    const url = `/students/tests/${testId}/session/end`;
+    fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                    'content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => console.log("Session ended:", data))
+        .catch(error => console.error("Error ending session:", error));
 }
 
 function initializeAudioMotion(stream) {

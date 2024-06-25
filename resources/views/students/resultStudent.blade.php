@@ -14,13 +14,16 @@
                     <div class="col-md-2 d-flex justify-content-end">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button type="submit" class="btn btn-light"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                onclick="event.preventDefault(); localStorage.clear(); document.getElementById('logout-form').submit();">
                                 <span>Logout</span>
                             </button>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
-                            <button class="btn btn-info" onclick="window.location.href='{{ route('student.index') }}'">Turn back</button>
+                            <button class="btn btn-info"
+                                onclick="localStorage.clear(); window.location.href='{{ route('student.index') }}'">
+                                Turn back
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -47,11 +50,15 @@
                         <div class="card-body">
                             <h3 class="card-title">Listening</h3>
                             <hr>
-                            <p class="card-text"><strong>Tổng số câu trả lời đúng phần Listening:</strong> {{ $correctAnswersListening }}/35</p>
-                            <p class="card-text"><strong>Tỷ lệ trả lời đúng - Listening:</strong> {{ number_format(($correctAnswersListening / 35) * 100, 2) }}%</p>
+                            <p class="card-text"><strong>Tổng số câu trả lời đúng phần Listening:</strong>
+                                {{ $correctAnswersListening }}/35</p>
+                            <p class="card-text"><strong>Tỷ lệ trả lời đúng - Listening:</strong>
+                                {{ number_format(($correctAnswersListening / 35) * 100, 2) }}%</p>
                             <hr>
                             <div class="row">
-                                <div class="col-6"><p><strong>Điểm - Listening:</strong></p></div>
+                                <div class="col-6">
+                                    <p><strong>Điểm - Listening:</strong></p>
+                                </div>
                                 <div class="col-6 d-flex justify-content-end align-items-center">
                                     <span class="badge bg-warning text-dark" style="font-size: 20px">
                                         <strong>{{ number_format($scoreListening, 2) }}</strong>
@@ -67,11 +74,15 @@
                         <div class="card-body">
                             <h3 class="card-title">Reading</h3>
                             <hr>
-                            <p class="card-text"><strong>Tổng số câu trả lời đúng phần Reading:</strong> {{ $correctAnswersReading }}/40</p>
-                            <p class="card-text"><strong>Tỷ lệ trả lời đúng - Reading:</strong> {{ number_format(($correctAnswersReading / 40) * 100, 2) }}%</p>
+                            <p class="card-text"><strong>Tổng số câu trả lời đúng phần Reading:</strong>
+                                {{ $correctAnswersReading }}/40</p>
+                            <p class="card-text"><strong>Tỷ lệ trả lời đúng - Reading:</strong>
+                                {{ number_format(($correctAnswersReading / 40) * 100, 2) }}%</p>
                             <hr>
                             <div class="row">
-                                <div class="col-6"><p><strong>Điểm - Reading:</strong></p></div>
+                                <div class="col-6">
+                                    <p><strong>Điểm - Reading:</strong></p>
+                                </div>
                                 <div class="col-6 d-flex justify-content-end align-items-center">
                                     <span class="badge bg-warning text-dark" style="font-size: 20px">
                                         <strong>{{ number_format($scoreReading, 2) }}</strong>

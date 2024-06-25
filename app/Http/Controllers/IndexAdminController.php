@@ -55,7 +55,16 @@ class IndexAdminController extends Controller
             ->count();
         $totalStudentsCount = User::where('role', 2)->count();
 
-        return view('admin.index', compact('students', 'person', 'highestListening', 'highestReading', 'count', 'totalStudentsCount'));
+        $testsPerDay = TestResult::selectRaw('DAYOFWEEK(created_at) as day, COUNT(*) as count')
+            ->groupBy('day')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                // Chuyển đổi số ngày trong tuần thành tên ngày, giả sử MySQL và Sunday là 1
+                $days = [1 => 'Sun', 2 => 'Mon', 3 => 'Tue', 4 => 'Wed', 5 => 'Thu', 6 => 'Fri', 7 => 'Sat'];
+                return [$days[$item->day] => $item->count];
+            });
+
+        return view('admin.index', compact('students', 'person', 'highestListening', 'highestReading', 'count', 'totalStudentsCount', 'testsPerDay'));
     }
 
     /**

@@ -513,6 +513,11 @@ $(document).ready(function () {
         location.reload();
     });
 
+    setTimeout(function() {
+        localStorage.clear();
+        location.reload();
+    }, 3 * 3600 * 1000); // 3 giờ x 3600 giây/giờ x 1000 mili giây/giây
+
     // window.onbeforeunload = function() {
     //     return "Bạn có chắc chắn muốn tải lại trang? Mọi thay đổi chưa được lưu có thể sẽ mất.";
     // };

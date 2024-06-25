@@ -28,7 +28,7 @@
                         <h5 class="card-title mb-0">The person who does the most tests</h5>
                     </div>
                     <div class="row d-flex align-items-center mb-4">
-                        @if ($person->test_results_count !== 0)
+                        @if ($person && $person->test_results_count !== 0)
                             <div class="col-8">
                                 <h4 class="d-flex align-items-center mb-0">
                                     @if ($person != null)
@@ -47,7 +47,6 @@
                 <!--end card body-->
             </div><!-- end card-->
         </div> <!-- end col-->
-
         <div class="col-md-6 col-xl-3">
             <div class="card">
                 <div class="card-body">
@@ -113,7 +112,7 @@
                         <h5 class="card-title mb-0">Number of Students who took the test</h5>
                     </div>
                     <div class="row d-flex align-items-center mb-4">
-                    @if ($person->test_results_count !== 0)
+                    @if ($person && $person->test_results_count !== 0)
                         <div class="col-8">
                             <h3 class="d-flex align-items-center mb-0">
                                 {{ $count }}
@@ -131,6 +130,20 @@
             </div><!-- end card-->
         </div> <!-- end col-->
     </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title">The test was done by day of the week</h4>
+                    <div class="mt-4 chartjs-chart">
+                        <canvas id="line-chart" height="90" data-colors="#1abc9c,#f1556c"></canvas>
+                    </div>
+                </div> <!-- end card-body-->
+            </div> <!-- end card-->
+        </div> <!-- end col -->
+    </div>
+
     <!-- end row-->
     <div class="row">
         <div class="col-12">
@@ -165,4 +178,38 @@
             </div> <!-- end card -->
         </div><!-- end col-->
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('line-chart').getContext('2d');
+            var colors = document.getElementById('line-chart').getAttribute('data-colors').split(',');
+
+            // Giả sử testsPerDay là một đối tượng JavaScript chứa dữ liệu số liệu cho các ngày
+            var testsPerDay = @json($testsPerDay);
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(testsPerDay), // Labels are the days of the week
+                    datasets: [{
+                        label: 'The test was done by day of the week',
+                        data: Object.values(testsPerDay), // Data points are the counts of tests
+                        backgroundColor: colors[0],
+                        borderColor: colors[1],
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1.0 // Đặt kích thước bước nhảy cho trục y là 1.0
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        </script>
 @endsection

@@ -4,13 +4,13 @@
     <div class="py-3 py-lg-4">
         <div class="row">
             <div class="col-lg-6">
-                <h4 class="page-title mb-0">{{ isset($user) ? 'Edit' : 'Create' }} Lecturer and Student Account</h4>
+                <h4 class="page-title mb-0">{{ isset($user) ? 'Edit' : 'Create' }} Lecturer Account</h4>
             </div>
             <div class="col-lg-6">
                 <div class="d-none d-lg-block">
                     <ol class="breadcrumb m-0 float-end">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">Forms</a></li>
-                        <li class="breadcrumb-item active">{{ isset($user) ? 'Edit' : 'Create' }} New Account</li>
+                        <li class="breadcrumb-item active">{{ isset($user) ? 'Edit' : 'Create New' }} Account</li>
                     </ol>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                                     <li>Cột 3: Nhập mã số giảng viên</li>
                                     <li>Cột 4: Nhập mật khẩu (Ex: 12345678)</li>
                                 </ul>
-                                <p><strong>Bước 3:</strong> Bấm nút "Register" màu trắng để đăng kí</p>
+                                <p><strong>Bước 3:</strong> Bấm nút <strong>"Register by Excel"</strong> màu trắng để đăng kí</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -70,7 +70,8 @@
                             <div class="mb-2 row">
                                 <div class="col-md-2"></div>
                                 <div class="col-md-10">
-                                    <button type="submit" class="btn btn-light">Register</button>
+                                    <hr>
+                                    <button type="submit" class="btn btn-light">Register by Excel</button>
                                 </div>
                             </div>
                         </div>
@@ -128,8 +129,8 @@
                                     <div class="mb-2 row">
                                         <div class="col-md-2"></div>
                                         <div class="col-md-10">
-                                            <button type="submit"
-                                                class="btn btn-primary w-xl">{{ isset($user) ? 'Update' : 'Register' }}</button>
+                                            <hr>
+                                            <button type="submit" class="btn btn-primary w-xl">{{ isset($user) ? 'Update' : 'Register' }}</button>
                                         </div>
                                     </div>
                                 </form>

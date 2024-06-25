@@ -293,8 +293,11 @@
     <script src="{{ asset('admin/assets/libs/dropzone/min/dropzone.min.js') }}"></script>
     <!-- Demo js-->
     <script src="{{ asset('admin/assets/js/pages/form-fileuploads.js') }}"></script>
-    <!-- Sweet alert Demo js-->
-    {{-- <script src="{{ asset('admin/assets/js/pages/sweet-alerts.js') }}"></script> --}}
+    <!-- Chart JS -->
+    <script src="{{ asset('admin/assets/libs/chart.js/Chart.bundle.min.js') }}"></script>
+    <!-- Demo js -->
+    <script src="{{ asset('admin/assets/js/pages/chartjs.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/statistic.js') }}"></script>
     <!-- Datatables js -->
     <script src="{{ asset('admin/assets/js/pages/datatables.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -309,6 +312,33 @@
                         <h4>${successMessage}</h4>
                     `,
                     icon: 'success',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showClass: {
+                        popup: `
+                    animate__animated
+                    animate__fadeInUp
+                    animate__faster
+                    `
+                    },
+                    hideClass: {
+                        popup: `
+                    animate__animated
+                    animate__fadeOutDown
+                    animate__faster
+                    `
+                    }
+                });
+            @endif
+            @if (session('error'))
+            const errorMessage = @json(session('error'));
+                Swal.fire({
+                    html: `
+                        <h3>Error!</h3>
+                        <h4>${errorMessage}</h4>
+                    `,
+                    icon: 'error',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: true,

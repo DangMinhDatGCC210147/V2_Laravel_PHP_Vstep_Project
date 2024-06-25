@@ -63,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(CheckLecturerRole::class)->group(function () {
         Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
-
+        Route::get('/export-test-results', [ShowListResultsController::class, 'exportExcel'])->name('export.test.results');
         // INSTRUCTORS
         Route::get('/list-lecturer', [InstructorsController::class, 'index'])->name('tableLecturer.index');
         Route::get('/create-lecturer', [InstructorsController::class, 'create'])->name('createInstructor.create');

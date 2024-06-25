@@ -187,6 +187,7 @@ class StudentController extends Controller
 
         // Lấy tất cả phản hồi của học sinh có skill_id là Reading hoặc Listening
         $studentResponses = StudentResponses::where('student_id', $studentId)
+            ->where('test_id', $testId)
             ->whereIn('skill_id', $readingSkillIds->merge($listeningSkillIds))
             ->get();
         $correctAnswersReading = 0;

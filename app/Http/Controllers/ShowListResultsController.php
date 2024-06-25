@@ -11,6 +11,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ResultsExport;
+use App\Exports\TestResultsExport;
 
 class ShowListResultsController extends Controller
 {
@@ -353,5 +356,9 @@ class ShowListResultsController extends Controller
         }
 
         return back()->with('error', 'Test Result not found.');
+    }
+    public function exportExcel()
+    {
+        return Excel::download(new TestResultsExport, 'test_results.xlsx');
     }
 }

@@ -33,7 +33,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p><strong>Passage: </strong> Giảng viên có thể copy passage của bài reading và dán vào nơi nhập của passage mà không bị mất định dạng. Màu sắc đề xuất cho passage là "Light Grey"</p>
+                        <p><strong>Passage: </strong> Giảng viên có thể copy passage của bài reading và dán vào nơi nhập của passage mà không bị mất định dạng. Màu sắc đề xuất cho passage là <strong>"Light Grey"</strong></p>
                         <p><strong>Question:</strong> Ở mỗi mục Question sẽ có 5 hàng để nhập:</p>
                         <ul>
                             <li><p>Hàng đầu: Dùng để nhập nội dung câu hỏi</p></li>
@@ -351,12 +351,10 @@
                                             id="questionForm">
                                             @csrf
                                             @method('PUT')
-                                            <input type="hidden" id="slug" name="slug"
-                                                value="{{ $slug->id }}">
-                                            <input type="hidden" id="partName" name="partName"
-                                                value="{{ $partName }}">
-                                            <input type="hidden" id="skillName" name="skillName"
-                                                value="{{ $skillName }}">
+                                            <input type="hidden" id="testSkillId" name="testSkillId" value="{{ $passage->id }}">
+                                            <input type="hidden" id="slug" name="slug" value="{{ $slug->id }}">
+                                            <input type="hidden" id="partName" name="partName" value="{{ $partName }}">
+                                            <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group">
                                                 <label for="textareaInput">Passage 4:</label>
                                                 <textarea id="textareaInput" name="passage" class="form-control" rows="8" placeholder="Enter text here">{{ old('passage', $passage->reading_audio_file ?? '') }}</textarea>
