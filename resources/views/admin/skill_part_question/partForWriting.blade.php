@@ -35,6 +35,27 @@
                         <div class="col-12">
                             <div class="p-2">
                                 @if ($partName ==  'Part_1')
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo câu hỏi Writing cho form</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Requirement: </strong> Tại ô nhập này, nội dung mặc định sẽ là "You should spend 20 minutes for this task". Nếu giảng viên có yêu cầu đặt biệt hơn có thể thay đổi cho phù hợp.</p>
+                                                <p><strong>Passage: </strong> Tại đây, giảng viên nhập nội dung của đề bài/ bức thư, ...</p>
+                                                <p><strong>Nút Save/Save changes: </strong>Khi đã thực hiện nhập các yêu cầu trên đầy đủ sẽ bấm vào nút Save/Save changes để lưu.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Hướng dẫn tạo câu hỏi
+                                </button>
                                     @if (isset($questions))
                                         <form action="{{ route('updateQuestionWriting') }}" method="POST" id="questionForm">
                                             @csrf
@@ -60,7 +81,7 @@
                                             <input type="hidden" id="skillName" name="skillName" value="{{ $skillName }}">
                                             <div class="form-group mt-3">
                                                 <label for="question" class="mb-3">Requirement 1:</label>
-                                                <input type="text" id="question" name="question" class="form-control" placeholder="Enter requirement here" value="" required>
+                                                <input type="text" id="question" name="question" class="form-control" placeholder="Enter requirement here" value="You should spend 20 minutes for this task" required>
                                             </div>
                                             <div class="form-group mt-3">
                                                 <label for="passage{{ $partName }}" class="mb-3">Passage 1:</label>
@@ -70,6 +91,27 @@
                                         </form>
                                     @endif
                                 @else
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo câu hỏi Writing cho form</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Requirement: </strong> Tại ô nhập này, nội dung mặc định sẽ là "You should spend 40 minutes for this task". Nếu giảng viên có yêu cầu đặt biệt hơn có thể thay đổi cho phù hợp.</p>
+                                                <p><strong>Passage: </strong> Tại đây, giảng viên nhập nội dung của đề bài/ bức thư, ...</p>
+                                                <p><strong>Nút Save/Save changes: </strong>Khi đã thực hiện nhập các yêu cầu trên đầy đủ sẽ bấm vào nút Save/Save changes để lưu.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Hướng dẫn tạo câu hỏi
+                                </button>
                                     @if (isset($questions))
                                         <form action="{{ route('updateQuestionWriting') }}" method="POST" id="questionForm">
                                             @csrf

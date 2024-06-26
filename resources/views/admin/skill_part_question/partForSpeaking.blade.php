@@ -35,6 +35,27 @@
                         <div class="col-12">
                             <div class="p-2">
                                 @if ($partName == 'Part_1')
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo câu hỏi Speaking cho form</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Topic: </strong> Tại ô nhập này, giảng viên sẽ nhập chủ đề của phần nói</p>
+                                                <p><strong>Question: </strong> Tại đây các ô questions, giảng viên nhập các câu hỏi của topic đã nhập</p>
+                                                <p><strong>Nút Save/Save changes: </strong>Khi đã thực hiện nhập các yêu cầu trên đầy đủ sẽ bấm vào nút Save/Save changes để lưu</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Hướng dẫn tạo câu hỏi
+                                </button>
                                     @if (isset($speaking))
                                         <form action="{{ route('updateQuestionSpeaking') }}" method="post">
                                             @csrf
@@ -49,7 +70,7 @@
                                                 <div class="card-body">
                                                     @foreach ($questions as $index => $question)
                                                         <div class="form-group mt-3">
-                                                            <label for="question{{ $index }}">Requirement {{ $question->question_number }}:</label>
+                                                            <label for="question{{ $index }}">Topic {{ $question->question_number }}:</label>
                                                             <input type="hidden" name="questions[{{ $index }}][id]" value="{{ $question->id }}">
                                                             <input type="text" id="question{{ $index }}"
                                                                 name="questions[{{ $index }}][text]" class="form-control mt-2"
@@ -94,7 +115,7 @@
                                                 <div class="card-body">
                                                     @for ($i = 1; $i <= 2; $i++)
                                                         <div class="mb-3">
-                                                            <label class="form-label">Requirement
+                                                            <label class="form-label">Topic
                                                                 {{ $i }}:</label>
                                                             <input type="text" name="part1_question_{{ $i }}"
                                                                 class="form-control" required>
@@ -118,6 +139,26 @@
                                         </form>
                                     @endif
                                 @elseif ($partName == 'Part_2')
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo câu hỏi Speaking cho form</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Requirement: </strong> Tại ô này, giảng viên sẽ nhập đầy đủ yêu cầu của Part 2</p>
+                                                <p><strong>Nút Save/Save changes: </strong>Khi đã thực hiện nhập các yêu cầu trên đầy đủ sẽ bấm vào nút Save/Save changes để lưu</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Hướng dẫn tạo câu hỏi
+                                </button>
                                     @if (isset($speaking))
                                         <form action="{{ route('updateQuestionSpeaking') }}" method="post"
                                             id="questionForm">
@@ -163,6 +204,28 @@
                                         </form>
                                     @endif
                                 @else
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo câu hỏi Speaking cho form</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>Topic: </strong> Tại ô nhập này, giảng viên sẽ nhập chủ đề của phần nói.</p>
+                                                <p><strong>Upload Image: </strong>Tại đây, giảng viên sẽ chọn hình ảnh diagram cho bài nói phần 3.</p>
+                                                <p><strong>Question: </strong> Tại đây các ô questions, giảng viên nhập các câu hỏi follow up.</p>
+                                                <p><strong>Nút Save/Save changes: </strong>Khi đã thực hiện nhập các yêu cầu trên đầy đủ sẽ bấm vào nút Save/Save changes để lưu.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Hướng dẫn tạo câu hỏi
+                                </button>
                                     @if (isset($speaking))
                                         <form action="{{ route('updateQuestionSpeaking') }}" method="POST"
                                             enctype="multipart/form-data" id="questionForm">
@@ -177,7 +240,7 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Requirement</label>
+                                                        <label class="form-label">Topic</label>
                                                         <input type="text" name="part3_question" class="form-control"
                                                             value="{{ old('part3_question', $questions[0]->question_text ?? '') }}">
                                                     </div>
@@ -223,7 +286,7 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Requirement</label>
+                                                        <label class="form-label">Topic</label>
                                                         <input type="text" name="part3_question" class="form-control" required>
                                                     </div>
                                                     <div class="mb-3">

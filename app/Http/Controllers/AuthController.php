@@ -101,6 +101,7 @@ class AuthController extends Controller
             $request->session()->put('user_name', $user->name);
             $request->session()->put('user_email', $user->email);
             $request->session()->put('account_id', $user->id);
+            $request->session()->put('user_id', $user->account_id);
             $request->session()->put('slug', $user->slug);
             // Kiểm tra thông tin session đã lưu
             if ($user->role == 1) {

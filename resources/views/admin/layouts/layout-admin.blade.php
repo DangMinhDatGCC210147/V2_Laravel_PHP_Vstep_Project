@@ -209,10 +209,28 @@
 
                             <div class="dropdown-divider"></div>
 
+                            <span class="dropdown-item notify-item">Role:
+                                @switch(session('role'))
+                                    @case(0)
+                                        {{ $roleName = 'Admin' }}
+                                        @break
+                                    @case(1)
+                                        {{ $roleName = 'Lecturer' }}
+                                        @break
+                                    @case(2)
+                                        {{ $roleName = 'Student' }}
+                                        @break
+                                    @default
+                                @endswitch
+                            </span>
+                            <span class="dropdown-item notify-item">ID:
+                                {{ session('user_id') }}
+                            </span>
+                            <div class="dropdown-divider"></div>
                             <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item notify-item"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fe-log-out"></i>
+                                {{-- <i class="fe-log-out"></i> --}}
                                 <span>Logout</span>
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST"

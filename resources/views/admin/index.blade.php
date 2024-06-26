@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <span class="badge badge-soft-danger float-end">Monthly</span>
-                        <h5 class="card-title mb-0">The person who does the most tests</h5>
+                        <h5 class="card-title mb-0">The student who does the most tests</h5>
                     </div>
                     <div class="row d-flex align-items-center mb-4">
                         @if ($person && $person->test_results_count !== 0)
