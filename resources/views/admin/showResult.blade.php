@@ -34,7 +34,6 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="header-title">List of Results</h4>
-
                     <table id="basic-datatable" class="table dt-responsive nowrap w-100">
                         <thead>
                             <tr>

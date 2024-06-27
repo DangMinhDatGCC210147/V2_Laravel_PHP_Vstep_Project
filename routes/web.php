@@ -154,6 +154,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/download-response/{studentId}/{testName}', [ShowListResultsController::class, 'downloadResponse'])->name('download.response');
         Route::get('/download-all-files', [ShowListResultsController::class, 'downloadAllFiles'])->name('download.allfiles');
         Route::get('/detail_test_results/{id}', [ShowListResultsController::class, 'detail'])->name('resultList.details');
+        Route::get('/download-responses', [ShowListResultsController::class, 'downloadFilesByDateTime'])->name('download.responses');
 
         //FUNCTION TO MARK SPEKAING AND WRITING
         Route::get('/mark-response/{studentId}/{testName}/{resultId?}', [ShowListResultsController::class, 'markResponse'])->name('mark.response');

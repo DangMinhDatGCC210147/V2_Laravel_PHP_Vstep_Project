@@ -62,12 +62,14 @@ class ShowListResultsController extends Controller
         $student = null;
 
         if ($testId) {
+            // dd($testId);
             $student = Student::where('user_id', $testResult->student_id)
                 ->where('test_id', $testId)
                 ->first();
         }
-        $user = User::where('id', $student->user_id)->first();
-        if (!$student) {
+        if ($student) { // Check if $student is not null before accessing properties
+            $user = User::where('id', $student->user_id)->first();
+        } else {
             // No student found, handle accordingly
             return redirect()->back()->with('error', 'No corresponding student found for the given test result.');
         }
