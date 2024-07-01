@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 
-class LecturersImport implements ToModel
+class AdminsImport implements ToModel
 {
     /**
     * @param array $row
@@ -19,7 +19,7 @@ class LecturersImport implements ToModel
             'name'     => $row[0],
             'email'    => $row[1],
             'account_id' => $row[2],
-            'role' => 1,
+            'role' => 0,
             'password' => Hash::make($row[3]),
             'is_active' => true,
         ]);

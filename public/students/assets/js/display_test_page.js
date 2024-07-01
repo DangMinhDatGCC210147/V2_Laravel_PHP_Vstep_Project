@@ -165,7 +165,7 @@ $(document).ready(function () {
         } else if (speakingPart === 2) {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').prop('disabled', false);
-            skillTimers['Speaking'] = 10;
+            skillTimers['Speaking'] = 60;
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').click();
             $('#notification-take-note').show();
         } else if (speakingPart === 3) {

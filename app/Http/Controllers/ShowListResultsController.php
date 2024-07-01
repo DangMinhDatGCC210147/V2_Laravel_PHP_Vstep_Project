@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ResultsExport;
 use App\Exports\TestResultsExport;
+use Illuminate\Support\Facades\DB;
 
 class ShowListResultsController extends Controller
 {
@@ -60,17 +61,28 @@ class ShowListResultsController extends Controller
 
         $testId = Test::where('test_name', $testResult->test_name)->value('id');
         $student = null;
+        $speakingResponses = [];
 
         if ($testId) {
-            // dd($testId);
             $student = Student::where('user_id', $testResult->student_id)
                 ->where('test_id', $testId)
                 ->first();
         }
-        if ($student) { // Check if $student is not null before accessing properties
+        if ($student) {
             $user = User::where('id', $student->user_id)->first();
+
+            // Lấy skill_id từ bảng test_skill với skill_name là speaking
+            $speakingSkillId = DB::table('test_skills')
+                ->where('skill_name', 'Speaking')
+                ->pluck('id');
+
+            // Truy vấn để lấy danh sách text_response từ bảng student_responses
+            $speakingResponses = DB::table('student_responses')
+                ->where('student_id', $user->id)
+                ->where('test_id', $testId)
+                ->whereIn('skill_id', $speakingSkillId)
+                ->pluck('text_response');
         } else {
-            // No student found, handle accordingly
             return redirect()->back()->with('error', 'No corresponding student found for the given test result.');
         }
 
@@ -88,8 +100,7 @@ class ShowListResultsController extends Controller
             $testResult->speaking
         ) / 4;
         $testResult->average_score = round($average * 2) / 2;
-
-        return view('admin.resultDetail', compact('testResult', 'student', 'user'));
+        return view('admin.resultDetail', compact('testResult', 'student', 'user', 'speakingResponses'));
     }
 
 
@@ -178,7 +189,7 @@ class ShowListResultsController extends Controller
             mkdir($responsesFolderPath . '/speaking', 0777, true); // Ensure speaking directory exists
             mkdir($responsesFolderPath . '/writing', 0777, true); // Ensure writing directory exists
         }
-
+        $writingTaskCounter = 1;
         foreach ($responses as $response) {
             if ($speakingSkillIds->contains($response->skill_id)) {
                 // Đối với kỹ năng nói, kiểm tra file tồn tại và sao chép
@@ -194,9 +205,11 @@ class ShowListResultsController extends Controller
                 $phpWord = new \PhpOffice\PhpWord\PhpWord();
                 $section = $phpWord->addSection();
                 $section->addText($response->text_response);
-                $docxFilePath = $responsesFolderPath . '/writing/writing_response_' . $response->id . '.docx';
+                $docxFilePath = $responsesFolderPath . '/writing/writing_response_' . '_Task_' . $writingTaskCounter . '.docx';
                 $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
                 $writer->save($docxFilePath);
+
+                $writingTaskCounter++;
             }
         }
 
@@ -326,7 +339,8 @@ class ShowListResultsController extends Controller
 
     public function markResponse($studentId, $testName, TestResult $resultId = null)
     {
-        return view('admin.markResponse', compact('studentId', 'testName', 'resultId'));
+        $student = User::find($studentId);
+        return view('admin.markResponse', compact('student', 'studentId', 'testName', 'resultId'));
     }
 
     public function updateMark(Request $request)
@@ -362,5 +376,78 @@ class ShowListResultsController extends Controller
     public function exportExcel()
     {
         return Excel::download(new TestResultsExport, 'test_results.xlsx');
+    }
+
+    public function downloadFilterDate(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $speakingSkillIds = TestSkill::where('skill_name', 'Speaking')->pluck('id');
+        $writingSkillIds = TestSkill::where('skill_name', 'Writing')->pluck('id');
+
+        if ($speakingSkillIds->isEmpty() || $writingSkillIds->isEmpty()) {
+            return redirect()->back()->with('error', 'Skill IDs for Speaking or Writing not found.');
+        }
+
+        $responses = StudentResponses::with('test')
+            ->whereIn('skill_id', $speakingSkillIds->merge($writingSkillIds)->toArray())
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+        if ($responses->isEmpty()) {
+            return redirect()->back()->with('error', 'Responses not found.');
+        }
+
+        $baseFolderPath = storage_path('app/public/responses');
+        if (!file_exists($baseFolderPath)) {
+            mkdir($baseFolderPath, 0777, true); // Ensure the base directory exists
+        }
+
+        foreach ($responses as $response) {
+            $student = User::find($response->student_id);
+            if (!$student) continue;
+
+            $testName = $response->test ? $response->test->test_name : 'default_test_name';
+            $responsesFolderPath = $baseFolderPath . '/' . $student->account_id . '_' . $student->slug . '_' . $testName;
+            if (!file_exists($responsesFolderPath)) {
+                mkdir($responsesFolderPath, 0777, true); // Create directory if not exists
+                mkdir($responsesFolderPath . '/speaking', 0777, true); // Speaking subdirectory
+                mkdir($responsesFolderPath . '/writing', 0777, true); // Writing subdirectory
+            }
+
+            if ($speakingSkillIds->contains($response->skill_id)) {
+                $filePath = str_replace('\\', '/', public_path('storage/' . $response->text_response));
+                if (file_exists($filePath)) {
+                    copy($filePath, $responsesFolderPath . '/speaking/' . basename($filePath));
+                }
+            } elseif ($writingSkillIds->contains($response->skill_id)) {
+                $phpWord = new \PhpOffice\PhpWord\PhpWord();
+                $section = $phpWord->addSection();
+                $section->addText($response->text_response);
+                $docxFilePath = $responsesFolderPath . '/writing/writing_response_' . $response->id . '.docx';
+                $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                $writer->save($docxFilePath);
+            }
+        }
+
+        // Zip the base responses folder
+        $zipFilePath = storage_path('app/public/responses_filtered.zip');
+        $zip = new \ZipArchive();
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
+            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($baseFolderPath));
+            foreach ($files as $file) {
+                if (!$file->isDir()) {
+                    $filePath = $file->getRealPath();
+                    $relativePath = substr($filePath, strlen($baseFolderPath) + 1);
+                    $zip->addFile($filePath, $relativePath);
+                }
+            }
+            $zip->close();
+            $this->deleteDirectory($baseFolderPath);
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        } else {
+            return redirect()->back()->with('error', 'Could not create zip file.');
+        }
     }
 }

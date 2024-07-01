@@ -139,9 +139,17 @@ class StudentSubmissionController extends Controller
         $user = auth()->user();
         $accountId = $user->account_id;
 
+        $existingCount = StudentResponses::where([
+            'test_id' => $validated['test_id'],
+            'skill_id' => $validated['skill_id'],
+            'student_id' => $user->id,
+            'question_id' => $validated['question_id']
+        ])->count();
+
+        $partNumber = $existingCount + 1;
         // Construct a unique file name
         $currentTimeFormatted = date('n_j_Y', time());
-        $fileName = $accountId . '_' . $currentTimeFormatted . '_' . time() . '.mp3';
+        $fileName = $accountId . '_Part_' . $partNumber . '_' . $currentTimeFormatted . '_' . time() . '.mp3';
         // Store the file in a dedicated directory
         $path = $request->file('recording')->storeAs('studentResponse', $fileName, 'public');
 

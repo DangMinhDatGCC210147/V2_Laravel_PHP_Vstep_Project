@@ -113,6 +113,11 @@
                     <div class="collapse" id="menuTables">
                         <ul class="sub-menu">
                             <li class="menu-item">
+                                <a href="{{ route('tableAdmin.index') }}" class="menu-link">
+                                    <span class="menu-text">Admin List</span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
                                 <a href="{{ route('tableLecturer.index') }}" class="menu-link">
                                     <span class="menu-text">Lecturer List</span>
                                 </a>

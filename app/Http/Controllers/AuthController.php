@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\AdminsImport;
 use App\Imports\LecturersImport;
 use App\Imports\UsersImport;
 use App\Models\User;
@@ -51,6 +52,24 @@ class AuthController extends Controller
         }
     }
 
+    public function registerExcelAdmins(Request $request)
+    {
+        if ($request->hasFile('excel_file')) {
+            try {
+                Log::info("Received file: " . $request->file('excel_file')->getClientOriginalName());
+
+                Excel::import(new AdminsImport, $request->file('excel_file'));
+
+                return redirect()->route('tableAdmin.index')->with('success', 'All users registered successfully');
+            } catch (\Exception $e) {
+                Log::error("Error during Excel import: " . $e->getMessage());
+                return redirect()->route('tableAdmin.index')->with('error', 'There was an error processing the Excel file. Or there is a duplicate account in the system.');
+            }
+        } else {
+            return redirect()->route('tableAdmin.index')->with('error', 'No file was uploaded.');
+        }
+    }
+
     public function registerPost(Request $request)
     {
         if (User::where('email', $request->email)->exists()) {
@@ -69,11 +88,14 @@ class AuthController extends Controller
         $user->account_id = $request->account_id;
         $user->role = $request->role;
         $user->password = Hash::make($request->password);
+        $user->is_active = true;
         $user->save();
         // return back()->with('success','Registered successfully');
         if ($user->role == 1) {
             return redirect()->route('tableLecturer.index')->with('success', 'Registered successfully');
-        } else {
+        }else if($user->role == 0){
+            return redirect()->route('tableAdmin.index')->with('success', 'Registered successfully');
+        }else {
             return redirect()->route('tableStudent.index')->with('success', 'Registered successfully');
         }
     }
@@ -90,31 +112,33 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Tìm người dùng với email và kiểm tra is_active
+        $user = User::where('email', $credentials['email'])->where('is_active', true)->first();
+
+        if ($user && Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Lấy thông tin người dùng đã đăng nhập
-            $user = Auth::user();
-
-            // Lưu thông tin người dùng vào session
+            // Lưu thông tin người dùng đã đăng nhập vào session
             $request->session()->put('role', $user->role);
             $request->session()->put('user_name', $user->name);
             $request->session()->put('user_email', $user->email);
             $request->session()->put('account_id', $user->id);
             $request->session()->put('user_id', $user->account_id);
             $request->session()->put('slug', $user->slug);
+
             // Kiểm tra thông tin session đã lưu
             if ($user->role == 1) {
                 return redirect()->route('admin.index')->with('success', 'Login successfully as Lecturer!');
             } elseif ($user->role == 0) {
                 return redirect()->route('admin.index')->with('success', 'Login successfully as Admin!');
-            }else {
+            } else {
                 return redirect()->route('student.index')->with('success', 'Login successfully as student!');
             }
         }
 
         return back()->withErrors([
             'email' => 'Wrong email or password, please re-enter for information.',
+            'is_active' => 'Your account is inactive. Please contact support.',
         ])->onlyInput('email');
     }
 

@@ -64,6 +64,14 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(CheckLecturerRole::class)->group(function () {
         Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
         Route::get('/export-test-results', [ShowListResultsController::class, 'exportExcel'])->name('export.test.results');
+        //ADMIN
+        Route::get('/list-admin', [InstructorsController::class, 'indexAdmin'])->name('tableAdmin.index');
+        Route::get('/create-admin', [InstructorsController::class, 'createAdmin'])->name('createAdmin.create');
+        Route::get('/admins/{slug}/edit', [InstructorsController::class, 'editAdmin'])->name('createAdmin.edit');
+        Route::put('/admins/{slug}', [InstructorsController::class, 'update'])->name('createAdmin.update');
+        Route::delete('/admin/{slug}', [InstructorsController::class, 'destroy'])->name('createAdmin.destroy');
+        Route::post('/create-admin-excel', [AuthController::class, 'registerExcelAdmins'])->name('createAdmin.excel.store');
+
         // INSTRUCTORS
         Route::get('/list-lecturer', [InstructorsController::class, 'index'])->name('tableLecturer.index');
         Route::get('/create-lecturer', [InstructorsController::class, 'create'])->name('createInstructor.create');
@@ -72,6 +80,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/lecturers/{slug}', [InstructorsController::class, 'update'])->name('createInstructor.update');
         Route::delete('/lecturers/{slug}', [InstructorsController::class, 'destroy'])->name('createInstructor.destroy');
         Route::post('/create-lecturer-excel', [AuthController::class, 'registerExcelLecturers'])->name('createLecturer.excel.store');
+        Route::post('/lecturers/inactive', [InstructorsController::class, 'inactiveLecturers'])->name('lecturers.inactive');
+        Route::post('/lecturers/active', [InstructorsController::class, 'activeLecturers'])->name('lecturers.active');
 
         //STUDENTS
         Route::get('/list-student', [InstructorsController::class, 'indexStudent'])->name('tableStudent.index');
@@ -80,6 +90,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/students/{slug}', [InstructorsController::class, 'update'])->name('createStudent.update');
         Route::delete('/students/{slug}', [InstructorsController::class, 'destroy'])->name('createStudent.destroy');
         Route::post('/create-student-excel', [AuthController::class, 'registerExcelStudents'])->name('createStudent.excel.store');
+        Route::post('/students/inactive', [InstructorsController::class, 'inactiveStudents'])->name('students.inactive');
+        Route::post('/students/active', [InstructorsController::class, 'activeStudents'])->name('students.active');
 
         //TESTS
         Route::get('/list-test', [TestsController::class, 'index'])->name('tableTest.index');
@@ -154,7 +166,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/download-response/{studentId}/{testName}', [ShowListResultsController::class, 'downloadResponse'])->name('download.response');
         Route::get('/download-all-files', [ShowListResultsController::class, 'downloadAllFiles'])->name('download.allfiles');
         Route::get('/detail_test_results/{id}', [ShowListResultsController::class, 'detail'])->name('resultList.details');
-        Route::get('/download-responses', [ShowListResultsController::class, 'downloadFilesByDateTime'])->name('download.responses');
+        Route::post('/download/filterdate', [ShowListResultsController::class, 'downloadFilterDate'])->name('download.filterdate');
 
         //FUNCTION TO MARK SPEKAING AND WRITING
         Route::get('/mark-response/{studentId}/{testName}/{resultId?}', [ShowListResultsController::class, 'markResponse'])->name('mark.response');

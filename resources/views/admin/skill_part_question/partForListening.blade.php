@@ -83,7 +83,8 @@
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $index }}">Question {{ $question->question_number }}:</label>
                                                     <input type="hidden" name="questions[{{ $index }}][id]" value="{{ $question->id }}">
-                                                    <input type="text" id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" placeholder="Enter question {{ $index + 1 }}" value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}">
+                                                    {{-- <input type="text" id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" placeholder="Enter question {{ $index + 1 }}" value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}"> --}}
+                                                    <textarea id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" rows="2" placeholder="Enter question {{ $index + 1 }}">{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}</textarea>
                                                     <div class="mt-2">
                                                         @foreach ($question->options as $optionIndex => $option)
                                                             <div class="form-check mt-2">
@@ -112,7 +113,8 @@
                                             @for ($i = 1; $i <= 8; $i++)
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $i }}">Question {{ $i }}:</label>
-                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required>
+                                                    {{-- <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required> --}}
+                                                    <textarea id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" rows="2" placeholder="Enter question {{ $i }}" required></textarea>
                                                     <div class="mt-2">
                                                         @for ($j = 1; $j <= 4; $j++)
                                                             <div class="form-check mt-2">
@@ -152,7 +154,8 @@
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $index }}">Question {{ $question->question_number }}:</label>
                                                     <input type="hidden" name="questions[{{ $index }}][id]" value="{{ $question->id }}">
-                                                    <input type="text" id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" placeholder="Enter question {{ $index + 1 }}" value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}">
+                                                    {{-- <input type="text" id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" placeholder="Enter question {{ $index + 1 }}" value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}"> --}}
+                                                    <textarea id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" rows="2" placeholder="Enter question {{ $index + 1 }}">{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}</textarea>
                                                     <div class="mt-2">
                                                         @foreach ($question->options as $optionIndex => $option)
                                                             <div class="form-check mt-2">
@@ -181,7 +184,8 @@
                                             @for ($i = 9; $i <= 20; $i++)
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $i }}">Question {{ $i }}:</label>
-                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required>
+                                                    {{-- <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required> --}}
+                                                    <textarea id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" rows="2" placeholder="Enter question {{ $i }}" required></textarea>
                                                     <div class="mt-2">
                                                         @for ($j = 1; $j <= 4; $j++)
                                                             <div class="form-check mt-2">
@@ -221,7 +225,8 @@
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $index }}">Question {{ $question->question_number }}:</label>
                                                     <input type="hidden" name="questions[{{ $index }}][id]" value="{{ $question->id }}">
-                                                    <input type="text" id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" placeholder="Enter question {{ $index + 1 }}" value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}">
+                                                    {{-- <input type="text" id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" placeholder="Enter question {{ $index + 1 }}" value="{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}"> --}}
+                                                    <textarea id="question{{ $index }}" name="questions[{{ $index }}][text]" class="form-control mt-2" rows="2" placeholder="Enter question {{ $index + 1 }}">{{ old('questions.' . $index . '.text', $question->question_text ?? '') }}</textarea>
                                                     <div class="mt-2">
                                                         @foreach ($question->options as $optionIndex => $option)
                                                             <div class="form-check mt-2">
@@ -250,7 +255,8 @@
                                             @for ($i = 21; $i <= 35; $i++)
                                                 <div class="form-group mt-3">
                                                     <label for="question{{ $i }}">Question {{ $i }}:</label>
-                                                    <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required>
+                                                    {{-- <input type="text" id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" placeholder="Enter question {{ $i }}" required> --}}
+                                                    <textarea id="question{{ $i }}" name="questions[{{ $i }}][text]" class="form-control mt-2" rows="2" placeholder="Enter question {{ $i }}" required></textarea>
                                                     <div class="mt-2">
                                                         @for ($j = 1; $j <= 4; $j++)
                                                             <div class="form-check mt-2">

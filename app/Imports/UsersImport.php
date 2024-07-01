@@ -21,6 +21,7 @@ class UsersImport implements ToModel
             'account_id' => $row[2],
             'role' => 2,
             'password' => Hash::make($row[3]),
+            'is_active' => true,
         ]);
     }
 }

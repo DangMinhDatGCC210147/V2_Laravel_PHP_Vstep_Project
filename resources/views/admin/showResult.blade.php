@@ -17,7 +17,33 @@
             </div>
         </div>
     </div>
-
+    <!-- Date filter form -->
+    <div class="card mt-2">
+        <div class="row m-3">
+            <div class="col-12">
+                <form action="{{ route('download.filterdate') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="start_date">Start Date and Time:</label>
+                                <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="end_date">End Date and Time:</label>
+                                <input type="datetime-local" class="form-control" id="end_date" name="end_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2 align-self-end">
+                            <button type="submit" class="btn btn-danger">Download</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- end page title -->
     <div class="row">
         <div class="col-12 d-flex justify-content-end">
@@ -28,7 +54,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-12">
             <div class="card">

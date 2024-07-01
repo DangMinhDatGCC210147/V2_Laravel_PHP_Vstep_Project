@@ -27,7 +27,7 @@
                         </h2>
                     </div>
                     <div class="col-md-4 text-end">
-                        <div class="badge bg-info">
+                        <div class="badge bg-primary">
                             <span id="answered-count">Số câu đã hoàn thành: 0/0</span>
                         </div>
                         <button class="btn btn-warning" id="submitTestButton" data-test-id="{{ $test->id }}"
@@ -308,7 +308,7 @@
         <!-- Controls Column -->
         <div class="skill-section">
             <div class="btn-group">
-                <button class="btn btn-info mb-2" id="next-skill-btn">Tiếp tục</button>
+                <button class="btn btn-warning mb-2" id="next-skill-btn">Tiếp tục</button>
                 <button class="btn btn-primary mb-2" id="save-btn">Lưu bài</button>
             </div>
         </div>

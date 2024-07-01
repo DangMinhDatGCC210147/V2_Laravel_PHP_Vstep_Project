@@ -20,7 +20,17 @@
     @if(auth()->user()->role == 0)
         <!-- end page title -->
         <div class="row">
-            <div class="col-12 d-flex justify-content-end">
+            <div class="col-6 d-flex justify-content-start">
+                <form id="inactive-students-form" action="{{ route('lecturers.inactive') }}" method="POST">
+                    @csrf
+                    <button type="button" class="btn btn-danger" onclick="inactiveStudents()">Deactivate Lecturers</button>
+                </form>
+                <form id="active-students-form" action="{{ route('lecturers.active') }}" method="POST">
+                    @csrf
+                    <button type="button" class="btn btn-warning" onclick="activeStudents()">Activate Lecturers</button>
+                </form>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
                 <a href="{{ route('createInstructor.create') }}" class="btn btn-info">Create</a>
             </div>
         </div>
@@ -34,10 +44,12 @@
                     <table id="basic-datatable" class="table dt-responsive nowrap w-100">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" id="checkAll"></th>
                                 <th>No</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Lecturer ID</th>
+                                <th>Status</th>
                                 @if(auth()->user()->role == 0)
                                 <th>Action</th>
                                 @endif
@@ -45,11 +57,23 @@
                         </thead>
                         <tbody>
                             @foreach ($lecturers as $lecturer)
-                                <tr>
+                                <tr class="{{ $lecturer->is_active ? '' : 'inactive-row' }}">
+                                    <td><input type="checkbox" name="student_ids[]" value="{{ $lecturer->id }}" {{ $lecturer->is_active ? 'checked' : '' }}></td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $lecturer->name }}</td>
                                     <td>{{ $lecturer->email }}</td>
                                     <td>{{ $lecturer->account_id }}</td>
+                                    <td>
+                                        @if ($lecturer->is_active)
+                                            <div class="badge bg-success">
+                                                Active
+                                            </div>
+                                        @else
+                                            <div class="badge bg-danger">
+                                                Inactive
+                                            </div>
+                                        @endif
+                                    </td>
                                     @if(auth()->user()->role == 0)
                                     <td>
                                         <a href="{{ route('createInstructor.edit', $lecturer->slug) }}"><i
@@ -79,4 +103,61 @@
         </div><!-- end col-->
     </div>
     <!-- end row-->
+    <style>
+        .inactive-row {
+            opacity: 0.3;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select/Deselect all checkboxes
+            document.getElementById('checkAll').addEventListener('change', function() {
+                let checkboxes = document.querySelectorAll('input[name="student_ids[]"]');
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            });
+
+            // Check/uncheck "checkAll" based on individual checkbox status
+            let checkboxes = document.querySelectorAll('input[name="student_ids[]"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    let allChecked = Array.from(checkboxes).every(chk => chk.checked);
+                    document.getElementById('checkAll').checked = allChecked;
+                });
+            });
+
+            // Initialize the "checkAll" checkbox status on page load
+            let allChecked = Array.from(checkboxes).every(chk => chk.checked);
+            document.getElementById('checkAll').checked = allChecked;
+        });
+
+        function inactiveStudents() {
+            let checkboxes = document.querySelectorAll('input[name="student_ids[]"]:not(:checked)');
+            let form = document.getElementById('inactive-students-form');
+
+            checkboxes.forEach(checkbox => {
+                let input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'student_ids[]';
+                input.value = checkbox.value;
+                form.appendChild(input);
+            });
+
+            form.submit();
+        }
+
+        function activeStudents() {
+            let checkboxes = document.querySelectorAll('input[name="student_ids[]"]:checked');
+            let form = document.getElementById('active-students-form');
+
+            checkboxes.forEach(checkbox => {
+                let input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'student_ids[]';
+                input.value = checkbox.value;
+                form.appendChild(input);
+            });
+
+            form.submit();
+        }
+    </script>
 @endsection

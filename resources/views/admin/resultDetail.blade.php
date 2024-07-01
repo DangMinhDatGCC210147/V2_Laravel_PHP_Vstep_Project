@@ -16,7 +16,8 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-center mb-2">
-                        <img src="{{ asset('storage/' . $student->image_file) }}" style="max-height: 300px;" alt="Student Image" class="img-fluid rounded">
+                        <img src="{{ asset('storage/' . $student->image_file) }}" style="max-height: 300px;"
+                            alt="Student Image" class="img-fluid rounded">
                     </div>
 
                     <h4 class="mb-3">Student Name: {{ $user->name }}</h4>
@@ -58,12 +59,18 @@
                                     <th scope="row">Overall</th>
                                     <td>
                                         @if ($testResult->computed_writing_score != 0.0 && $testResult->speaking !== null)
-                                            @if( number_format($testResult->average_score, 1) >= 8.0)
-                                                <div style="color: rgb(187, 187, 16)"><strong>{{ number_format($testResult->average_score, 1) }}</strong></div>
-                                            @elseif ( number_format($testResult->average_score, 1) >= 6.0)
-                                                <div style="color: rgb(9, 195, 9)"><strong>{{ number_format($testResult->average_score, 1) }}</strong></div>
-                                            @elseif( number_format($testResult->average_score, 1) < 6.0)
-                                                <div style="color:rgb(225, 14, 14)"><strong>{{ number_format($testResult->average_score, 1) }}</strong></div>
+                                            @if (number_format($testResult->average_score, 1) >= 8.0)
+                                                <div style="color: rgb(187, 187, 16)">
+                                                    <strong>{{ number_format($testResult->average_score, 1) }}</strong>
+                                                </div>
+                                            @elseif (number_format($testResult->average_score, 1) >= 6.0)
+                                                <div style="color: rgb(9, 195, 9)">
+                                                    <strong>{{ number_format($testResult->average_score, 1) }}</strong>
+                                                </div>
+                                            @elseif(number_format($testResult->average_score, 1) < 6.0)
+                                                <div style="color:rgb(225, 14, 14)">
+                                                    <strong>{{ number_format($testResult->average_score, 1) }}</strong>
+                                                </div>
                                             @endif
                                         @else
                                             <strong>{{ 'Not yet graded' }}</strong>
@@ -76,6 +83,21 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="card-body" style="font-size: 0.9rem;">
+                        <div class="list-audio">
+                            <h3 class="card-title mb-3">List audio</h3>
+                            @if ($speakingResponses)
+                                @foreach ($speakingResponses as $index => $response)
+                                    <h5>Part {{ $index + 1 }}</h5>
+                                    <audio controls controlsList="nodownload">
+                                        <source src="{{ asset('storage/' . $response) }}" type="audio/mpeg"
+                                            id="audioPlayer">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
