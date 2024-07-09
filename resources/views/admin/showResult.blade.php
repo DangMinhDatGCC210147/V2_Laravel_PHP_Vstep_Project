@@ -21,6 +21,8 @@
     <div class="card mt-2">
         <div class="row m-3">
             <div class="col-12">
+                <h4>Download student's responses by Date</h4>
+                <br>
                 <form action="{{ route('download.filterdate') }}" method="POST">
                     @csrf
                     <div class="row">
@@ -37,7 +39,31 @@
                             </div>
                         </div>
                         <div class="col-md-2 align-self-end">
-                            <button type="submit" class="btn btn-danger">Download</button>
+                            <button type="submit" class="btn btn-warning">Download Response</button>
+                        </div>
+                    </div>
+                </form>
+                <br>
+                <hr>
+                <h4>Export Excel by Date</h4>
+                <br>
+                <form action="{{ route('export.filterdate') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="start_date">Start Date and Time:</label>
+                                <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="end_date">End Date and Time:</label>
+                                <input type="datetime-local" class="form-control" id="end_date" name="end_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2 align-self-end">
+                            <button type="submit" class="btn btn-warning">Export Excel Result</button>
                         </div>
                     </div>
                 </form>
@@ -49,8 +75,10 @@
         <div class="col-12 d-flex justify-content-end">
             {{-- <a href="{{ route('createInstructor.create') }}" class="btn btn-info">Create</a> --}}
             <div class="d-flex justify-content-between">
-                <button class="btn btn-light" onclick="window.location='{{ route('download.allfiles') }}'">Download All</button>
-                <a href="{{ route('export.test.results') }}" class="btn btn-success">Excel</a>
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                    <button class="btn btn-light" onclick="window.location='{{ route('download.allfiles') }}'">Download All</button>
+                    <a href="{{ route('export.test.results') }}" class="btn btn-success">Excel</a>
+                </div>
             </div>
         </div>
     </div>

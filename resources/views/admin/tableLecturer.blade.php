@@ -21,7 +21,7 @@
         <!-- end page title -->
         <div class="row">
             <div class="col-6 d-flex justify-content-start">
-                <form id="inactive-students-form" action="{{ route('lecturers.inactive') }}" method="POST">
+                <form id="inactive-students-form" class="mx-2" action="{{ route('lecturers.inactive') }}" method="POST">
                     @csrf
                     <button type="button" class="btn btn-danger" onclick="inactiveStudents()">Deactivate Lecturers</button>
                 </form>

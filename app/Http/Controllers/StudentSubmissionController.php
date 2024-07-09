@@ -141,9 +141,7 @@ class StudentSubmissionController extends Controller
 
         $existingCount = StudentResponses::where([
             'test_id' => $validated['test_id'],
-            'skill_id' => $validated['skill_id'],
-            'student_id' => $user->id,
-            'question_id' => $validated['question_id']
+            'student_id' => $user->id
         ])->count();
 
         $partNumber = $existingCount + 1;

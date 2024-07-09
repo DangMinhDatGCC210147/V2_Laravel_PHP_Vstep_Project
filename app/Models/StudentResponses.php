@@ -26,4 +26,9 @@ class StudentResponses extends Model
     {
         return $this->belongsTo(Test::class);
     }
+
+    public function readingAudio()
+    {
+        return $this->belongsTo(ReadingsAudio::class, 'skill_id', 'test_skill_id');
+    }
 }

@@ -14,7 +14,7 @@ class Question extends Model
     {
         return $this->belongsTo(TestSkill::class);
     }
-    
+
     public function readingsAudio()
     {
         return $this->belongsTo(ReadingsAudio::class);
@@ -23,5 +23,10 @@ class Question extends Model
     public function options()
     {
         return $this->hasMany(Option::class);
+    }
+
+    public function responses()
+    {
+        return $this->hasMany(StudentResponses::class, 'question_id');
     }
 }

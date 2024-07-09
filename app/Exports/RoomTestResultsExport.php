@@ -3,42 +3,53 @@
 namespace App\Exports;
 
 use App\Models\TestResult;
+use App\Models\ExamRooms;
+use App\Models\StudentExamRoom;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class TestResultsExport implements FromCollection, WithHeadings
+class RoomTestResultsExport implements FromCollection, WithHeadings
 {
-    protected $startDate;
-    protected $endDate;
+    protected $roomId;
 
-    public function __construct($startDate = null, $endDate = null)
+    public function __construct($roomId)
     {
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+        $this->roomId = $roomId;
     }
 
     public function collection()
     {
-        $query = TestResult::with('student');
+        $room = ExamRooms::findOrFail($this->roomId);
+        $startDate = $room->start_time;
+        $endDate = $room->end_time;
 
-        if ($this->startDate && $this->endDate) {
-            $query->whereBetween('created_at', [$this->startDate, $this->endDate]);
-        }
+        // Lấy danh sách ID của sinh viên từ bảng StudentExamRoom
+        $studentIds = StudentExamRoom::where('room_id', $this->roomId)->pluck('user_id')->toArray();
 
-        $testResults = $query->get();
+        // Lấy tất cả sinh viên trong phòng thi
+        $students = User::whereIn('id', $studentIds)->get();
 
-        return $testResults->map(function ($testResult, $index) {
-            $writingScore = $testResult->writing_part1 !== null && $testResult->writing_part2 !== null ?
-                round((($testResult->writing_part1 + $testResult->writing_part2 * 2) / 3) * 2) / 2 : null;
-            $speakingScore = $testResult->speaking_part1 !== null && $testResult->speaking_part2 !== null && $testResult->speaking_part3 !== null ?
-                round((($testResult->speaking_part1 + $testResult->speaking_part2 + $testResult->speaking_part3) / 3) * 2) / 2 : null;
+        // Lấy kết quả thi của các sinh viên
+        $testResults = TestResult::with('student')
+            ->whereIn('student_id', $studentIds)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
 
-            // Calculate Overall only if both writing and speaking scores are available
+        // Tạo một bản đồ từ student_id sang testResult để truy cập nhanh
+        $resultsMap = $testResults->keyBy('student_id');
+
+        return $students->map(function ($student, $index) use ($resultsMap) {
+            $testResult = $resultsMap[$student->id] ?? null;
+
+            $writingScore = $testResult ? (round((($testResult->writing_part1 + $testResult->writing_part2 * 2) / 3) * 2) / 2) : null;
+            $speakingScore = $testResult ? (round((($testResult->speaking_part1 + $testResult->speaking_part2 + $testResult->speaking_part3) / 3) * 2) / 2) : null;
             $overallScore = null;
-            if ($writingScore !== null && $speakingScore !== null) {
+
+            if ($writingScore !== null || $speakingScore !== null) {
                 $overallScore = round((
-                    $this->calculateScoreListening($testResult->listening_correctness) +
-                    $this->calculateScoreReading($testResult->reading_correctness) +
+                    $this->calculateScoreListening($testResult->listening_correctness ?? 0) +
+                    $this->calculateScoreReading($testResult->reading_correctness ?? 0) +
                     $writingScore +
                     $speakingScore
                 ) / 4 * 2) / 2;
@@ -46,18 +57,19 @@ class TestResultsExport implements FromCollection, WithHeadings
 
             return [
                 'No' => $index + 1,
-                'Student Name' => $testResult->student->name ?? 'N/A',
-                'Student ID' => $testResult->student->account_id,
-                'Test Name' => $testResult->test_name,
-                'Listening' => $this->calculateScoreListening($testResult->listening_correctness),
-                'Reading' => $this->calculateScoreReading($testResult->reading_correctness),
+                'Student Name' => $student->name,
+                'Student ID' => $student->account_id,
+                'Test Name' => $testResult->test_name ?? '-',
+                'Listening' => $testResult ? $this->calculateScoreListening($testResult->listening_correctness) : '-',
+                'Reading' => $testResult ? $this->calculateScoreReading($testResult->reading_correctness) : '-',
                 'Writing' => $writingScore,
                 'Speaking' => $speakingScore,
                 'Overall' => $overallScore,
-                'Date Finish' => $testResult->created_at->toDateString(),
+                'Date Finish' => $testResult ? $testResult->created_at->toDateString() : '-',
             ];
         });
     }
+
 
     public function headings(): array
     {

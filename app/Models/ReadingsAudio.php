@@ -16,7 +16,7 @@ class ReadingsAudio extends Model
     {
         return $this->belongsTo(TestSkill::class);
     }
-    
+
     public function questions() {
         return $this->hasMany(Question::class);
     }
@@ -40,5 +40,10 @@ class ReadingsAudio extends Model
     {
         // Nếu không phải file âm thanh và không phải hình ảnh, giả sử đó là văn bản
         return !$this->isAudio() && !$this->isImage();
+    }
+
+    public function responses()
+    {
+        return $this->hasMany(StudentResponses::class, 'test_skill_id', 'skill_id');
     }
 }

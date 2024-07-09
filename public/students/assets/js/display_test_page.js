@@ -158,34 +158,34 @@ $(document).ready(function () {
         const testId = $('input[name="test_id"]').val();
         if (speakingPart === 1) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_1"]');
-            skillTimers['Speaking'] = 3 * 60;
+            skillTimers['Speaking'] = 10;
             $('#notification').show();
             $('#audioMotion').show();
-            startRecording(3 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
+            startRecording(10 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 2) {
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').prop('disabled', false);
-            skillTimers['Speaking'] = 60;
+            skillTimers['Speaking'] = 10;
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_2"]').click();
             $('#notification-take-note').show();
         } else if (speakingPart === 3) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_2"]');
-            skillTimers['Speaking'] = 3 * 60;
+            skillTimers['Speaking'] = 10;
             $('#notification').show();
             $('#audioMotion').show();
-            startRecording(3 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
+            startRecording(10 + 1, recordingControls, speakingPart, testId); // Start recording for 3 minutes
         } else if (speakingPart === 4) {
-            skillTimers['Speaking'] = 60;
+            skillTimers['Speaking'] = 10;
             $('.skill-part-btn[data-skill-name="Speaking"]').prop('disabled', true);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_3"]').prop('disabled', false);
             $('.skill-part-btn[data-skill-name="Speaking"][data-part-id="Part_3"]').click();
             $('#notification-take-note').show();
         } else if (speakingPart === 5) {
             const recordingControls = document.querySelector('.recording-controls[data-part-id="Part_3"]');
-            skillTimers['Speaking'] = 4 * 60;
+            skillTimers['Speaking'] = 10;
             $('#notification').show();
             $('#audioMotion').show();
-            startRecording(4 * 60 + 1, recordingControls, speakingPart, testId); // Start recording for 4 minutes
+            startRecording(10 + 1, recordingControls, speakingPart, testId); // Start recording for 4 minutes
         }
 
         if (speakingPart <= 5) {

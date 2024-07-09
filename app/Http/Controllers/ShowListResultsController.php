@@ -9,12 +9,20 @@ use App\Models\TestResult;
 use App\Models\TestSkill;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ResultsExport;
 use App\Exports\TestResultsExport;
+use App\Models\Question;
+use App\Models\ReadingsAudio;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpWord\Shared\Html;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use App\Models\ReadingsAudios;
+use ZipArchive;
+
 
 class ShowListResultsController extends Controller
 {
@@ -159,7 +167,6 @@ class ShowListResultsController extends Controller
 
     public function downloadResponse($studentId, $testName)
     {
-
         $testId = Test::where('test_name', $testName)->value('id');
         if (!$testId) {
             return redirect()->back()->with('error', 'Test is not available.');
@@ -182,13 +189,14 @@ class ShowListResultsController extends Controller
         if ($responses->isEmpty()) {
             return redirect()->back()->with('error', 'Responses not found.');
         }
-        $responsesFolderPath = storage_path('app/public/' . $accountId . '_' . $studentName);
 
+        $responsesFolderPath = storage_path('app/public/' . $accountId . '_' . $studentName);
         if (!file_exists($responsesFolderPath)) {
             mkdir($responsesFolderPath, 0777, true);
-            mkdir($responsesFolderPath . '/speaking', 0777, true); // Ensure speaking directory exists
-            mkdir($responsesFolderPath . '/writing', 0777, true); // Ensure writing directory exists
+            mkdir($responsesFolderPath . '/speaking', 0777, true);
+            mkdir($responsesFolderPath . '/writing', 0777, true);
         }
+
         $writingTaskCounter = 1;
         foreach ($responses as $response) {
             if ($speakingSkillIds->contains($response->skill_id)) {
@@ -200,13 +208,28 @@ class ShowListResultsController extends Controller
                     $this->deleteDirectory($responsesFolderPath);
                     return redirect()->back()->with('error', 'Student did not submit Speaking or Writing or their submissions are not available');
                 }
+
+                
             } elseif ($writingSkillIds->contains($response->skill_id)) {
                 // Đối với kỹ năng viết, tạo file docx từ text
-                $phpWord = new \PhpOffice\PhpWord\PhpWord();
+                $phpWord = new PhpWord();
                 $section = $phpWord->addSection();
+
+                // Thêm question_text
+                $questionText = Question::where('id', $response->question_id)->value('question_text');
+                $section->addText("Question: " . $questionText);
+
+                // Thêm reading_audio_file
+                $readingAudioText = ReadingsAudio::where('test_skill_id', $response->skill_id)->value('reading_audio_file');
+                Html::addHtml($section, $readingAudioText);
+
+                // Thêm response
+                $section->addTextBreak(1); // Thêm một khoảng trống giữa question và response
+                $section->addText("Response:");
                 $section->addText($response->text_response);
-                $docxFilePath = $responsesFolderPath . '/writing/writing_response_' . '_Task_' . $writingTaskCounter . '.docx';
-                $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+
+                $docxFilePath = $responsesFolderPath . '/writing/writing_response_Task_' . $writingTaskCounter . '.docx';
+                $writer = IOFactory::createWriter($phpWord, 'Word2007');
                 $writer->save($docxFilePath);
 
                 $writingTaskCounter++;
@@ -215,9 +238,9 @@ class ShowListResultsController extends Controller
 
         // Zip the responses folder
         $zipFilePath = storage_path('app/public/' . $accountId . '_' . $studentName . '.zip');
-        $zip = new \ZipArchive();
-        if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
-            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($responsesFolderPath));
+        $zip = new ZipArchive();
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($responsesFolderPath));
             foreach ($files as $file) {
                 if (!$file->isDir()) {
                     $filePath = $file->getRealPath();
@@ -228,7 +251,6 @@ class ShowListResultsController extends Controller
             $zip->close();
             // Return the response with the ZIP file download
             $this->deleteDirectory($responsesFolderPath);
-            // Return the response with the ZIP file download
             return response()->download($zipFilePath)->deleteFileAfterSend(true);
         } else {
             $this->deleteDirectory($responsesFolderPath);
@@ -273,20 +295,19 @@ class ShowListResultsController extends Controller
 
         $baseFolderPath = storage_path('app/public/responses');
         if (!file_exists($baseFolderPath)) {
-            mkdir($baseFolderPath, 0777, true); // Ensure the base directory exists
+            mkdir($baseFolderPath, 0777, true);
         }
 
         foreach ($responses as $response) {
-            // dd($response);
             $student = User::find($response->student_id);
             if (!$student) continue;
 
             $testName = $response->test ? $response->test->test_name : 'default_test_name';
             $responsesFolderPath = $baseFolderPath . '/' . $student->account_id . '_' . $student->slug . '_' . $testName;
             if (!file_exists($responsesFolderPath)) {
-                mkdir($responsesFolderPath, 0777, true); // Create directory if not exists
-                mkdir($responsesFolderPath . '/speaking', 0777, true); // Speaking subdirectory
-                mkdir($responsesFolderPath . '/writing', 0777, true); // Writing subdirectory
+                mkdir($responsesFolderPath, 0777, true);
+                mkdir($responsesFolderPath . '/speaking', 0777, true);
+                mkdir($responsesFolderPath . '/writing', 0777, true);
             }
 
             if ($speakingSkillIds->contains($response->skill_id)) {
@@ -295,20 +316,32 @@ class ShowListResultsController extends Controller
                     copy($filePath, $responsesFolderPath . '/speaking/' . basename($filePath));
                 }
             } elseif ($writingSkillIds->contains($response->skill_id)) {
-                $phpWord = new \PhpOffice\PhpWord\PhpWord();
+                $phpWord = new PhpWord();
                 $section = $phpWord->addSection();
+
+                // Thêm question_text
+                $questionText = Question::where('id', $response->question_id)->value('question_text');
+                $section->addText("Question: " . $questionText);
+
+                // Thêm reading_audio_file
+                $readingAudioText = ReadingsAudio::where('test_skill_id', $response->skill_id)->value('reading_audio_file');
+                Html::addHtml($section, $readingAudioText);
+
+                // Thêm response
+                $section->addTextBreak(1);
+                $section->addText("Response:");
                 $section->addText($response->text_response);
+
                 $docxFilePath = $responsesFolderPath . '/writing/writing_response_' . $response->id . '.docx';
-                $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                $writer = IOFactory::createWriter($phpWord, 'Word2007');
                 $writer->save($docxFilePath);
             }
         }
 
-        // Zip the base responses folder
         $zipFilePath = storage_path('app/public/all_responses.zip');
-        $zip = new \ZipArchive();
-        if ($zip->open($zipFilePath, \ZipArchive::CREATE) === TRUE) {
-            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($baseFolderPath));
+        $zip = new ZipArchive();
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($baseFolderPath));
             foreach ($files as $file) {
                 if (!$file->isDir()) {
                     $filePath = $file->getRealPath();
@@ -324,18 +357,18 @@ class ShowListResultsController extends Controller
         }
     }
 
-    function getUniqueDirectory($baseFolderPath, $directoryName)
-    {
-        $directory = $baseFolderPath . '/' . $directoryName;
-        $i = 1;
+    // function getUniqueDirectory($baseFolderPath, $directoryName)
+    // {
+    //     $directory = $baseFolderPath . '/' . $directoryName;
+    //     $i = 1;
 
-        while (is_dir($directory)) {
-            $directory = $baseFolderPath . '/' . $directoryName . '_' . $i;
-            $i++;
-        }
+    //     while (is_dir($directory)) {
+    //         $directory = $baseFolderPath . '/' . $directoryName . '_' . $i;
+    //         $i++;
+    //     }
 
-        return $directory;
-    }
+    //     return $directory;
+    // }
 
     public function markResponse($studentId, $testName, TestResult $resultId = null)
     {
@@ -449,5 +482,13 @@ class ShowListResultsController extends Controller
         } else {
             return redirect()->back()->with('error', 'Could not create zip file.');
         }
+    }
+
+    public function exportExcelFiltered(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        return Excel::download(new TestResultsExport($startDate, $endDate), 'test_results_filtered.xlsx');
     }
 }

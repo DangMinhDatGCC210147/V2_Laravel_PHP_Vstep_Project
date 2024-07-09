@@ -24,8 +24,8 @@
         </div>
     </div>
     <div class="row mt-2">
-        <div class="d-flex justify-content-center">
-            <div class="col-5">
+        <div class="col-4 d-flex justify-content-center">
+            <div class="col-12">
                 <div class="card border-danger">
                     <div class="card-header d-flex justify-content-center">
                         <h3>Student's Information</h3>
@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12">
+        <div class="col-8">
             <div class="card">
                 <div class="card-body">
                     <h4 class="header-title">Mark for Writing and Speaking</h4>

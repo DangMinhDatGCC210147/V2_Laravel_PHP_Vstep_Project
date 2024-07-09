@@ -11,7 +11,7 @@
                 <div class="d-none d-lg-block">
                     <ol class="breadcrumb m-0 float-end">
                         <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">List of Tests</li>
+                        <li class="breadcrumb-item active">List of Rooms</li>
                     </ol>
                 </div>
             </div>
@@ -21,8 +21,11 @@
     <!-- end page title -->
     @if (auth()->user()->role == 0)
         <div class="row">
-            <div class="col-md-12 d-flex justify-content-end">
-                <button class="btn btn-danger" id="deleteAll">Delete All</button>
+            <div class="buttons">
+                <div class="col-12 d-flex justify-content-end">
+                    <a href="{{ route('room.create') }}" class="btn btn-info mx-2">Create</a>
+                    <button class="btn btn-danger" id="deleteAll">Delete All</button>
+                </div>
             </div>
         </div>
         <div id="showForm"></div>
@@ -60,41 +63,43 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Test Name</th>
-                                <th>Duration</th>
-                                <th>Create At</th>
-                                @if(auth()->user()->role == 0)
-                                    <th>Action</th>
-                                @endif
+                                <th>Room Name</th>
+                                <th>Capacity</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Participants</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tests as $test)
+                            @foreach ($rooms as $room)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $test->test_name }}</td>
-                                    <td>{{ $test->duration }}</td>
-                                    <td>{{ $test->created_at }}</td>
-                                    @if(auth()->user()->role == 0)
+                                    <td>{{ $room->room_name }}</td>
+                                    <td>{{ $room->capacity }}</td>
+                                    <td>{{ $room->start_time }}</td>
+                                    <td>{{ $room->end_time }}</td>
+                                    <td><h3><span class="badge bg-success">{{ $room->students_count }}</span></h3></td>
                                     <td>
-                                        {{-- <a href="{{ route('downloadTest', ['slug' => $test->slug]) }}">
-                                            <i class="mdi mdi-file-export mdi-24px"></i>
-                                        </a> --}}
-                                        <a href="{{ route('test.destroy', $test->slug) }}"
+                                        <a href="{{ route('room.addStudentForm', ['id' => $room->id]) }}">
+                                            <i class="mdi mdi-account-multiple-plus mdi-24px mx-2" style="color: rgb(19, 225, 201)"></i>
+                                        </a>
+                                        <a href="{{ route('room.edit', ['id' => $room->id]) }}"><i
+                                            class="mdi mdi-lead-pencil mdi-24px"></i></a>
+                                        <a href="{{ route('room.destroy', $room->id) }}"
                                             onclick="event.preventDefault();
-                                                    if(confirm('Are you sure you want to delete this test?')) {
-                                                        document.getElementById('delete-form-{{ $test->slug }}').submit();
+                                                    if(confirm('Are you sure you want to delete this room?')) {
+                                                        document.getElementById('delete-form-{{ $room->id }}').submit();
                                                     }">
                                             <i class="mdi mdi-delete-empty mdi-24px" style="color: rgb(206, 25, 25)"></i>
                                         </a>
-                                        <form id="delete-form-{{ $test->slug }}"
-                                            action="{{ route('test.destroy', $test->slug) }}" method="POST"
+                                        <form id="delete-form-{{ $room->id }}"
+                                            action="{{ route('room.destroy', $room->id) }}" method="POST"
                                             style="display: none;">
                                             @csrf
                                             @method('DELETE')
                                         </form>
                                     </td>
-                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -105,41 +110,4 @@
         </div><!-- end col-->
     </div>
     <!-- end row-->
-    <script>
-        document.getElementById('deleteAll').addEventListener('click', function() {
-            $('#confirmationModal').modal('show');
-        });
-
-        document.getElementById('confirmDeleteAll').addEventListener('click', function() {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            fetch('/delete-all-tests', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    $('#confirmationModal').modal('hide');
-                    $('#showForm').append(`
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        All tests and related student records have been deleted.
-                    </div>
-                `);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 3000);
-                })
-                .catch(error => {
-                    $('#confirmationModal').modal('hide');
-                    $('#showForm').append(`
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Something went wrong. Please try again later.
-                    </div>
-                `);
-                });
-        });
-    </script>
 @endsection

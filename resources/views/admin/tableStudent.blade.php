@@ -22,7 +22,7 @@
     @if (auth()->user()->role == 0)
         <div class="row">
             <div class="col-6 d-flex justify-content-start">
-                <form id="inactive-students-form" action="{{ route('students.inactive') }}" method="POST">
+                <form id="inactive-students-form" class="mx-2" action="{{ route('students.inactive') }}" method="POST">
                     @csrf
                     <button type="button" class="btn btn-danger" onclick="inactiveStudents()">Deactivate Students</button>
                 </form>

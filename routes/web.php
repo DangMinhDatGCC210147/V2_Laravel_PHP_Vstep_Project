@@ -15,12 +15,14 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentSubmissionController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\TestsController;
 use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckStudentRole;
 use App\Http\Middleware\CheckLecturerRole;
 use App\Http\Controllers\StudentAssignmentController;
+use App\Http\Controllers\TestExportController;
 
 Route::fallback(function () {
     return view('errors.404');
@@ -62,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(CheckLecturerRole::class)->group(function () {
+
         Route::get('/index-lecturer', [IndexAdminController::class, 'index'])->name('admin.index');
         Route::get('/export-test-results', [ShowListResultsController::class, 'exportExcel'])->name('export.test.results');
         //ADMIN
@@ -167,10 +170,29 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/download-all-files', [ShowListResultsController::class, 'downloadAllFiles'])->name('download.allfiles');
         Route::get('/detail_test_results/{id}', [ShowListResultsController::class, 'detail'])->name('resultList.details');
         Route::post('/download/filterdate', [ShowListResultsController::class, 'downloadFilterDate'])->name('download.filterdate');
+        Route::post('/export-filterdate', [ShowListResultsController::class, 'exportExcelFiltered'])->name('export.filterdate');
 
         //FUNCTION TO MARK SPEKAING AND WRITING
         Route::get('/mark-response/{studentId}/{testName}/{resultId?}', [ShowListResultsController::class, 'markResponse'])->name('mark.response');
         Route::post('/update-test-result', [ShowListResultsController::class, 'updateMark'])->name('testResult.update');
+
+        //ROOMS
+        Route::get('/room-list', [RoomsController::class, 'index'])->name('room.index');
+        Route::get('/create-room', [RoomsController::class, 'create'])->name('room.create');
+        Route::post('/rooms', [RoomsController::class, 'store'])->name('room.store');
+        Route::get('/room/{id}/edit', [RoomsController::class, 'edit'])->name('room.edit');
+        Route::put('/room/{id}', [RoomsController::class, 'update'])->name('room.update');
+        Route::delete('/rooms/{id}', [RoomsController::class, 'destroy'])->name('room.destroy');
+
+        //STUDENTS IN ROOM
+        Route::get('room/{id}/add-student', [RoomsController::class, 'addStudentForm'])->name('room.addStudentForm');
+        Route::post('room/{id}/add-student', [RoomsController::class, 'addStudent'])->name('room.addStudent');
+        Route::post('room/{id}/import-students', [RoomsController::class, 'importStudents'])->name('room.importStudents');
+        Route::delete('room/{room_id}/remove-student/{student_id}', [RoomsController::class, 'removeStudent'])->name('room.removeStudent');
+        Route::get('/rooms/{id}/download-files', [RoomsController::class, 'downloadRoomFiles'])->name('room.downloadFiles');
+        Route::get('/rooms/{roomId}/export', [RoomsController::class, 'exportRoomTestResults'])->name('room.export');
+
+        // Route::get('/export-test/{slug}', [TestExportController::class, 'export'])->name('downloadTest');
     });
 
 });

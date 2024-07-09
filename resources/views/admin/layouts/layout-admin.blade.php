@@ -128,6 +128,11 @@
                                 </a>
                             </li>
                             <li class="menu-item">
+                                <a href="{{ route('room.index') }}" class="menu-link">
+                                    <span class="menu-text">Room List</span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
                                 <a href="{{ route('tableAssignment.index') }}" class="menu-link">
                                     <span class="menu-text">Assignment List</span>
                                 </a>

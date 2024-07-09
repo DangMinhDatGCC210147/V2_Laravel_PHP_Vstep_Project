@@ -86,4 +86,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSessions::class);
     }
+
+    public function examRooms()
+    {
+        return $this->belongsToMany(ExamRooms::class, 'student_exam_room', 'user_id', 'room_id');
+    }
+
 }
