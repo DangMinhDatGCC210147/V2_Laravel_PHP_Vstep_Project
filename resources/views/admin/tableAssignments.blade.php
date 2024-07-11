@@ -56,6 +56,7 @@
                                     <td>
                                         <button class="btn btn-primary copy-link" data-link="{{ route('assignments.show', $assignment->id) }}" {{ $assignment->isEnable ? '' : 'disabled' }}>Copy Link</button>
                                         <a href="{{ route('editAssignment', $assignment->id) }}" class="btn btn-warning">Edit</a>
+                                        <a href="{{ route('assignments.students', $assignment->id) }}" class="btn btn-info">View Students</a>
                                         <form action="{{ route('deleteAssignment', $assignment->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')

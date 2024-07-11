@@ -11,6 +11,7 @@ use App\Models\MultipleChoiceOption;
 use App\Models\TrueFalse;
 use App\Models\MatchingHeadline;
 use App\Models\FillInTheBlank;
+use App\Models\StudentAnswer;
 
 class AssignmentController extends Controller
 {
@@ -339,6 +340,149 @@ class AssignmentController extends Controller
 
         return redirect()->route('tableAssignment.index')->with('success', 'Assignment and questions updated successfully.');
     }
+
+    public function showStudents(Assignment $assignment)
+    {
+        // Lấy tất cả sinh viên đã làm bài assignment
+        $students = $assignment->studentAnswers()
+            ->select('student_id')
+            ->distinct()
+            ->get();
+
+        $studentScores = [];
+
+        foreach ($students as $student) {
+            $studentId = $student->student_id;
+            $attemptNumbers = StudentAnswer::where('student_id', $studentId)
+                ->whereHas('question', function ($query) use ($assignment) {
+                    $query->where('assignment_id', $assignment->id);
+                })
+                ->distinct()
+                ->pluck('attempt_number');
+
+            $maxScore = 0;
+
+            foreach ($attemptNumbers as $attemptNumber) {
+                $answers = StudentAnswer::where('student_id', $studentId)
+                    ->whereHas('question', function ($query) use ($assignment) {
+                        $query->where('assignment_id', $assignment->id);
+                    })
+                    ->where('attempt_number', $attemptNumber)
+                    ->get();
+
+                $correctAnswers = 0;
+                $totalQuestions = 0;
+
+                foreach ($answers as $answer) {
+                    $question = $answer->question;
+
+                    if ($question->question_type == 'matching_headline') {
+                        $correctHeadlines = $question->matchingHeadlines()
+                            ->whereNotNull('headline')
+                            ->where('headline', '!=', '')
+                            ->whereNotNull('match_text')
+                            ->where('match_text', '!=', '')
+                            ->pluck('headline', 'match_text');
+
+                        $totalQuestions += $correctHeadlines->count();
+                        $answerTextArray = json_decode($answer->answer_text, true);
+
+                        foreach ($correctHeadlines as $matchText => $headline) {
+                            if (isset($answerTextArray[$matchText]) && $answerTextArray[$matchText] == $headline) {
+                                $correctAnswers++;
+                            }
+                        }
+                    } elseif ($question->question_type == 'fill_in_the_blank') {
+                        $totalQuestions += $question->fillInTheBlanks->count();
+                        $answerTextArray = json_decode($answer->answer_text, true);
+
+                        foreach ($question->fillInTheBlanks as $index => $blank) {
+                            if (isset($answerTextArray[$index]) && $answerTextArray[$index] === $blank->correct_answer) {
+                                $correctAnswers++;
+                            }
+                        }
+                    } else {
+                        $totalQuestions++;
+                        if ($answer->is_correct) {
+                            $correctAnswers++;
+                        }
+                    }
+                }
+
+                $score = $correctAnswers;
+                if ($score > $maxScore) {
+                    $maxScore = $score;
+                }
+            }
+
+            $studentScores[] = [
+                'student' => $student->student,
+                'max_score' => $maxScore,
+                'total_questions' => $totalQuestions
+            ];
+        }
+
+        return view('admin.assignment_students', [
+            'assignment' => $assignment,
+            'studentScores' => $studentScores
+        ]);
+    }
+
+    // public function showStudents(Assignment $assignment)
+    // {
+    //     $students = StudentAnswer::select('student_id')
+    //         ->whereIn('question_id', $assignment->questions->pluck('id'))
+    //         ->groupBy('student_id')
+    //         ->with('student')
+    //         ->get();
+
+    //     $students = $students->map(function ($studentAnswer) use ($assignment) {
+    //         // Lấy tất cả các lần làm bài của sinh viên này cho assignment này
+    //         $attempts = StudentAnswer::where('student_id', $studentAnswer->student_id)
+    //             ->whereIn('question_id', $assignment->questions->pluck('id'))
+    //             ->get()
+    //             ->groupBy('attempt_number');
+
+    //         // Tính toán số điểm cao nhất giữa tất cả các lần thử
+    //         $maxScore = 0;
+    //         foreach ($attempts as $attemptNumber => $answers) {
+    //             $score = 0;
+    //             foreach ($answers as $answer) {
+    //                 $question = $answer->question;
+
+    //                 if ($question->question_type == 'matching_headline') {
+    //                     $correctHeadlines = $question->matchingHeadlines()
+    //                         ->whereNotNull('headline')
+    //                         ->where('headline', '!=', '')
+    //                         ->whereNotNull('match_text')
+    //                         ->where('match_text', '!=', '')
+    //                         ->pluck('headline', 'match_text');
+
+    //                     foreach ($correctHeadlines as $matchText => $headline) {
+    //                         if (isset($answer->answer_text[$matchText]) && $answer->answer_text[$matchText] == $headline) {
+    //                             $score++;
+    //                         }
+    //                     }
+    //                 } else {
+    //                     if ($answer->is_correct) {
+    //                         $score++;
+    //                     }
+    //                 }
+    //             }
+    //             if ($score > $maxScore) {
+    //                 $maxScore = $score;
+    //             }
+    //         }
+
+    //         $studentAnswer->max_score = $maxScore;
+    //         return $studentAnswer;
+    //     });
+
+    //     $totalQuestions = $assignment->questions->count();
+
+    //     return view('admin.assignment_students', compact('assignment', 'students', 'totalQuestions'));
+    // }
+
 
 
     // Xóa Assignment

@@ -143,8 +143,13 @@ Route::middleware(['auth'])->group(function () {
         //ASSIGNMENT LIST
         Route::get('/list-assignment', [AssignmentController::class, 'index'])->name('tableAssignment.index');
 
+        //FUNCTION FOR GET STUDENT DO ASSIGNMENT
+        Route::get('/assignments/{assignment}/students', [AssignmentController::class, 'showStudents'])->name('assignments.students');
+
         //FUNCTION FOR GET INFO ASSIGNMENT
         Route::get('/create-assignment', [AssignmentController::class, 'create'])->name('create.assignemnt');
+
+
 
         //FUNCTION FOR CREATING QUESTIONS IN ASSIGNMENT
         Route::post('/store-assignment-type', [AssignmentController::class, 'store'])->name('storeAssignmentType');
