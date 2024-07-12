@@ -138,7 +138,14 @@ class InstructorsController extends Controller
 
         $user->save();
         Log::info('User updated successfully', ['user' => $user]);
-        return redirect()->route('tableStudent.index')->with('success', 'User updated successfully.');
+
+        if ($user->role == 2) {
+            return redirect()->route('tableStudent.index')->with('success', 'User updated successfully.');
+        } elseif ($user->role == 1) {
+            return redirect()->route('tableLecturer.index')->with('success', 'User updated successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Role not recognized.');
     }
 
     /**

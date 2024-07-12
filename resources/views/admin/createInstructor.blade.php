@@ -30,20 +30,23 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo cấu trúc file excel để tạo tài khoản với số lượng nhiều</h1>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hướng dẫn tạo cấu trúc file excel để tạo
+                                    tài khoản với số lượng nhiều</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <p><strong>Bước 1:</strong> Tạo một file excel rỗng</p>
-                                <p><strong>Bước 2:</strong> Nhập dữ liệu tương ứng như sau (không cần nhập tên cột vào file):</p>
+                                <p><strong>Bước 2:</strong> Nhập dữ liệu tương ứng như sau (không cần nhập tên cột vào
+                                    file):</p>
                                 <ul>
                                     <li>Cột 1: Nhập đầy đủ họ tên</li>
                                     <li>Cột 2: Nhập địa chỉ email (email đăng kí tài khoản dùng để đăng nhập)</li>
                                     <li>Cột 3: Nhập mã số giảng viên</li>
                                     <li>Cột 4: Nhập mật khẩu (Ex: 12345678)</li>
                                 </ul>
-                                <p><strong>Bước 3:</strong> Bấm nút <strong>"Register by Excel"</strong> màu trắng để đăng kí</p>
+                                <p><strong>Bước 3:</strong> Bấm nút <strong>"Register by Excel"</strong> màu trắng để đăng
+                                    kí</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -91,56 +94,84 @@
                                     @if (isset($user))
                                         @method('PUT')
                                     @endif
-                                    <div class="mb-2 row">
-                                        <label class="col-md-2 col-form-label" for="simple-input">Full Name</label>
-                                        <div class="col-md-10">
-                                            <input type="text" id="simple-input" class="form-control"
-                                                value="{{ isset($user) ? $user->name : '' }}" placeholder="Full name"
-                                                name="name" required>
-                                        </div>
-                                    </div>
-                                    <div class="mb-2 row">
-                                        <label class="col-md-2 col-form-label" for="simpleinput">Email</label>
-                                        <div class="col-md-10">
-                                            <input type="email" id="simpleinput" class="form-control"
-                                                value="{{ isset($user) ? $user->email : '' }}" placeholder="Email"
-                                                name="email" required>
-                                        </div>
-                                    </div>
-                                    <div class="mb-2 row">
-                                        <label class="col-md-2 col-form-label" for="example-email">Lecturer ID</label>
-                                        <div class="col-md-10">
-                                            <input type="text" id="example-email" class="form-control"
-                                                placeholder="Lecturer ID" name="account_id"
-                                                value="{{ isset($user) ? $user->account_id : '' }}">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="role" value="1">
-                                    @if (!isset($user))
-                                        <div class="mb-2 row">
-                                            <label class="col-md-2 col-form-label" for="example-password">Password</label>
-                                            <div class="col-md-10">
-                                                <input type="password" class="form-control" id="example-password"
-                                                    value="" placeholder="Password" name="password"
-                                                    {{ isset($user) ? 'hidden' : 'required' }}>
-                                            </div>
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
                                         </div>
                                     @endif
+                                <div class="mb-2 row">
+                                    <label class="col-md-2 col-form-label" for="simple-input">Full Name</label>
+                                    <div class="col-md-10">
+                                        <input type="text" id="simple-input" class="form-control"
+                                            value="{{ isset($user) ? $user->name : old('name') }}" placeholder="Full name"
+                                            name="name" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-md-2 col-form-label" for="simpleinput">Email</label>
+                                    <div class="col-md-10">
+                                        <input type="email" id="simpleinput" class="form-control"
+                                            value="{{ isset($user) ? $user->email : old('email') }}" placeholder="Email"
+                                            name="email" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-md-2 col-form-label" for="example-email">Lecturer ID</label>
+                                    <div class="col-md-10">
+                                        <input type="text" id="example-email" class="form-control" placeholder="Lecturer ID"
+                                            name="account_id"
+                                            value="{{ isset($user) ? $user->account_id : old('account_id') }}">
+                                    </div>
+                                </div>
+                                <input type="hidden" name="role" value="1">
+
+                                @if (isset($user))
                                     <div class="mb-2 row">
-                                        <div class="col-md-2"></div>
+                                        <label class="col-md-2 col-form-label" for="old_password">Old Password</label>
                                         <div class="col-md-10">
-                                            <hr>
-                                            <button type="submit" class="btn btn-primary w-xl">{{ isset($user) ? 'Update' : 'Register' }}</button>
+                                            <input type="password" class="form-control" id="old_password"
+                                                placeholder="Old Password" name="old_password">
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                        </div>
+                                @endif
 
+                                <div class="mb-2 row">
+                                    <label class="col-md-2 col-form-label" for="new_password">New Password</label>
+                                    <div class="col-md-10">
+                                        <input type="password" class="form-control" id="new_password"
+                                            placeholder="New Password" name="new_password"
+                                            {{ isset($user) ? '' : 'required' }}>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <label class="col-md-2 col-form-label" for="new_password_confirmation">Confirm
+                                        Password</label>
+                                    <div class="col-md-10">
+                                        <input type="password" class="form-control" id="new_password_confirmation"
+                                            placeholder="Confirm Password" name="new_password_confirmation"
+                                            {{ isset($user) ? '' : 'required' }}>
+                                    </div>
+                                </div>
+                                <div class="mb-2 row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-10">
+                                        <hr>
+                                        <button type="submit"
+                                            class="btn btn-primary w-xl">{{ isset($user) ? 'Update' : 'Register' }}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <!-- end row -->
+
                 </div>
-            </div> <!-- end card -->
-        </div><!-- end col -->
+                <!-- end row -->
+            </div>
+        </div> <!-- end card -->
+    </div><!-- end col -->
     </div>
 @endsection
