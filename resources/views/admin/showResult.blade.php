@@ -72,17 +72,6 @@
     </div>
     <!-- end page title -->
     <div class="row">
-        <div class="col-12 d-flex justify-content-end">
-            {{-- <a href="{{ route('createInstructor.create') }}" class="btn btn-info">Create</a> --}}
-            <div class="d-flex justify-content-between">
-                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                    <button class="btn btn-light" onclick="window.location='{{ route('download.allfiles') }}'">Download All</button>
-                    <a href="{{ route('export.test.results') }}" class="btn btn-success">Excel</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">

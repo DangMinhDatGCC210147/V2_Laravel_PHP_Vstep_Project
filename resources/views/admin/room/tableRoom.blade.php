@@ -19,12 +19,13 @@
     </div>
 
     <!-- end page title -->
-    @if (auth()->user()->role == 0)
         <div class="row">
             <div class="buttons">
                 <div class="col-12 d-flex justify-content-end">
                     <a href="{{ route('room.create') }}" class="btn btn-info mx-2">Create</a>
-                    <button class="btn btn-danger" id="deleteAll">Delete All</button>
+                    @if (auth()->user()->role == 0)
+                        <button class="btn btn-danger" id="deleteAll">Delete All</button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -52,7 +53,6 @@
                 </div>
             </div>
         </div>
-    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">

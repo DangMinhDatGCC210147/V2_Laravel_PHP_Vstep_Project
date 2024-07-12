@@ -18,11 +18,13 @@
         </div>
     </div>
     <!-- end page title -->
-    <div class="row">
-        <div class="col-12 d-flex justify-content-end">
-            <a href="{{ route('createAdmin.create') }}" class="btn btn-info">Create</a>
+    @if(auth()->user()->role == 0)
+        <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+                <a href="{{ route('createAdmin.create') }}" class="btn btn-info">Create</a>
+            </div>
         </div>
-    </div>
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">

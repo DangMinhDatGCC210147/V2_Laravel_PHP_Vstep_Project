@@ -19,23 +19,23 @@
     </div>
 
     <!-- end page title -->
-    @if (auth()->user()->role == 0)
         <div class="row">
-            <div class="col-6 d-flex justify-content-start">
-                <form id="inactive-students-form" class="mx-2" action="{{ route('students.inactive') }}" method="POST">
-                    @csrf
-                    <button type="button" class="btn btn-danger" onclick="inactiveStudents()">Deactivate Students</button>
-                </form>
-                <form id="active-students-form" action="{{ route('students.active') }}" method="POST">
-                    @csrf
-                    <button type="button" class="btn btn-warning" onclick="activeStudents()">Activate Students</button>
-                </form>
-            </div>
+                <div class="col-6 d-flex justify-content-start">
+                    @if (auth()->user()->role == 0)
+                        <form id="inactive-students-form" class="mx-2" action="{{ route('students.inactive') }}" method="POST">
+                            @csrf
+                            <button type="button" class="btn btn-danger" onclick="inactiveStudents()">Deactivate Students</button>
+                        </form>
+                        <form id="active-students-form" action="{{ route('students.active') }}" method="POST">
+                            @csrf
+                            <button type="button" class="btn btn-warning" onclick="activeStudents()">Activate Students</button>
+                        </form>
+                    @endif
+                </div>
             <div class="col-6 d-flex justify-content-end">
                 <a href="{{ route('createStudent.create') }}" class="btn btn-info mr-2">Create</a>
             </div>
         </div>
-    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">

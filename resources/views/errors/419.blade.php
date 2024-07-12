@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Error 500 | Greenwich Cantho - VSTEP</title>
+    <title>Error 419 | Greenwich Cantho - VSTEP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Myra Studio" name="author" />
@@ -25,14 +25,14 @@
                     <div class="card-body p-4">
 
                         <div class="text-center w-50 mx-auto my-4">
-                            <img src="{{ asset('admin/assets/images/500-error.svg') }}" title="invite.svg">
+                            <img src="{{ asset('admin/assets/images/404-error.svg') }}" title="invite.svg">
                         </div>
 
-                        <h3 class="text-center mb-4 mt-3">Internal Server Error</h3>
+                        <h3 class="text-center mb-4 mt-3">Page Page Expired</h3>
 
-                        <p class="text-muted text-center mt-3">We are experiencing an internal server problem, please try back later.</p>
+                        <p class="text-muted text-center mt-3">Sorry, your session has expired. Please refresh and try again.</p>
                         <div class="mt-4 text-center">
-                            <a href="index.html" class="btn btn-primary w-100">Back to Home</a>
+                            <a href="{{ url()->previous() }}" class="btn btn-primary w-100">Back to Home</a>
                         </div>
 
                     </div> <!-- end card-body -->
