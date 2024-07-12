@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class InstructorsController extends Controller
@@ -96,31 +97,48 @@ class InstructorsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $slug)
+    public function update(Request $request, $slug)
     {
-        // dd($request->all(), $slug);
-        $user = User::findOrFail($slug->id);
+        $user = User::where('slug', $slug)->firstOrFail();
+        Log::info('User found', ['user' => $user]);
+        // Validate request
         $request->validate([
-            'password' => 'nullable|min:8',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'account_id' => 'required|string|max:255|unique:users,account_id,' . $user->id,
+            'old_password' => 'nullable|string|min:8',
+            'new_password' => 'nullable|string|min:8|confirmed',
         ]);
-        // Update the user data
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->account_id = $request->account_id;
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-        // Save the updated user
-        $user->save();
+        Log::info('Updated user details', ['name' => $user->name, 'email' => $user->email, 'account_id' => $user->account_id]);
 
-        // Redirect back with a success message
-        if ($user->role == 1) {
-            return redirect()->route('tableLecturer.index')->with('success', 'Lecturer updated successfully');
-        } else if ($user->role == 2) {
-            return redirect()->route('tableStudent.index')->with('success', 'Student updated successfully');
-        } else{
-            return redirect()->route('tableAdmin.index')->with('success', 'Admin updated successfully');
+        if ($request->filled('old_password')) {
+            Log::info('Old password provided');
+
+            if (Hash::check($request->old_password, $user->password)) {
+                Log::info('Old password is correct');
+
+                if ($request->new_password === $request->new_password_confirmation) {
+                    Log::info('New password confirmed');
+
+                    $user->password = Hash::make($request->new_password);
+                    Log::info('Password updated');
+                } else {
+                    Log::warning('New password confirmation does not match');
+                    return redirect()->back()->withErrors(['new_password_confirmation' => 'New password and confirm password do not match.']);
+                }
+            } else {
+                Log::warning('Old password is incorrect');
+                return redirect()->back()->withErrors(['old_password' => 'Old password is incorrect.']);
+            }
         }
+
+        $user->save();
+        Log::info('User updated successfully', ['user' => $user]);
+        return redirect()->route('tableStudent.index')->with('success', 'User updated successfully.');
     }
 
     /**
@@ -144,7 +162,7 @@ class InstructorsController extends Controller
             User::whereIn('id', $studentIds)
                 ->where('is_active', true)
                 ->update(['is_active' => false]);
-        }else{
+        } else {
             return redirect()->route('tableStudent.index')->with('error', 'No students selected for deactivation.');
         }
 
@@ -160,7 +178,7 @@ class InstructorsController extends Controller
             User::whereIn('id', $studentIds)
                 ->where('is_active', false)
                 ->update(['is_active' => true]);
-        }else{
+        } else {
             return redirect()->route('tableStudent.index')->with('error', 'No students selected for activation.');
         }
         return redirect()->route('tableStudent.index')->with('success', 'Selected students have been activated.');
@@ -174,7 +192,7 @@ class InstructorsController extends Controller
             User::whereIn('id', $studentIds)
                 ->where('is_active', true)
                 ->update(['is_active' => false]);
-        }else{
+        } else {
             return redirect()->route('tableLecturer.index')->with('error', 'No lecturers selected for deactivation.');
         }
 
@@ -190,7 +208,7 @@ class InstructorsController extends Controller
             User::whereIn('id', $studentIds)
                 ->where('is_active', false)
                 ->update(['is_active' => true]);
-        }else{
+        } else {
             return redirect()->route('tableLecturer.index')->with('error', 'No lecturers selected for activation.');
         }
         return redirect()->route('tableLecturer.index')->with('success', 'Selected lecturers have been activated.');
