@@ -37,7 +37,7 @@
                                 <th>No</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
-                                <th>Lecturer ID</th>
+                                <th>Staff ID</th>
                                 @if (auth()->user()->role == 0)
                                     <th>Action</th>
                                 @endif
