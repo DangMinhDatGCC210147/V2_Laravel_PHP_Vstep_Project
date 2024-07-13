@@ -30,7 +30,7 @@
     @if (auth()->user()->role == 0 || auth()->user()->role == 1)
         <div class="row mt-2">
             <div class="col-12">
-                @if (!isset($user) && auth()->user()->role == 0)
+                {{-- @if (!isset($user) && auth()->user()->role == 0) --}}
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </div>
-                    @if (auth()->user()->role == 0)
+                    {{-- @if (auth()->user()->role == 0) --}}
                         <form action="{{ route('createStudent.excel.store') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
@@ -89,8 +89,8 @@
                                 </div>
                             </div>
                         </form>
-                    @endif
-                @endif
+                    {{-- @endif --}}
+                {{-- @endif --}}
                 @if (auth()->user()->role == 0 || auth()->user()->role == 1)
                     <div class="card">
                         <div class="card-body">

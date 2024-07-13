@@ -50,28 +50,29 @@
                                     <td>{{ $admin->name }}</td>
                                     <td>{{ $admin->email }}</td>
                                     <td>{{ $admin->account_id }}</td>
-                                    <td>
-                                        <a href="{{ route('createAdmin.edit', $admin->slug) }}"><i
-                                                class="mdi mdi-lead-pencil mdi-24px"></i></a>
-                                        <a href="{{ route('createAdmin.destroy', $admin->slug) }}"
-                                            onclick="event.preventDefault();
-                                                    if(confirm('Are you sure you want to delete this test?')) {
-                                                        document.getElementById('delete-form-{{ $admin->slug }}').submit();
-                                                    }">
-                                            <i class="mdi mdi-delete-empty mdi-24px" style="color: red"></i>
-                                        </a>
-                                        <form id="delete-form-{{ $admin->slug }}"
-                                            action="{{ route('createAdmin.destroy', $admin->slug) }}" method="POST"
-                                            style="display: none;">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    </td>
+                                    @if (auth()->user()->role == 0)
+                                        <td>
+                                            <a href="{{ route('createAdmin.edit', $admin->slug) }}"><i
+                                                    class="mdi mdi-lead-pencil mdi-24px"></i></a>
+                                            <a href="{{ route('createAdmin.destroy', $admin->slug) }}"
+                                                onclick="event.preventDefault();
+                                                        if(confirm('Are you sure you want to delete this test?')) {
+                                                            document.getElementById('delete-form-{{ $admin->slug }}').submit();
+                                                        }">
+                                                <i class="mdi mdi-delete-empty mdi-24px" style="color: red"></i>
+                                            </a>
+                                            <form id="delete-form-{{ $admin->slug }}"
+                                                action="{{ route('createAdmin.destroy', $admin->slug) }}" method="POST"
+                                                style="display: none;">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-
                 </div> <!-- end card body-->
             </div> <!-- end card -->
         </div><!-- end col-->
